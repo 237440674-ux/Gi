@@ -472,7 +472,7 @@ function rPf(){
       var isB=fd&&td&&isBkd(rm.num,fd,td),bi=isB?getBk(rm.num,fd):null,names=isB?getBkNames(rm.num,fd,td):[];
       var cls='room-card avl';if(isS)cls='room-card sel';else if(isB)cls='room-card bkd';
       var nhtml='';if(isS)nhtml='<div class="rnm" style="color:var(--blue);font-weight:500;">已选</div><div class="rnm"><input class="ni" placeholder="姓名" maxlength="8"></div>';
-      else if(isB)nhtml='<div class="rnm" style="color:var(--red);font-weight:500;">占用</div>'+(names.length>0?'<div class="rnm">'+names.slice(0,2).join(',')+'</div>':'');
+      else if(isB){var _dr=bi?'<div class="rnm" style="font-size:9px;color:var(--slate-500);">'+bi.df+'~'+bi.dt+'</div>':'';nhtml='<div class="rnm" style="color:var(--red);font-weight:500;">占用</div>'+_dr+(names.length>0?'<div class="rnm">'+names.slice(0,2).join(',')+'</div>':'')}
       else nhtml='<div class="rnm" style="color:var(--green-dark);">空闲</div>';
       h+='<div class="'+cls+'" onclick="cr('+rm.num+')"><div class="rn">'+rm.num+'</div><div class="rt">客房 '+flr+'F</div><div class="rd"></div>'+nhtml+(isB&&bi?'<div class="rbb">'+bi.dep+'</div>':'')+'</div>';}
     h+='</div></div>';}
