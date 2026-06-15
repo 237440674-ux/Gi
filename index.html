@@ -462,8 +462,6 @@ var WH_CATS = {
 };
 var WH_LOCS = {'112':'12号1F·112库房','512':'12号5F·512库房','515':'12号5F·515库房'};
 
-function ld(){try{var r=localStorage.getItem(sk);if(r){var p=JSON.parse(r);BK=p.bk||[];WH=p.wh||[];WHL=p.whl||[];return!!p.bk;}}catch(e){}return false;}
-function sv(){try{localStorage.setItem(sk,JSON.stringify({bk:BK,wh:WH,whl:WHL}));}catch(e){}}
 function gu(uid){for(var i=0;i<ALL.length;i++)if(ALL[i].uid===uid)return ALL[i];return null;}
 function gn(num){for(var i=0;i<ALL.length;i++)if(ALL[i].num===num)return ALL[i];return null;}
 function uVal(x){return typeof x==='object'?x.u:x;}
