@@ -225,6 +225,33 @@ input,select,textarea{font:inherit}
   .bp .fr{grid-template-columns:1fr}.modal{max-width:100%;margin:10px}
   .kpi-row{grid-template-columns:1fr 1fr}.row2{grid-template-columns:1fr}.wh-grid{grid-template-columns:1fr}
 }
+
+.date-overview{border:1px solid var(--slate-200);border-radius:var(--radius);margin:12px 24px;background:#fff;overflow:hidden;}
+.date-ov-header{display:flex;align-items:center;gap:8px;padding:10px 16px;cursor:pointer;font-size:13px;font-weight:600;color:var(--navy);background:var(--slate-50);border-bottom:1px solid var(--slate-200);}
+.date-ov-header:hover{background:var(--slate-100);}
+.date-ov-header i.rotated{transform:rotate(-90deg);}
+.date-ov-body{padding:12px 16px;}
+.date-ov-body.hide{display:none;}
+.date-ov-legend{display:flex;gap:16px;font-size:11px;color:var(--slate-500);margin-bottom:10px;}
+.ov-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:middle;}
+.date-ov-timeline{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.ov-bar{display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;font-size:11px;color:#fff;cursor:pointer;position:relative;}
+.ov-bar:hover{opacity:0.85;}
+.ov-bar .ov-dates{font-size:10px;opacity:0.9;}
+.date-ov-list{max-height:180px;overflow-y:auto;}
+.ov-item{display:flex;align-items:center;gap:10px;padding:6px 8px;border-bottom:1px solid var(--slate-100);font-size:12px;}
+.ov-item:last-child{border-bottom:none;}
+.ov-item .ov-status{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.ov-item .ov-range{color:var(--slate-500);font-size:11px;min-width:160px;}
+.ov-item .ov-dep{font-weight:500;color:var(--navy);}
+.ov-item .ov-rooms{color:var(--slate-400);font-size:11px;}
+.ov-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:12px;}
+.ov-cal-cell{text-align:center;padding:3px 0;font-size:10px;border-radius:3px;}
+.ov-cal-cell.head{background:var(--slate-100);font-weight:600;color:var(--slate-500);}
+.ov-cal-cell.occ{background:var(--blue-light);color:var(--blue);font-weight:500;}
+.ov-cal-cell.occ-many{background:var(--red-light);color:var(--red);font-weight:500;}
+.ov-cal-month{font-size:11px;font-weight:600;color:var(--navy);margin:6px 0 4px;}
+#dateOvBody.hide{display:none;}
 </style>
 </head><body>
 <header class="header">
@@ -258,6 +285,22 @@ input,select,textarea{font:inherit}
     <div class="floor-tabs" id="ft"></div>
     <div class="toolbar-divider"></div>
     <div class="toolbar-group"><span class="toolbar-label">入住</span><input class="toolbar-date" type="date" id="df"><span style="color:var(--slate-400)">~</span><span class="toolbar-label">退房</span><input class="toolbar-date" type="date" id="dt"></div>
+  </div>
+  <div class="date-overview" id="dateOv">
+    <div class="date-ov-header" onclick="document.getElementById('dateOvBody').classList.toggle('hide');this.querySelector('i').classList.toggle('rotated');">
+      <i data-lucide="chevron-down" style="width:16px;height:16px;transition:transform .2s;"></i>
+      <span>📅 日期占用总览</span>
+      <span id="dateOvCount" style="margin-left:auto;font-size:12px;color:var(--slate-500);"></span>
+    </div>
+    <div class="date-ov-body" id="dateOvBody">
+      <div class="date-ov-legend">
+        <span class="ov-dot" style="background:var(--blue);"></span>进行中
+        <span class="ov-dot" style="background:var(--amber);"></span>即将开始
+        <span class="ov-dot" style="background:var(--slate-300);"></span>已结束
+      </div>
+      <div class="date-ov-timeline" id="ovTimeline"></div>
+      <div class="date-ov-list" id="ovList"></div>
+    </div>
   </div>
   <div class="bp">
     <h3><i data-lucide="calendar-check"></i> 提交排房申请</h3>
@@ -396,7 +439,8 @@ function ld(){
 
 // 重写sv():本地+云端
 function sv(){
-  try{localStorage.setItem(sk,JSON.stringify({bk:BK,wh:WH,whl:WHL}));}catch(e){}
+  try{localStorage.setItem(sk,JSON.stringify({bk:BK,wh:WH,whl:WHL}));  renderDateOverview();
+}catch(e){}
   saveToCloud();
 }
 
@@ -455,7 +499,7 @@ function sw(p){
 }
 
 // ========== 排房 ==========
-function iPf(){ftT(parseInt(document.getElementById('bld').value));var n=new Date();document.getElementById('df').value=n.toISOString().slice(0,10);var m=new Date(n);m.setDate(m.getDate()+1);document.getElementById('dt').value=m.toISOString().slice(0,10);rPf();}
+function iPf(){ftT(parseInt(document.getElementById('bld').value));var n=new Date();document.getElementById('df').value=n.toISOString().slice(0,10);var m=new Date(n);m.setDate(m.getDate()+1);document.getElementById('dt').value=m.toISOString().slice(0,10);rPf();renderDateOverview();}
 function ftT(b){var c=document.getElementById('ft'),f=b===11?5:6,h='<button class="floor-tab act" data-f="a">全部</button>';for(var i=1;i<=f;i++)h+='<button class="floor-tab" data-f="'+i+'">'+i+'F</button>';c.innerHTML=h;Array.from(c.children).forEach(function(t){t.onclick=function(){c.querySelectorAll('.floor-tab').forEach(function(x){x.classList.remove('act');});this.classList.add('act');rPf();};});}
 function gF(){var a=document.querySelector('#ft .floor-tab.act');return a?a.getAttribute('data-f'):'a';}
 function gS(){var tbody=document.querySelector('#selR tbody');if(!tbody)return[];var r=[];Array.from(tbody.querySelectorAll('tr')).forEach(function(tr){var v=parseInt(tr.getAttribute('d-n')),bl=parseInt(tr.getAttribute('d-b')),inp=tr.querySelector('.ni2'),nm=inp?inp.value.trim():'';if(v&&bl)r.push({n:v,b:bl,nm:nm});});return r;}
@@ -859,5 +903,57 @@ function init(){
 }
 function rdy(){if(typeof lucide!=='undefined'){init();lucide.createIcons();return;}var n=0,ch=setInterval(function(){if(typeof lucide!=='undefined'){clearInterval(ch);init();lucide.createIcons();}if(++n>50){clearInterval(ch);init();}},100);}
 rdy();
+
+// ========== 日期占用总览 ==========
+function renderDateOverview(){
+  var container = document.getElementById('ovTimeline');
+  var listEl = document.getElementById('ovList');
+  var countEl = document.getElementById('dateOvCount');
+  if(!container || !listEl) return;
+  if(!BK || BK.length === 0){
+    container.innerHTML = '<div style="color:var(--slate-400);font-size:12px;padding:8px 0;">暂无排房记录</div>';
+    listEl.innerHTML = '';
+    if(countEl) countEl.textContent = '（无记录）';
+    return;
+  }
+  var today = new Date(); today.setHours(0,0,0,0);
+  // 按入住日期排序
+  var sorted = BK.slice().sort(function(a,b){ return (a.df||'').localeCompare(b.df||''); });
+  var html = '';
+  var listHtml = '';
+  var nowCount = 0;
+  sorted.forEach(function(bk){
+    var df = bk.df||'', dt = bk.dt||'';
+    if(!df) return;
+    var dFrom = new Date(df);
+    var dTo = new Date(dt);
+    dFrom.setHours(0,0,0,0);
+    dTo.setHours(0,0,0,0);
+    var status, color;
+    if(today >= dFrom && today <= dTo){ status='进行中'; color='var(--blue)'; nowCount++; }
+    else if(today < dFrom){ status='即将开始'; color='var(--amber)'; }
+    else { status='已结束'; color='var(--slate-300)'; }
+    var dep = bk.dep||bk.g||'未知部门';
+    var pur = bk.pur||'';
+    var rooms = (bk.rooms||[]).length;
+    // 时间条
+    html += '<div class="ov-bar" style="background:'+color+';" title="'+dep+' '+df+'~'+dt+'">'
+          + '<span>'+dep+'</span>'
+          + '<span class="ov-dates">'+df.slice(5)+' ~ '+dt.slice(5)+'</span>'
+          + '<span style="font-size:10px;opacity:0.8;">'+rooms+'间</span>'
+          + '</div>';
+    // 列表项
+    listHtml += '<div class="ov-item">'
+          + '<span class="ov-status" style="background:'+color+'"></span>'
+          + '<span class="ov-range">'+df+' ~ '+dt+'</span>'
+          + '<span class="ov-dep">'+dep+'</span>'
+          + '<span class="ov-rooms">'+rooms+'间'+(pur?' · '+pur:'')+'</span>'
+          + '</div>';
+  });
+  container.innerHTML = html || '<div style="color:var(--slate-400);font-size:12px;">暂无数据</div>';
+  listEl.innerHTML = listHtml;
+  if(countEl) countEl.textContent = '（共 '+BK.length+' 条，'+nowCount+' 条进行中）';
+}
+
 </script>
 </body></html>
