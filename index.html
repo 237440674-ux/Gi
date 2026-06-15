@@ -1,0 +1,789 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>培训班排房系统</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://unpkg.com/mammoth@1.6.0/mammoth.browser.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0f172a;--slate-50:#f8fafc;--slate-100:#f1f5f9;--slate-200:#e2e8f0;--slate-300:#cbd5e1;--slate-400:#94a3b8;--slate-500:#64748b;--slate-600:#475569;--slate-700:#334155;--slate-800:#1e293b;
+  --blue:#2563eb;--blue-dark:#1d4ed8;--blue-light:#eff6ff;
+  --green:#22c55e;--green-light:#f0fdf4;--green-dark:#16a34a;
+  --red:#ef4444;--red-light:#fef2f2;
+  --amber:#f59e0b;--amber-light:#fffbeb;
+  --indigo:#6366f1;--indigo-light:#eef2ff;
+  --radius:8px;--shadow:0 1px 3px rgba(0,0,0,0.08);--shadow-lg:0 4px 16px rgba(0,0,0,0.12);--transition:150ms ease;
+}
+html{font-size:14px}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--slate-50);color:var(--slate-700);line-height:1.5}
+button{cursor:pointer;font:inherit;color:inherit;border:none;background:none}
+input,select,textarea{font:inherit}
+.header{background:var(--navy);color:#fff;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.header-left{display:flex;align-items:center;gap:12px}
+.header-logo{font-size:17px;font-weight:600;display:flex;align-items:center;gap:8px}
+.header-logo svg{width:20px;height:20px}
+.header-tabs{display:flex;gap:4px;margin-left:24px}
+.header-tab{padding:6px 16px;border-radius:6px;font-size:13px;font-weight:500;color:var(--slate-300)}
+.header-tab:hover{background:rgba(255,255,255,0.1);color:#fff}
+.header-tab.act{background:rgba(255,255,255,0.15);color:#fff}
+.toolbar{background:#fff;border-bottom:1px solid var(--slate-200);padding:12px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.toolbar-group{display:flex;align-items:center;gap:6px}
+.toolbar-label{font-size:12px;font-weight:600;color:var(--slate-500);white-space:nowrap}
+.toolbar-select{padding:5px 10px;border:1px solid var(--slate-300);border-radius:6px;font-size:13px;color:var(--slate-700);background:#fff;outline:none;cursor:pointer}
+.toolbar-date{padding:5px 10px;border:1px solid var(--slate-300);border-radius:6px;font-size:13px;color:var(--slate-700);background:#fff;outline:none}
+.toolbar-divider{width:1px;height:24px;background:var(--slate-200)}
+.stats-bar{display:flex;background:#fff;border-bottom:1px solid var(--slate-200);padding:0 24px;overflow-x:auto}
+.stat-item{display:flex;align-items:center;gap:8px;padding:10px 18px;border-right:1px solid var(--slate-100)}
+.stat-item:last-child{border-right:none}
+.stat-icon{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center}
+.stat-icon svg{width:16px;height:16px}
+.stat-value{font-size:17px;font-weight:700;color:var(--slate-800)}
+.stat-label{font-size:11px;color:var(--slate-500)}
+.stat-icon.b11{background:var(--blue-light);color:var(--blue)}
+.stat-icon.b12{background:var(--indigo-light);color:var(--indigo)}
+.stat-icon.avl{background:var(--green-light);color:var(--green-dark)}
+.stat-icon.bkd{background:var(--red-light);color:var(--red)}
+.stat-icon.wh{background:var(--amber-light);color:var(--amber)}
+.main{padding:20px 24px 40px;max-width:1400px;margin:0 auto}
+.page{display:none}
+.page.act{display:block}
+.floor-section{margin-bottom:24px}
+.floor-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.floor-header h3{font-size:14px;font-weight:600;color:var(--slate-800)}
+.floor-header .fb{background:var(--navy);color:#fff;font-size:10px;font-weight:600;padding:2px 8px;border-radius:8px}
+.floor-header .fc{font-size:11px;color:var(--slate-400);margin-left:auto}
+.floor-header .fc span{font-weight:600;color:var(--slate-600)}
+.room-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:7px}
+.room-card{background:#fff;border-radius:6px;border:1px solid var(--slate-200);padding:8px;cursor:pointer;text-align:center;user-select:none;position:relative}
+.room-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-1px)}
+.room-card .rn{font-size:14px;font-weight:700;color:var(--slate-800)}
+.room-card .rt{font-size:10px;color:var(--slate-400)}
+.room-card .rd{display:inline-block;width:8px;height:8px;border-radius:50%;margin-top:3px}
+.room-card .rnm{font-size:9px;color:var(--slate-500);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.room-card.avl{border-left:3px solid var(--green)}
+.room-card.avl .rd{background:var(--green)}
+.room-card.bkd{border-left:3px solid var(--red);background:var(--red-light);cursor:default;opacity:0.7}
+.room-card.bkd .rd{background:var(--red)}
+.room-card.bkd .rnm{color:var(--red);font-weight:500}
+.room-card.sel{border-left:3px solid var(--blue);background:var(--blue-light)}
+.room-card.sel .rd{background:var(--blue)}
+.room-card.sel .rnm{color:var(--blue)}
+.room-card .rst{font-size:9px;margin-top:1px}.room-card .rbb{font-size:9px;color:var(--red);margin-top:3px}
+.floor-tabs{display:flex;gap:4px;flex-wrap:wrap}
+.floor-tab{padding:4px 12px;border-radius:14px;font-size:12px;font-weight:500;color:var(--slate-600);background:var(--slate-100)}
+.floor-tab:hover{background:var(--slate-200)}
+.floor-tab.act{background:var(--navy);color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:7px 16px;border-radius:6px;font-size:13px;font-weight:500;white-space:nowrap}
+.btn svg{width:14px;height:14px}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blue-dark)}
+.btn-secondary{background:var(--slate-100);color:var(--slate-700)}
+.btn-success{background:var(--green);color:#fff}
+.btn-success:hover{background:var(--green-dark)}
+.btn-danger{background:var(--red);color:#fff}
+.btn-sm{padding:4px 10px;font-size:12px}
+.bp{background:#fff;border:1px solid var(--slate-200);border-radius:10px;padding:20px;margin-bottom:20px}
+.bp h3{font-size:15px;font-weight:600;color:var(--slate-800);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.bp .fr{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+.fg{margin-bottom:0}
+.fl{display:block;font-size:12px;font-weight:600;color:var(--slate-600);margin-bottom:4px}
+.fl .rq{color:var(--red)}
+.fi{width:100%;padding:7px 10px;border:1px solid var(--slate-300);border-radius:6px;font-size:13px;color:var(--slate-800);background:#fff}
+.fi:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 2px rgba(37,99,235,0.1)}
+.srl{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;min-height:32px;padding:8px;border:1px dashed var(--slate-300);border-radius:6px;background:var(--slate-50)}
+.rtag{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-size:12px;font-weight:500;background:var(--blue-light);color:var(--blue)}
+.rtag .rdel{width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:var(--blue);color:#fff;font-size:9px;cursor:pointer}
+.sc-list{display:flex;flex-direction:column;gap:12px}
+.sc-card{background:#fff;border:1px solid var(--slate-200);border-radius:8px;padding:14px 18px}
+.sc-card .sch{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.sc-card .scd{font-size:14px;font-weight:600;color:var(--slate-800);display:flex;align-items:center;gap:6px}
+.sc-card .sdd{font-size:12px;color:var(--slate-500)}
+.sc-card .scr{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.sc-card .srt2{padding:2px 8px;background:var(--slate-100);border-radius:4px;font-size:12px;color:var(--slate-700);font-weight:500}
+.sc-card .sci{font-size:12px;color:var(--slate-500);margin-top:6px;display:flex;gap:16px;flex-wrap:wrap}
+.sc-card .sca{margin-top:8px;display:flex;gap:6px}
+.scard{background:#fff;border:1px solid var(--slate-200);border-radius:10px;padding:16px 20px;margin-bottom:16px}
+.scard h3{font-size:14px;font-weight:600;color:var(--slate-800);margin-bottom:10px}
+.st{width:100%;border-collapse:collapse;font-size:13px}
+.st th{text-align:left;padding:6px 8px;color:var(--slate-400);font-weight:500;border-bottom:1px solid var(--slate-200);font-size:12px}
+.st td{padding:6px 8px;border-bottom:1px solid var(--slate-100);color:var(--slate-700)}
+.st tr:hover td{background:var(--slate-50)}
+.st .rl{font-size:12px;color:var(--slate-500)}
+.emp{text-align:center;padding:50px 20px;color:var(--slate-400)}
+.emp svg{width:44px;height:44px;margin-bottom:10px;opacity:0.4}
+.emp p{font-size:14px}
+.mod{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:center;justify-content:center;padding:20px}
+.mod.open{display:flex}
+@keyframes su{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.modal{background:#fff;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.2);width:100%;max-width:500px;max-height:90vh;overflow-y:auto;animation:su 200ms ease}
+.mh{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--slate-200)}
+.mh h3{font-size:15px;font-weight:600;color:var(--slate-800);display:flex;align-items:center;gap:8px}
+.mc{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--slate-400)}
+.mc:hover{background:var(--slate-100);color:var(--slate-600)}
+.mb{padding:16px 20px}
+.mf{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid var(--slate-200);background:var(--slate-50);border-radius:0 0 12px 12px}
+.tc{position:fixed;bottom:24px;right:24px;z-index:300;display:flex;flex-direction:column;gap:8px}
+.tt{padding:10px 16px;border-radius:6px;background:var(--navy);color:#fff;font-size:13px;font-weight:500;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:6px;animation:su 200ms ease}
+.ni{width:50px;border:none;border-bottom:1px dashed var(--slate-300);background:transparent;font-size:12px;padding:0 2px;outline:none}
+.ni:focus{border-bottom-color:var(--blue)}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--slate-300);border-radius:3px}
+
+.bill-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px}
+.bill-table th,.bill-table td{border:1px solid #999;padding:4px 6px;text-align:center;font-size:12px}
+.bill-table th{background:#e8e8e8;font-weight:600;color:#333}
+.bill-table .ni2{width:50px;border:none;border-bottom:1px solid #aaa;background:transparent;font-size:12px;padding:0 2px;outline:none;text-align:center}
+.bill-table .ni2:focus{border-bottom-color:var(--blue)}
+.bill-table .rdel2{color:#c00;cursor:pointer;font-size:14px;font-weight:700}
+.bill-table .room-num{font-weight:600}
+.sel-hint{color:var(--slate-400);font-size:12px;padding:8px;text-align:center}
+
+/* === 库房管理系统 === */
+.wh-tabs{display:flex;gap:4px;margin-bottom:16px}
+.wh-tab{padding:6px 16px;border-radius:6px;font-size:13px;font-weight:500;color:var(--slate-600);background:var(--slate-100)}
+.wh-tab:hover{background:var(--slate-200)}
+.wh-tab.act{background:var(--navy);color:#fff}
+/* KPI 卡片 */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.kpi-card{background:#fff;border:1px solid var(--slate-200);border-radius:10px;padding:16px;display:flex;align-items:center;gap:14px}
+.kpi-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.kpi-icon svg{width:22px;height:22px}
+.kpi-val{font-size:26px;font-weight:700;color:var(--slate-800);line-height:1.1}
+.kpi-label{font-size:11px;color:var(--slate-500)}
+.kpi-sub{font-size:10px;color:var(--slate-400);margin-top:1px}
+.kpi-icon.ki-blue{background:var(--blue-light);color:var(--blue)}
+.kpi-icon.ki-green{background:var(--green-light);color:var(--green-dark)}
+.kpi-icon.ki-amber{background:var(--amber-light);color:var(--amber)}
+.kpi-icon.ki-red{background:var(--red-light);color:var(--red)}
+.kpi-icon.ki-purple{background:#f3e8ff;color:#7c3aed}
+/* 二级行 */
+.row2{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:20px}
+/* 物品卡片网格 */
+.wh-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px}
+.wh-card{background:#fff;border:1px solid var(--slate-200);border-radius:8px;padding:14px 16px;transition:box-shadow var(--transition)}
+.wh-card:hover{box-shadow:var(--shadow-lg)}
+.wh-card .wc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.wh-card .wc-code{font-size:10px;font-family:monospace;color:var(--slate-400);background:var(--slate-100);padding:1px 6px;border-radius:3px}
+.wh-card .wc-cat{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;white-space:nowrap}
+.wh-card .wc-cat.bc{background:var(--blue-light);color:var(--blue)}
+.wh-card .wc-cat.kf{background:var(--red-light);color:var(--red)}
+.wh-card .wc-cat.cl{background:var(--green-light);color:var(--green-dark)}
+.wh-card .wc-cat.wx{background:var(--amber-light);color:var(--amber)}
+.wh-card .wc-cat.bg{background:var(--indigo-light);color:var(--indigo)}
+.wh-card .wc-cat.gd{background:#f3e8ff;color:#7c3aed}
+.wh-card .wc-cat.qt{background:var(--slate-200);color:var(--slate-600)}
+.wh-card .wc-name{font-size:14px;font-weight:600;color:var(--slate-800);margin-bottom:8px}
+.wh-card .wc-main{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.wh-card .wc-qty{font-size:22px;font-weight:700}
+.wh-card .wc-unit{font-size:11px;color:var(--slate-500)}
+.wh-card .wc-bar-wrap{display:flex;align-items:center;gap:6px;margin-left:auto}
+.wh-card .wc-bar{width:80px;height:6px;background:var(--slate-200);border-radius:3px;overflow:hidden}
+.wh-card .wc-bar-fill{height:100%;border-radius:3px;background:var(--green);transition:width 300ms}
+.wh-card .wc-bar-fill.low{background:var(--red)}
+.wh-card .wc-bar-fill.warn{background:var(--amber)}
+.wh-card .wc-lvl{font-size:11px;font-weight:600}.wc-lvl.ok{color:var(--green)}.wc-lvl.warn{color:var(--amber)}.wc-lvl.low{color:var(--red)}
+.wh-card .wc-info{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--slate-500);margin-bottom:8px}
+.wh-card .wc-acts{display:flex;gap:5px;padding-top:8px;border-top:1px solid var(--slate-100)}
+.wh-card .wc-btn{padding:3px 10px;border-radius:4px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid var(--slate-200);background:#fff;color:var(--slate-600)}
+.wh-card .wc-btn:hover{background:var(--slate-100)}
+/* 出入库记录标签 */
+.tag-in{background:var(--green-light);color:var(--green-dark);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.tag-out{background:var(--red-light);color:var(--red);padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.tag-check{background:#f3e8ff;color:#7c3aed;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+/* 导入验收单 */
+.imp-zone{border:2px dashed var(--slate-300);border-radius:10px;padding:30px;text-align:center;cursor:pointer;transition:all var(--transition);background:var(--slate-50)}
+.imp-zone:hover{border-color:var(--blue);background:var(--blue-light)}
+.imp-zone.drag{border-color:var(--blue);background:var(--blue-light)}
+.imp-zone svg{width:36px;height:36px;color:var(--slate-400);margin-bottom:8px}
+.imp-zone .iz-title{font-size:14px;font-weight:600;color:var(--slate-600)}
+.imp-zone .iz-sub{font-size:12px;color:var(--slate-400);margin-top:4px}
+.imp-preview{max-height:400px;overflow-y:auto;margin-top:16px}
+.imp-preview table{font-size:11px}
+.imp-preview th{position:sticky;top:0;background:var(--slate-100);z-index:1;font-size:11px}
+.imp-preview td{padding:4px 6px}
+.imp-meta{display:flex;gap:16px;flex-wrap:wrap;padding:12px;background:var(--slate-50);border-radius:6px;margin-bottom:12px;font-size:12px}
+.imp-meta .im-row{display:flex;align-items:center;gap:4px}
+.imp-meta .im-label{color:var(--slate-400)}.imp-meta .im-val{font-weight:600;color:var(--slate-700)}
+.imp-summary{font-size:12px;color:var(--slate-500);margin:10px 0}
+/* 盘点结果 */
+.check-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--slate-100)}
+.check-row .cr-name{flex:1;font-size:13px}
+.check-row .cr-qty{font-size:13px;font-weight:600;text-align:right;min-width:50px}
+/* 预警列表 */
+.alert-item{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--red-light);border-radius:6px;margin-bottom:6px;font-size:12px}
+.alert-item .al-name{font-weight:600;color:var(--red)}
+.alert-item .al-qty{color:var(--slate-600)}
+.alert-item .al-act{margin-left:auto}
+
+@media(max-width:768px){
+  .header{padding:0 16px}.header-logo span{display:none}.header-tabs{gap:2px;margin-left:12px}.header-tab{padding:4px 10px;font-size:12px}
+  .toolbar{padding:10px 16px}.stats-bar{overflow-x:auto;padding:0 16px}.stat-item{padding:8px 12px}.stat-value{font-size:15px}
+  .main{padding:16px}.room-grid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:6px}
+  .bp .fr{grid-template-columns:1fr}.modal{max-width:100%;margin:10px}
+  .kpi-row{grid-template-columns:1fr 1fr}.row2{grid-template-columns:1fr}.wh-grid{grid-template-columns:1fr}
+}
+</style>
+</head><body>
+<header class="header">
+  <div class="header-left">
+    <div class="header-logo"><i data-lucide="building"></i><span>培训班排房系统</span></div>
+    <div class="header-tabs">
+      <button class="header-tab act" onclick="sw(1)">排房</button>
+      <button class="header-tab" onclick="sw(2)">总览</button>
+      <button class="header-tab" onclick="sw(3)">库房</button>
+    </div>
+  </div>
+  <div class="header-right"><span id="cd"></span></div>
+</header>
+<div class="stats-bar" id="sb-pf">
+  <div class="stat-item"><div class="stat-icon b11"><i data-lucide="building-2"></i></div><div><div class="stat-value">11</div><div class="stat-label">11号楼</div></div></div>
+  <div class="stat-item"><div class="stat-icon b12"><i data-lucide="building-2"></i></div><div><div class="stat-value">12</div><div class="stat-label">12号楼</div></div></div>
+  <div class="stat-item"><div class="stat-icon avl"><i data-lucide="check-circle"></i></div><div><div class="stat-value" id="sAvl">0</div><div class="stat-label">空闲</div></div></div>
+  <div class="stat-item"><div class="stat-icon bkd"><i data-lucide="x-circle"></i></div><div><div class="stat-value" id="sBkd">0</div><div class="stat-label">已排</div></div></div>
+</div>
+<div class="stats-bar" id="sb-wh" style="display:none">
+  <div class="stat-item"><div class="stat-icon avl"><i data-lucide="package"></i></div><div><div class="stat-value" id="sSKU">0</div><div class="stat-label">SKU</div></div></div>
+  <div class="stat-item"><div class="stat-icon b11"><i data-lucide="layers"></i></div><div><div class="stat-value" id="sQty">0</div><div class="stat-label">库存总量</div></div></div>
+  <div class="stat-item"><div class="stat-icon wh"><i data-lucide="archive"></i></div><div><div class="stat-value" id="sLoc">0</div><div class="stat-label">库房</div></div></div>
+  <div class="stat-item"><div class="stat-icon bkd"><i data-lucide="alert-triangle"></i></div><div><div class="stat-value" id="sLow">0</div><div class="stat-label">低库存</div></div></div>
+</div>
+<main class="main">
+<div class="page act" id="p1">
+  <div class="toolbar">
+    <div class="toolbar-group"><span class="toolbar-label">楼栋</span><select class="toolbar-select" id="bld"><option value="11">11号楼</option><option value="12">12号楼</option></select></div>
+    <div class="toolbar-divider"></div>
+    <div class="floor-tabs" id="ft"></div>
+    <div class="toolbar-divider"></div>
+    <div class="toolbar-group"><span class="toolbar-label">入住</span><input class="toolbar-date" type="date" id="df"><span style="color:var(--slate-400)">~</span><span class="toolbar-label">退房</span><input class="toolbar-date" type="date" id="dt"></div>
+  </div>
+  <div class="bp">
+    <h3><i data-lucide="calendar-check"></i> 提交排房申请</h3>
+    <div class="fr"><div class="fg"><label class="fl">部门 <span class="rq">*</span></label><input class="fi" id="dep" placeholder="如：市场部"></div><div class="fg"><label class="fl">联系人 <span class="rq">*</span></label><input class="fi" id="con" placeholder="姓名"></div><div class="fg"><label class="fl">电话</label><input class="fi" id="ph" placeholder="手机号"></div></div>
+    <div class="fr"><div class="fg"><label class="fl">培训内容</label><input class="fi" id="pur" placeholder="如：新员工入职培训"></div><div class="fg"><label class="fl">入住人数</label><input class="fi" type="text" id="pp" readonly style="background:#f5f5f5;font-weight:600;color:var(--blue);" placeholder="选房后自动计算"></div><div class="fg"><label class="fl">住宿标准</label><input class="fi" type="number" id="pa" placeholder="元/人/天" min="0"></div><div class="fg"><label class="fl">餐费标准</label><input class="fi" type="number" id="pm" placeholder="元/人/天" min="0"></div><div class="fg"><label class="fl">其他费用</label><input class="fi" type="number" id="po" placeholder="元/人" min="0"></div></div>
+    <div class="fg"><label class="fl">已选房间 <span class="rq">*</span> <span style="font-weight:400;color:var(--slate-400);margin-left:6px;">点击下方房间卡片选择/取消</span></label><div class="srl" id="selR"><div class="sel-hint">请点击下方房间卡片选择</div></div></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:12px;"><button class="btn btn-success" onclick="sub()"><i data-lucide="send"></i> 提交申请</button></div>
+  </div>
+  <div id="rc"><div class="emp"><i data-lucide="building-2"></i><p>请选择楼栋、楼层和日期</p></div></div>
+</div>
+<div class="page" id="p2">
+  <div class="toolbar">
+    <div class="toolbar-group"><span class="toolbar-label">日期</span><input class="toolbar-date" type="date" id="zdf"><span style="color:var(--slate-400)">至</span><input class="toolbar-date" type="date" id="zdt"></div>
+    <div class="toolbar-divider"></div>
+    <div class="toolbar-group"><span class="toolbar-label">楼栋</span><select class="toolbar-select" id="zb"><option value="all">全部</option><option value="11">11号楼</option><option value="12">12号楼</option></select></div>
+    <div style="margin-left:auto;display:flex;gap:8px">
+      <button class="btn btn-sm btn-secondary" onclick="sr('w')">本周</button>
+      <button class="btn btn-sm btn-secondary" onclick="sr('m')">本月</button>
+      <button class="btn btn-sm btn-secondary" onclick="sr('a')">全部</button>
+    </div>
+  </div>
+  <div id="zc"><div class="emp"><i data-lucide="calendar"></i><p>暂无排房记录</p></div></div>
+</div>
+<div class="page" id="p3">
+  <div class="wh-tabs">
+    <button class="wh-tab act" onclick="whTab('dash')">总控看板</button>
+    <button class="wh-tab" onclick="whTab('list')">库存管理</button>
+    <button class="wh-tab" onclick="whTab('log')">出入记录</button>
+    <button class="wh-tab" onclick="whTab('check')">盘点中心</button>
+    <button class="btn btn-sm btn-primary" style="margin-left:auto" onclick="whImport()"><i data-lucide="upload"></i> 导入验收单</button>
+  </div>
+  <!-- KPI -->
+  <div class="kpi-row" id="whKpi"></div>
+  <!-- 内容 -->
+  <div id="whc"><div class="emp"><i data-lucide="package"></i><p>暂无库存记录</p></div></div>
+</div>
+</main>
+<div class="mod" id="mo" onclick="if(event.target===event.currentTarget)cm()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="mh"><h3 id="mt"></h3><button class="mc" onclick="cm()"><i data-lucide="x"></i></button></div>
+    <div class="mb" id="mb"></div>
+    <div class="mf" id="mf"></div>
+  </div>
+</div>
+<!-- 导入验收单 Modal（大号） -->
+<div class="mod" id="mo_imp" onclick="if(event.target===event.currentTarget)cmImp()">
+  <div class="modal" style="max-width:800px;max-height:95vh" onclick="event.stopPropagation()">
+    <div class="mh"><h3><i data-lucide="upload"></i> 导入验收单</h3><button class="mc" onclick="cmImp()"><i data-lucide="x"></i></button></div>
+    <div class="mb" id="mb_imp"></div>
+    <div class="mf" id="mf_imp"></div>
+  </div>
+</div>
+<div class="tc" id="tc"></div>
+<script>
+// ===== 房间数据 =====
+var B11 = [
+  {f:1,r:[101,102]},
+  {f:2,r:[201,202,203,205,206,207,208,210,211,212,213,215,216,217,218,220,222]},
+  {f:3,r:[301,302,303,305,306,307,308,310,311,312,313,315,316,317,318,320,322]},
+  {f:4,r:[401,402,403,405,406,407,408,410,411,412,413,415,416,417,418,420,422]},
+  {f:5,r:[501,502,503]}
+];
+var B12 = [
+  {f:1,r:[102,103,104,105,106,107,108,109,110,111,113,114,115,116,117,118,119,120,121,122,123]},
+  {f:2,r:[201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,225,227]},
+  {f:3,r:[301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317,318,319,320,321,322,323,325,327]},
+  {f:4,r:[401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,419,420,421,422,423,425,427]},
+  {f:5,r:[501,502,503,504,505,506,507,508,510,513,514,516,517,518,519,520,521,522,523,525]}
+];
+var ALL = [], sk = 'pf_v6';
+for(var i=0;i<B11.length;i++){var fl=B11[i];for(var j=0;j<fl.r.length;j++){var n=fl.r[j];ALL.push({uid:110000+n,num:n,bld:11,flr:fl.f});}}
+for(var i=0;i<B12.length;i++){var fl=B12[i];for(var j=0;j<fl.r.length;j++){var n=fl.r[j];ALL.push({uid:120000+n,num:n,bld:12,flr:fl.f});}}
+var BK=[],WH=[],WHL=[];
+var whTabSt='dash';
+
+// 分类体系 & 库房定位
+var WH_CATS = {
+  '布草':{sub:['床单','被套','枕套','毛巾','浴巾','毛毯','床垫保护垫','枕芯','被芯'],color:'bc'},
+  '客房用品':{sub:['洗漱套装','拖鞋','衣架','电水壶','吹风机','纸巾盒','垃圾桶'],color:'kf'},
+  '清洁用品':{sub:['清洁剂','消毒液','扫把','拖把','垃圾袋','马桶刷','抹布','橡胶手套'],color:'cl'},
+  '维修物料':{sub:['LED灯泡','螺丝刀套装','电工胶带','水管接头','门锁配件','膨胀螺栓'],color:'wx'},
+  '办公用品':{sub:['A4打印纸','签字笔','文件夹','笔记本','订书机','记号笔','计算器'],color:'bg'},
+  '固定资产':{sub:['对讲机','手推车','吸尘器','电风扇','测温仪'],color:'gd'},
+  '其他':{sub:['一次性洗漱杯','备用钥匙','欢迎卡','应急包'],color:'qt'}
+};
+var WH_LOCS = {'112':'12号1F·112库房','512':'12号5F·512库房','515':'12号5F·515库房'};
+
+function ld(){try{var r=localStorage.getItem(sk);if(r){var p=JSON.parse(r);BK=p.bk||[];WH=p.wh||[];WHL=p.whl||[];return!!p.bk;}}catch(e){}return false;}
+function sv(){try{localStorage.setItem(sk,JSON.stringify({bk:BK,wh:WH,whl:WHL}));}catch(e){}}
+function gu(uid){for(var i=0;i<ALL.length;i++)if(ALL[i].uid===uid)return ALL[i];return null;}
+function gn(num){for(var i=0;i<ALL.length;i++)if(ALL[i].num===num)return ALL[i];return null;}
+function uVal(x){return typeof x==='object'?x.u:x;}
+function uNa(x){return typeof x==='object'?(x.na||''):'';}
+function rnListWithName(rs){return rs.map(function(x){var n=uVal(x)%10000,na=uNa(x);return na?n+'('+na+')':''+n;});}
+function whFind(id){for(var i=0;i<WH.length;i++)if(WH[i].id===id)return WH[i];return null;}
+function t(msg,ty){
+  if(!ty)ty='i';var el=document.getElementById('tc'),d=document.createElement('div');d.className='tt';d.textContent=msg;
+  el.appendChild(d);setTimeout(function(){d.style.opacity='0';d.style.transition='opacity 300ms';setTimeout(function(){d.remove();},300);},3000);
+}
+
+function rb(bld,flr){var r=[];for(var i=0;i<ALL.length;i++){if(ALL[i].bld===bld&&(!flr||flr==='a'||ALL[i].flr==flr))r.push(ALL[i]);}return r;}
+function isBkd(num,fd,td){
+  if(!fd||!td)return false;var d=new Date(fd),end=new Date(td);
+  while(d<=end){var ds=d.toISOString().slice(0,10);for(var i=0;i<BK.length;i++){var b=BK[i];if(b.st!=='c')for(var j=0;j<b.rs.length;j++)if(uVal(b.rs[j])%10000===num&&ds>=b.df&&ds<=b.dt)return true;}d.setDate(d.getDate()+1);}
+  return false;
+}
+function getBk(num,fd){for(var i=0;i<BK.length;i++){var b=BK[i];if(b.st!=='c')for(var j=0;j<b.rs.length;j++)if(uVal(b.rs[j])%10000===num&&fd>=b.df&&fd<=b.dt)return b;}return null;}
+function getBkNames(num,fd,td){
+  var names=[],d=new Date(fd),end=new Date(td);
+  while(d<=end){var ds=d.toISOString().slice(0,10);for(var i=0;i<BK.length;i++){var b=BK[i];if(b.st!=='c')for(var j=0;j<b.rs.length;j++)if(uVal(b.rs[j])%10000===num&&ds>=b.df&&ds<=b.dt){var na=uNa(b.rs[j]);if(na)names.push(na);}}d.setDate(d.getDate()+1);}
+  var u=[];for(var i=0;i<names.length;i++)if(u.indexOf(names[i])===-1)u.push(names[i]);return u;
+}
+
+function sw(p){
+  document.querySelectorAll('.page').forEach(function(x){x.classList.remove('act');});
+  document.querySelectorAll('.header-tab').forEach(function(x){x.classList.remove('act');});
+  document.getElementById('p'+p).classList.add('act');
+  document.querySelectorAll('.header-tab')[p-1].classList.add('act');
+  document.getElementById('sb-pf').style.display=(p===3)?'none':'flex';
+  document.getElementById('sb-wh').style.display=(p===3)?'flex':'none';
+  if(p===1)rPf();if(p===2)rZl();if(p===3)rWh();
+}
+
+// ========== 排房 ==========
+function iPf(){ftT(parseInt(document.getElementById('bld').value));var n=new Date();document.getElementById('df').value=n.toISOString().slice(0,10);var m=new Date(n);m.setDate(m.getDate()+1);document.getElementById('dt').value=m.toISOString().slice(0,10);rPf();}
+function ftT(b){var c=document.getElementById('ft'),f=b===11?5:6,h='<button class="floor-tab act" data-f="a">全部</button>';for(var i=1;i<=f;i++)h+='<button class="floor-tab" data-f="'+i+'">'+i+'F</button>';c.innerHTML=h;Array.from(c.children).forEach(function(t){t.onclick=function(){c.querySelectorAll('.floor-tab').forEach(function(x){x.classList.remove('act');});this.classList.add('act');rPf();};});}
+function gF(){var a=document.querySelector('#ft .floor-tab.act');return a?a.getAttribute('data-f'):'a';}
+function gS(){var tbody=document.querySelector('#selR tbody');if(!tbody)return[];var r=[];Array.from(tbody.querySelectorAll('tr')).forEach(function(tr){var v=parseInt(tr.getAttribute('d-n')),bl=parseInt(tr.getAttribute('d-b')),inp=tr.querySelector('.ni2'),nm=inp?inp.value.trim():'';if(v&&bl)r.push({n:v,b:bl,nm:nm});});return r;}
+function rPf(){
+  var b=parseInt(document.getElementById('bld').value),fl=gF(),fd=document.getElementById('df').value,td=document.getElementById('dt').value;
+  var c=document.getElementById('rc'),sel=gS(),rooms=rb(b,fl),nm=b===11?'11号楼':'12号楼';
+  var fm={};for(var i=0;i<rooms.length;i++){var rm=rooms[i];if(!fm[rm.flr])fm[rm.flr]=[];fm[rm.flr].push(rm);}
+  var fk=Object.keys(fm).sort(function(a,b){return parseInt(a)-parseInt(b);});
+  if(fk.length===0){c.innerHTML='<div class="emp"><i data-lucide="search-x"></i><p>没有找到房间</p></div>';return;}
+  var h='';
+  for(var fi=0;fi<fk.length;fi++){var flr=fk[fi],rms=fm[flr],total=rms.length,bkd=rms.filter(function(r){return fd&&td&&isBkd(r.num,fd,td);}).length;
+    h+='<div class="floor-section"><div class="floor-header"><h3>'+nm+' '+flr+'F</h3><span class="fb">共 '+total+' 间</span><span class="fc">空闲 <span>'+(total-bkd)+'</span> / 已排 <span>'+bkd+'</span> / 共 <span>'+total+'</span> 间</span></div><div class="room-grid">';
+    for(var ri=0;ri<rms.length;ri++){var rm=rms[ri],isS=false;for(var si=0;si<sel.length;si++){if(sel[si].n===rm.num&&sel[si].b===rm.bld){isS=true;break;}}
+      var isB=fd&&td&&isBkd(rm.num,fd,td),bi=isB?getBk(rm.num,fd):null,names=isB?getBkNames(rm.num,fd,td):[];
+      var cls='room-card avl';if(isS)cls='room-card sel';else if(isB)cls='room-card bkd';
+      var nhtml='';if(isS)nhtml='<div class="rnm" style="color:var(--blue);font-weight:500;">已选</div><div class="rnm"><input class="ni" placeholder="姓名" maxlength="8"></div>';
+      else if(isB)nhtml='<div class="rnm" style="color:var(--red);font-weight:500;">占用</div>'+(names.length>0?'<div class="rnm">'+names.slice(0,2).join(',')+'</div>':'');
+      else nhtml='<div class="rnm" style="color:var(--green-dark);">空闲</div>';
+      h+='<div class="'+cls+'" onclick="cr('+rm.num+')"><div class="rn">'+rm.num+'</div><div class="rt">客房 '+flr+'F</div><div class="rd"></div>'+nhtml+(isB&&bi?'<div class="rbb">'+bi.dep+'</div>':'')+'</div>';}
+    h+='</div></div>';}
+  c.innerHTML=h;updS();
+}
+function cr(num){var fd=document.getElementById('df').value,td=document.getElementById('dt').value,b=parseInt(document.getElementById('bld').value);if(!fd||!td){t('请先选择入住和退房日期','e');return;}if(isBkd(num,fd,td)){t('该房间在选定时间范围内已被预约','e');return;}var el=document.getElementById('selR'),tbody=el.querySelector('tbody');if(!tbody){el.innerHTML='';el.style.padding='0';tbody=document.createElement('tbody');var tbl=document.createElement('table');tbl.className='bill-table';tbl.innerHTML='<thead><tr><th style="width:60px">房号</th><th style="width:50px">楼栋</th><th>入住人</th><th style="width:40px"></th></tr></thead>';tbl.appendChild(tbody);el.appendChild(tbl);}var existing=null;Array.from(tbody.querySelectorAll('tr')).forEach(function(r){if(parseInt(r.getAttribute('d-n'))===num&&parseInt(r.getAttribute('d-b'))===b)existing=r;});if(existing){existing.remove();}else{var tr=document.createElement('tr');tr.setAttribute('d-n',num);tr.setAttribute('d-b',b);tr.innerHTML='<td class="room-num">'+num+'</td><td>'+(b===11?'11号楼':'12号楼')+'</td><td><input class="ni2" placeholder="姓名" maxlength="8"></td><td><span class="rdel2" onclick="rRm(this)">&times;</span></td>';tbody.appendChild(tr);}rPf();updatePP();}
+function rRm(el){el.closest('tr').remove();var tbody=document.querySelector('#selR tbody');if(!tbody||tbody.children.length===0){document.getElementById('selR').innerHTML='<div class="sel-hint">请点击下方房间卡片选择</div>';document.getElementById('selR').style.padding='';}rPf();updatePP();}
+function updatePP(){var cnt=0,tbody=document.querySelector('#selR tbody');if(tbody)cnt=tbody.querySelectorAll('tr').length;var el=document.getElementById('pp');if(el)el.value=cnt||'';}
+function updS(){var fd=document.getElementById('df').value,td=document.getElementById('dt').value;if(!fd||!td){document.getElementById('sAvl').textContent='-';document.getElementById('sBkd').textContent='-';return;}var cnt=0,d=new Date(fd),end=new Date(td);while(d<=end){var ds=d.toISOString().slice(0,10);for(var i=0;i<BK.length;i++){var b=BK[i];if(b.st!=='c'&&ds>=b.df&&ds<=b.dt)cnt+=b.rs.length;}d.setDate(d.getDate()+1);}var days=Math.max(1,Math.round((end-new Date(fd))/86400000)+1);document.getElementById('sAvl').textContent=ALL.length-Math.round(cnt/days);document.getElementById('sBkd').textContent=Math.round(cnt/days);}
+function sub(){var dep=document.getElementById('dep').value.trim(),co=document.getElementById('con').value.trim(),ph=document.getElementById('ph').value.trim(),pu=document.getElementById('pur').value.trim(),fd=document.getElementById('df').value,td=document.getElementById('dt').value,sel=gS();if(!dep){t('请填写部门','e');return;}if(!co){t('请填写联系人','e');return;}if(!fd||!td){t('请选择入住和退房日期','e');return;}if(sel.length===0){t('请至少选择一个房间','e');return;}for(var i=0;i<sel.length;i++){if(isBkd(sel[i].n,fd,td)){t('房间 '+sel[i].n+' 在选定时间范围内已被预约','e');return;}}var rs=[];for(var i=0;i<sel.length;i++)rs.push({u:sel[i].b*10000+sel[i].n,na:sel[i].nm||''});var pa=parseFloat(document.getElementById('pa').value)||0,pm=parseFloat(document.getElementById('pm').value)||0,po=parseFloat(document.getElementById('po').value)||0,pp=document.querySelectorAll('#selR tbody tr').length||0;BK.push({id:'b'+Date.now()+Math.random().toString(36).slice(2,6),dep:dep,co:co,ph:ph,pu:pu||'培训',pp:pp,pa:pa,pm:pm,po:po,df:fd,dt:td,rs:rs,st:'y',at:new Date().toISOString().slice(0,10)});sv();document.getElementById('dep').value='';document.getElementById('con').value='';document.getElementById('ph').value='';document.getElementById('pur').value='';document.getElementById('pp').value='';document.getElementById('pa').value='';document.getElementById('pm').value='';document.getElementById('po').value='';document.getElementById('selR').innerHTML='<div class="sel-hint">请点击下方房间卡片选择</div>';rPf();t(dep+' 于 '+fd+'~'+td+' 使用 '+sel.length+' 间房 申请已提交','s');}
+
+// ========== 总览 ==========
+function iZl(){var t=new Date(),w=new Date(t);w.setDate(w.getDate()+7);document.getElementById('zdf').value=t.toISOString().slice(0,10);document.getElementById('zdt').value=w.toISOString().slice(0,10);rZl();}
+function sr(r){var t=new Date();if(r==='w'){var e=new Date(t);e.setDate(e.getDate()+7);document.getElementById('zdf').value=t.toISOString().slice(0,10);document.getElementById('zdt').value=e.toISOString().slice(0,10);}else if(r==='m'){var e=new Date(t);e.setMonth(e.getMonth()+1);document.getElementById('zdf').value=t.toISOString().slice(0,10);document.getElementById('zdt').value=e.toISOString().slice(0,10);}else if(r==='a'){document.getElementById('zdf').value='2020-01-01';var f=new Date();f.setFullYear(f.getFullYear()+2);document.getElementById('zdt').value=f.toISOString().slice(0,10);}rZl();}
+function rZl(){
+  var df=document.getElementById('zdf').value,dt=document.getElementById('zdt').value,bld=document.getElementById('zb').value,c=document.getElementById('zc'),bks=[];
+  for(var i=0;i<BK.length;i++)if(BK[i].st!=='c')bks.push(BK[i]);
+  if(df)bks=bks.filter(function(b){return b.df>=df||b.dt>=df;});if(dt)bks=bks.filter(function(b){return b.df<=dt||b.dt<=dt;});
+  if(bld!=='all')bks=bks.filter(function(b){for(var j=0;j<b.rs.length;j++){var g=gn(uVal(b.rs[j])%10000);if(g&&g.bld===parseInt(bld))return true;}return false;});
+  bks.sort(function(a,b){return a.df.localeCompare(b.df);});
+  if(bks.length===0){c.innerHTML='<div class="emp"><i data-lucide="calendar"></i><p>暂无排房记录</p></div>';return;}
+  var h='<div class="scard"><h3><i data-lucide="bar-chart-3" style="width:16px;height:16px;vertical-align:middle;"></i> 排房统计</h3><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;">';
+  var tc=bks.length,tr=0,tp=0,ur={},dd={},b11=0,b12=0;
+  for(var i=0;i<bks.length;i++){var b=bks[i];tr+=b.rs.length;tp+=b.pp||0;dd[b.dep]=1;for(var j=0;j<b.rs.length;j++){var uid=uVal(b.rs[j]);ur[uid]=1;var g=gu(uid);if(g){if(g.bld===11)b11++;else b12++;}}}
+  var ar=tc>0?(tr/tc).toFixed(1):0,uc=0;for(var k in ur)uc++;var dc=0;for(var k in dd)dc++;
+  h+=_st('总班数',tc)+_st('占用房间',tr)+_st('不同房间',uc)+_st('总人次',tp)+_st('涉及部门',dc)+_st('平均间数',ar);
+  h+='</div><div style="margin-top:6px;font-size:12px;color:var(--slate-500);">11号楼 '+b11+' 间 &middot; 12号楼 '+b12+' 间 &middot; 平均 '+ar+' 间/班</div></div>';
+  h+='<div class="scard"><h3><i data-lucide="clipboard-list" style="width:16px;height:16px;vertical-align:middle;"></i> 排房明细</h3><table class="st"><tr><th>入住~退房</th><th>部门</th><th>联系人</th><th>内容</th><th>人数</th><th>房间数</th><th>房间（入住人）</th><th>住宿标准</th><th>餐费标准</th><th>其他费用</th><th>费用</th><th>操作</th></tr>';
+  for(var i=0;i<bks.length;i++){var b=bks[i],rns=rnListWithName(b.rs),rnStr=rns.join('、');
+    h+='<tr><td>'+b.df+'~'+b.dt+'</td><td><strong>'+b.dep+'</strong></td><td>'+b.co+'</td><td>'+(b.pu||'-')+'</td><td>'+(b.pp||'-')+'</td><td style="text-align:center;font-weight:600;">'+b.rs.length+'</td><td><span class="rl">'+rnStr+'</span></td><td style="text-align:center;">'+(b.pa?b.pa:'-')+'</td><td style="text-align:center;">'+(b.pm?b.pm:'-')+'</td><td style="text-align:center;">'+(b.po?b.po:'-')+'</td><td style="text-align:center;font-weight:600;color:var(--red);">'+((b.pa||0)+(b.pm||0)+(b.po||0)&&b.pp?((b.pa||0)+(b.pm||0)+(b.po||0))*b.pp:'-')+'</td><td><button class="btn btn-sm btn-primary" onclick="printBk(\''+b.id+'\')" style="margin-right:4px;">签到表</button><button class="btn btn-sm btn-primary" onclick="printBill(\''+b.id+'\')" style="margin-right:4px;">水单</button><button class="btn btn-sm btn-danger" onclick="db(\''+b.id+'\')">取消</button></td></tr>';}
+  h+='</table></div>';
+  var dm={};for(var i=0;i<bks.length;i++){var d=bks[i].df;if(!dm[d])dm[d]=[];dm[d].push(bks[i]);}
+  var ds=Object.keys(dm).sort();h+='<div class="sc-list">';
+  for(var di=0;di<ds.length;di++){var d=ds[di],items=dm[d],ar=[];for(var i=0;i<items.length;i++)for(var j=0;j<items[i].rs.length;j++)ar.push(uVal(items[i].rs[j]));
+    var dbb={11:0,12:0};for(var i=0;i<ar.length;i++){var g=gu(ar[i]);if(g)dbb[g.bld]++;}
+    h+='<div class="sc-card"><div class="sch"><span class="scd"><i data-lucide="calendar" style="width:14px;height:14px;"></i> '+d+' &nbsp;'+items.length+'个班 &nbsp;共 '+ar.length+' 间 (11号'+dbb[11]+'/12号'+dbb[12]+')</span></div>';
+    for(var i=0;i<items.length;i++){var b=items[i],br={11:[],12:[]};for(var j=0;j<b.rs.length;j++){var uid=uVal(b.rs[j]),g=gu(uid);if(g)br[g.bld].push({num:g.num,na:uNa(b.rs[j])});}
+      h+='<div style="margin-top:8px;padding:8px 0;border-top:1px solid var(--slate-100);"><div class="sdd"><strong>'+b.dep+'</strong> &middot; '+b.co+(b.ph?' &middot; '+b.ph:'')+'</div>';
+      if(b.pu||b.pp)h+='<div class="sci">'+(b.pu?'<span>'+b.pu+'</span>':'')+(b.pp?'<span>'+b.pp+'人</span>':'')+(b.pa?'<span>住宿'+b.pa+'元</span>':'')+(b.pm?'<span>餐费'+b.pm+'元</span>':'')+(b.po?'<span>其他'+b.po+'元</span>':'')+((b.pa||0)+(b.pm||0)+(b.po||0)&&b.pp?'<span style="color:var(--red);font-weight:600;">合计'+((b.pa||0)+(b.pm||0)+(b.po||0))*b.pp+'元</span>':'')+'</div>';
+      h+='<div class="scr">';
+      if(br[11].length>0){h+='<span style="font-size:11px;color:var(--slate-400);">11号楼:</span>';br[11].sort(function(a,b){return a.num-b.num;}).forEach(function(r){h+='<span class="srt2" style="background:var(--blue-light);color:var(--blue);">'+r.num+(r.na?'('+r.na+')':'')+'</span>';});}
+      if(br[12].length>0){h+='<span style="font-size:11px;color:var(--slate-400);margin-left:4px;">12号楼:</span>';br[12].sort(function(a,b){return a.num-b.num;}).forEach(function(r){h+='<span class="srt2" style="background:var(--indigo-light);color:var(--indigo);">'+r.num+(r.na?'('+r.na+')':'')+'</span>';});}
+      h+='</div><div class="sca"><button class="btn btn-sm btn-primary" onclick="printBk(\''+b.id+'\')" style="margin-right:4px;">签到表</button><button class="btn btn-sm btn-primary" onclick="printBill(\''+b.id+'\')" style="margin-right:4px;">水单</button><button class="btn btn-sm btn-danger" onclick="db(\''+b.id+'\')">取消</button></div></div>';}
+    h+='</div>';}
+  h+='</div>';c.innerHTML=h;
+}
+function _st(l,v){return '<div style="display:flex;align-items:center;gap:6px;padding:8px;background:var(--slate-50);border-radius:6px;"><div style="font-size:16px;font-weight:700;color:var(--slate-800);">'+v+'</div><div style="font-size:11px;color:var(--slate-500);">'+l+'</div></div>';}
+function db(id){var b=null;for(var i=0;i<BK.length;i++){if(BK[i].id===id){b=BK[i];break;}}if(!b)return;document.getElementById('mt').innerHTML='确认取消';var rns=rnListWithName(b.rs);document.getElementById('mb').innerHTML='<p style="font-size:14px;color:var(--slate-700);">确定取消 <strong>'+b.dep+'</strong> 于 '+b.df+'~'+b.dt+' 的排房？</p><p style="font-size:13px;color:var(--slate-400);margin-top:8px;">房间：'+rns.join('、')+'</p>';document.getElementById('mf').innerHTML='<button class="btn btn-secondary" onclick="cm()">返回</button><button class="btn btn-danger" onclick="cf(\''+id+'\')">确认取消</button>';document.getElementById('mo').classList.add('open');}
+function cf(id){for(var i=0;i<BK.length;i++)if(BK[i].id===id){BK[i].st='c';sv();break;}cm();rZl();t('已取消','i');}
+function cm(){document.getElementById('mo').classList.remove('open');}
+function printBk(id){var b=null;for(var i=0;i<BK.length;i++)if(BK[i].id===id){b=BK[i];break;}if(!b)return;var w=window.open('','_blank','width=900,height=700'),h='<html><head><meta charset="utf-8"><title>培训签到表</title><style>body{font-family:"SimSun","宋体",serif;padding:30px;color:#333}h1{text-align:center;font-size:22px;margin-bottom:5px}.sub{text-align:center;color:#666;font-size:14px;margin-bottom:25px}.info{font-size:14px;margin-bottom:20px}.info td{padding:3px 10px}table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid #333;padding:8px 10px;text-align:center}th{background:#f0f0f0;font-weight:600}@media print{body{padding:20px}button{display:none}}</style></head><body><h1>培 训 签 到 表</h1><div class="sub">'+b.df+' ~ '+b.dt+'</div><table class="info"><tr><td><strong>培训部门：</strong>'+b.dep+'</td><td><strong>培训内容：</strong>'+(b.pu||'')+'</td></tr><tr><td><strong>联系人：</strong>'+b.co+(b.ph?' ('+b.ph+')':'')+'</td><td><strong>预计人数：</strong>'+(b.pp||'')+'人</td></tr></table><table><tr><th style="width:50px">序号</th><th style="width:100px">房间号</th><th style="width:120px">楼栋</th><th style="width:120px">入住人</th><th style="width:120px">签到</th><th style="width:120px">备注</th></tr>';for(var j=0;j<b.rs.length;j++){var uid=uVal(b.rs[j]),g=gu(uid),na=uNa(b.rs[j]);h+='<tr><td>'+(j+1)+'</td><td>'+(g?g.num:'')+'</td><td>'+(g&&g.bld===11?'11号楼':'12号楼')+'</td><td>'+(na||'')+'</td><td></td><td></td></tr>';}h+='</table><div class="footer" style="text-align:center;margin-top:30px;font-size:12px;color:#999">打印时间：'+new Date().toISOString().slice(0,10)+'</div><div style="text-align:center;margin-top:20px"><button onclick="window.print()" style="padding:8px 24px;font-size:14px;cursor:pointer">打 印</button> <button onclick="window.close()" style="padding:8px 24px;font-size:14px;cursor:pointer">关 闭</button></div></body></html>';w.document.write(h);w.document.close();}
+function printBill(id){var b=null;for(var i=0;i<BK.length;i++)if(BK[i].id===id){b=BK[i];break;}if(!b)return;var w=window.open('','_blank','width=800,height=650'),days=Math.max(1,Math.round((new Date(b.dt)-new Date(b.df))/86400000)+1),billNo=b.id.slice(0,12),h='<html><head><meta charset="utf-8"><title>前台结账单</title><style>body{font-family:"SimSun","宋体",serif;padding:20px 30px;color:#333}h1{text-align:center;font-size:22px;margin:10px 0 20px;letter-spacing:10px}.it{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:15px}.it td{padding:3px 6px}.it .lb{font-weight:600;width:70px}.it .rb{text-align:right;font-weight:600;width:80px}.dt{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:15px}.dt th{border:1px solid #333;padding:5px 4px;background:#eee;font-weight:600;text-align:center;font-size:12px}.dt td{border:1px solid #333;padding:4px;text-align:center;font-size:12px}.dt .a{text-align:right;padding-right:10px}.dt .s{text-align:right;padding-right:10px;font-weight:700;font-size:13px}.tr td{font-weight:700;font-size:13px}@media print{body{padding:15px}.bb{display:none}}</style></head><body><h1>前台结账单</h1><table class="it"><tr><td class="lb">姓名</td><td>'+b.co+'</td><td class="rb">NO</td><td>'+billNo+'</td></tr><tr><td class="lb">房号</td><td>'+(b.rs.length?'共 '+b.rs.length+'间':'')+'</td><td class="rb">到达日期</td><td>'+b.df+'</td></tr><tr><td class="lb">公司</td><td>'+b.dep+'</td><td class="rb">离开日期</td><td>'+b.dt+'</td></tr></table><div style="font-size:12px;margin-bottom:10px;color:#555">培训内容：'+(b.pu||'-')+'</div><table class="dt"><tr><th style="width:80px">日期</th><th>摘要</th><th>账单号</th><th>时间</th><th>消费</th><th>付款</th></tr>';var todayStr=new Date().toISOString().slice(0,10).replace(/-/g,'.'),pa=b.pa||0,pm=b.pm||0,po=b.po||0,pc=b.pp||0,at2=pa*pc*days,mt2=pm*pc*days,ot2=po*pc*days,gt=at2+mt2+ot2;h+='<tr><td>'+todayStr+'</td><td>住宿费 '+pa+'元/人/天 '+pc+'人*'+days+'天</td><td>'+billNo+'</td><td>'+days+'天</td><td class="a">'+at2.toFixed(2)+'</td><td></td></tr><tr><td>'+todayStr+'</td><td>餐费 '+pm+'元/人/天 '+pc+'人*'+days+'天</td><td>'+billNo+'</td><td>'+days+'天</td><td class="a">'+mt2.toFixed(2)+'</td><td></td></tr><tr><td>'+todayStr+'</td><td>其他费用 '+po+'元/人</td><td>'+billNo+'</td><td>'+days+'天</td><td class="a">'+ot2.toFixed(2)+'</td><td></td></tr><tr class="tr"><td colspan="4" style="text-align:right;padding-right:15px;">总额</td><td class="s">'+gt.toFixed(2)+'</td><td></td></tr><tr class="tr"><td colspan="4" style="text-align:right;padding-right:15px;">余额</td><td class="s">'+gt.toFixed(2)+'</td><td></td></tr></table><div style="font-size:11px;color:#555;margin-top:10px;"><strong>房间分配：</strong> ';for(var j=0;j<b.rs.length;j++){var uid=uVal(b.rs[j]),g=gu(uid),na=uNa(b.rs[j]);if(j>0)h+='、';h+=(g?g.num:'')+'('+(na||'')+')';}h+='</div><div style="font-size:11px;color:#666;margin-top:20px;line-height:1.8">收款员：001 &nbsp; TIME: '+new Date().toLocaleTimeString()+'<br>注：需补开发票者，请持原始账单一个月内办理，逾期不受理。<br>转账索引如转账无效，本人愿意承担账单最后所列尚未结清之欠款。</div><div style="font-size:12px;color:#999;margin-top:30px;text-align:right">签字：_________________</div><div class="bb" style="text-align:center;margin-top:20px"><button onclick="window.print()" style="padding:8px 28px;font-size:14px;cursor:pointer;margin:0 5px">打 印</button> <button onclick="window.close()" style="padding:8px 28px;font-size:14px;cursor:pointer;margin:0 5px">关 闭</button></div></body></html>';w.document.write(h);w.document.close();}
+
+// ==================== 库房管理系统 ====================
+function whTab(t){whTabSt=t;document.querySelectorAll('.wh-tab').forEach(function(x){x.classList.remove('act');});var ts=document.querySelectorAll('.wh-tab'),idx=t==='dash'?0:t==='list'?1:t==='log'?2:3;ts[idx].classList.add('act');rWh();}
+
+function rWh(){
+  updateWhStats();
+  var c=document.getElementById('whc');
+  if(whTabSt==='log'){renderLog(c);return;}
+  if(whTabSt==='check'){renderCheck(c);return;}
+  if(whTabSt==='dash'){renderDash(c);return;}
+
+  // === 库存管理 ===
+  var cat1=(document.getElementById('whCat1')?document.getElementById('whCat1').value:'all');
+  var cat2=(document.getElementById('whCat2')?document.getElementById('whCat2').value:'all');
+  var loc=(document.getElementById('whLoc')?document.getElementById('whLoc').value:'all');
+  var kw=(document.getElementById('whSearch')?(document.getElementById('whSearch').value||'').trim().toLowerCase():'');
+  var items=WH;
+  if(cat1!=='all')items=items.filter(function(w){return w.cat1===cat1;});
+  if(cat2!=='all')items=items.filter(function(w){return w.cat2===cat2;});
+  if(loc!=='all')items=items.filter(function(w){return w.loc===loc;});
+  if(kw)items=items.filter(function(w){return (w.code||'').toLowerCase().indexOf(kw)!==-1||w.name.toLowerCase().indexOf(kw)!==-1;});
+  if(items.length===0){c.innerHTML='<div class="emp"><i data-lucide="package"></i><p>暂无匹配库存</p></div>';return;}
+  var grp={};for(var i=0;i<items.length;i++){var w=items[i];if(!grp[w.cat1])grp[w.cat1]=[];grp[w.cat1].push(w);}
+  var catOrder=Object.keys(WH_CATS),h='';
+  for(var ci=0;ci<catOrder.length;ci++){var cn=catOrder[ci];if(!grp[cn])continue;var ws=grp[cn],tq=0,lw=0;
+    for(var wi=0;wi<ws.length;wi++){tq+=ws[wi].qty;if((ws[wi].minStock||0)>0&&ws[wi].qty<=ws[wi].minStock)lw++;}
+    h+='<div class="scard"><h3><i data-lucide="package" style="width:16px;height:16px;vertical-align:middle;"></i> '+cn+' <span style="font-weight:400;color:var(--slate-400);font-size:12px;">'+ws.length+'种 &middot; '+tq+(ws[0].unit||'件')+(lw>0?' &middot; <span style="color:var(--red)">'+lw+'预警</span>':'')+'</span></h3><div class="wh-grid">';
+    for(var wi=0;wi<ws.length;wi++){var w=ws[wi],ms=w.minStock||5,mx=w.maxStock||Math.max(w.qty*2,20),ratio=Math.min(100,Math.round(w.qty/mx*100)),barCls='',lvlCls='ok',lvlTxt='正常';
+      if(w.qty<=ms){barCls=' low';lvlCls='low';lvlTxt='缺货';}else if(w.qty<=ms*2){barCls=' warn';lvlCls='warn';lvlTxt='偏低';}
+      h+='<div class="wh-card"><div class="wc-top"><span class="wc-code">'+(w.code||'')+'</span><span class="wc-cat '+(WH_CATS[w.cat1]?WH_CATS[w.cat1].color:'qt')+'">'+w.cat1+'/'+w.cat2+'</span></div>';
+      h+='<div class="wc-name">'+w.name+'</div><div class="wc-main"><span class="wc-qty" style="'+(w.qty<=ms?'color:var(--red)':'')+'">'+w.qty+'</span><span class="wc-unit">'+w.unit+'</span><div class="wc-bar-wrap"><div class="wc-bar"><div class="wc-bar-fill'+barCls+'" style="width:'+ratio+'%"></div></div><span class="wc-lvl '+lvlCls+'">'+lvlTxt+'</span></div></div>';
+      h+='<div class="wc-info"><span><i data-lucide="map-pin" style="width:10px;height:10px;"></i> '+(WH_LOCS[w.loc]||w.loc)+'</span>'+(w.shelf?'<span>货架 '+w.shelf+'</span>':'')+'<span>安全库存 '+ms+'</span></div>';
+      h+='<div class="wc-acts"><button class="wc-btn" onclick="whAct(\'in\',\''+w.id+'\')">入库</button><button class="wc-btn" onclick="whAct(\'out\',\''+w.id+'\')">出库</button><button class="wc-btn" onclick="whEdit(\''+w.id+'\')">编辑</button><button class="wc-btn" style="margin-left:auto" onclick="whChk(\''+w.id+'\')">盘点</button></div></div>';}
+    h+='</div></div>';}
+  c.innerHTML=h;lucide.createIcons();
+}
+
+// === 总控看板 ===
+function renderDash(c){
+  var totalQty=0,lowCnt=0;for(var i=0;i<WH.length;i++){totalQty+=WH[i].qty;if((WH[i].minStock||0)>0&&WH[i].qty<=WH[i].minStock)lowCnt++;}
+  var sku=WH.length,locSet={};for(var i=0;i<WH.length;i++)locSet[WH[i].loc]=1;var locCnt=0;for(var k in locSet)locCnt++;
+  // 月周转率
+  var monthAgo=new Date();monthAgo.setMonth(monthAgo.getMonth()-1);var monthOps=0;
+  for(var i=0;i<WHL.length;i++){if(WHL[i].dt>=monthAgo.toISOString().slice(0,10))monthOps++;}
+  var turnover=sku>0?(monthOps/sku).toFixed(1):'0.0';
+
+  // 部门消耗（最近30天）
+  var deptUse={};
+  for(var i=0;i<WHL.length;i++){var l=WHL[i];if(l.dt>=monthAgo.toISOString().slice(0,10)&&(l.type==='out'||l.type==='loss')){var d=l.op.split('-')[0]||'未指定';deptUse[d]=(deptUse[d]||0)+l.qty;}}
+
+  var h='';
+  // 预警列表
+  var alerts=WH.filter(function(w){return (w.minStock||0)>0&&w.qty<=w.minStock;}).sort(function(a,b){return a.qty-a.minStock-(b.qty-b.minStock);});
+  h+='<div class="row2"><div class="scard"><h3><i data-lucide="alert-triangle" style="width:16px;height:16px;vertical-align:middle;"></i> 低库存预警</h3>';
+  if(alerts.length===0)h+='<div style="font-size:13px;color:var(--slate-400);padding:10px">所有物品库存正常</div>';
+  else for(var i=0;i<Math.min(alerts.length,8);i++){var a=alerts[i];
+    h+='<div class="alert-item"><span class="al-name">'+a.name+'</span><span class="al-qty">库存 '+a.qty+a.unit+' / 安全库存 '+(a.minStock||5)+a.unit+'</span><button class="btn btn-sm btn-primary al-act" onclick="whAct(\'in\',\''+a.id+'\')">补货</button></div>';}
+  h+='</div>';
+  // 部门消耗
+  h+='<div class="scard"><h3><i data-lucide="users" style="width:16px;height:16px;vertical-align:middle;"></i> 部门消耗（30天）</h3>';
+  var dk=Object.keys(deptUse).sort(function(a,b){return deptUse[b]-deptUse[a];});
+  if(dk.length===0)h+='<div style="font-size:13px;color:var(--slate-400);padding:10px">暂无消耗数据</div>';
+  else{h+='<table class="st"><tr><th>部门</th><th style="text-align:right;">消耗量</th></tr>';
+  for(var i=0;i<Math.min(dk.length,6);i++){h+='<tr><td>'+dk[i]+'</td><td style="text-align:right;font-weight:600;">'+deptUse[dk[i]]+'</td></tr>';}}
+  h+='</table></div></div>';
+  c.innerHTML=h;lucide.createIcons();
+}
+
+// === 出入记录 ===
+function renderLog(c){
+  var logs=WHL.slice().reverse().slice(0,150);
+  if(logs.length===0){c.innerHTML='<div class="emp"><i data-lucide="file-text"></i><p>暂无出入记录</p></div>';return;}
+  var h='<div class="scard"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><h3 style="margin:0"><i data-lucide="clipboard-list" style="width:16px;height:16px;vertical-align:middle;"></i> 出入库记录</h3><div style="display:flex;gap:8px"><select class="toolbar-select" id="whLogType" onchange="rWh()"><option value="all">全部类型</option><option value="in">入库</option><option value="out">出库</option><option value="loss">报损</option><option value="check">盘点</option></select></div></div>';
+  var ft=document.getElementById('whLogType')?document.getElementById('whLogType').value:'all';
+  h+='<div class="log-scroll"><table class="st"><tr><th style="width:90px">时间</th><th>物品</th><th style="width:50px">类型</th><th style="width:55px">数量</th><th style="width:75px">库存变化</th><th style="width:80px">操作人</th><th>备注</th></tr>';
+  for(var i=0;i<logs.length;i++){var l=logs[i];if(ft!=='all'&&l.type!==ft)continue;var w=whFind(l.itemId);
+    var tt='';if(l.type==='in')tt='<span class="tag-in">入库</span>';else if(l.type==='out')tt='<span class="tag-out">出库</span>';else if(l.type==='loss')tt='<span class="tag-out">报损</span>';else tt='<span class="tag-check">盘点</span>';
+    var qs=l.type==='in'?'+'+l.qty:'-'+l.qty,sc=l.type==='in'?'color:var(--green-dark)':'color:var(--red)';
+    var chg=(typeof l.bf!=='undefined')?(l.bf+'→'+l.af):'';
+    h+='<tr><td>'+l.dt+'</td><td>'+(w?w.name:l.itemId)+'</td><td>'+tt+'</td><td style="text-align:center;font-weight:700;'+sc+'">'+qs+'</td><td style="text-align:center;font-size:11px;">'+chg+'</td><td>'+l.op+'</td><td style="font-size:11px;color:var(--slate-500)">'+(l.note||'')+'</td></tr>';}
+  h+='</table></div></div>';c.innerHTML=h;lucide.createIcons();
+}
+
+// === 盘点中心 ===
+function renderCheck(c){
+  // 最近盘点
+  var chkLogs=WHL.filter(function(l){return l.type==='check';}).slice(-15);
+  var h='<div class="row2"><div class="scard"><h3><i data-lucide="clipboard-check" style="width:16px;height:16px;vertical-align:middle;"></i> 盘点操作</h3>';
+  h+='<p style="font-size:13px;color:var(--slate-500);margin-bottom:12px;">选择盘点方式开始盘点，系统将对比账面与实际库存。</p>';
+  h+='<div style="display:flex;gap:8px;margin-bottom:16px"><button class="btn btn-primary" onclick="whFullChk()"><i data-lucide="list"></i> 全部盘点</button><button class="btn btn-secondary" onclick="whCycleChk()"><i data-lucide="refresh-cw"></i> 循环盘点（低库存项）</button></div>';
+
+  if(chkLogs.length>0){h+='<h4 style="font-size:13px;font-weight:600;color:var(--slate-600);margin:12px 0 8px;">最近盘点</h4><table class="st"><tr><th>时间</th><th>物品</th><th>账面</th><th>实盘</th><th>差异</th><th>操作人</th></tr>';
+    for(var i=chkLogs.length-1;i>=0;i--){var l=chkLogs[i],w=whFind(l.itemId),df=l.af-l.bf,dc=df===0?'color:var(--green)':df>0?'color:var(--green-dark)':'color:var(--red)';
+      h+='<tr><td>'+l.dt+'</td><td>'+(w?w.name:l.itemId)+'</td><td style="text-align:center">'+(l.bf||0)+'</td><td style="text-align:center;font-weight:600">'+(l.af||0)+'</td><td style="text-align:center;font-weight:700;'+dc+'">'+(df>0?'+'+df:df)+'</td><td>'+l.op+'</td></tr>';}
+    h+='</table>';}else{h+='<div class="emp" style="padding:20px"><i data-lucide="clipboard-check"></i><p>暂无盘点记录</p></div>';}
+  h+='</div><div class="scard"><h3><i data-lucide="bar-chart-3" style="width:16px;height:16px;vertical-align:middle;"></i> 库存健康度</h3>';
+  var ok=0,warn=0,low=0;for(var i=0;i<WH.length;i++){var w=WH[i],ms=w.minStock||0;if(ms===0)ok++;else if(w.qty<=ms)low++;else if(w.qty<=ms*2)warn++;else ok++;}
+  h+='<div style="display:flex;gap:12px;padding:12px 0"><div style="text-align:center;flex:1"><div style="font-size:28px;font-weight:700;color:var(--green)">'+ok+'</div><div style="font-size:11px;color:var(--slate-500)">正常</div></div><div style="text-align:center;flex:1"><div style="font-size:28px;font-weight:700;color:var(--amber)">'+warn+'</div><div style="font-size:11px;color:var(--slate-500)">偏低</div></div><div style="text-align:center;flex:1"><div style="font-size:28px;font-weight:700;color:var(--red)">'+low+'</div><div style="font-size:11px;color:var(--slate-500)">低库存</div></div></div>';
+  h+='</div></div>';c.innerHTML=h;lucide.createIcons();
+}
+
+function whFullChk(){var o=document.getElementById('mo');o.classList.add('open');document.getElementById('mt').innerHTML='<i data-lucide="clipboard-check" style="width:18px;height:18px;"></i> 全部盘点';var m=document.getElementById('mb');m.innerHTML='<p style="font-size:13px;color:var(--slate-600);margin-bottom:12px;">逐项确认 '+WH.length+' 种物品的实盘数量</p><div style="max-height:350px;overflow-y:auto;">';for(var i=0;i<WH.length;i++){var w=WH[i];m.innerHTML+='<div style="display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid var(--slate-100);"><span style="width:70px;font-size:11px;font-weight:500;">'+w.code+'</span><span style="width:80px;font-size:12px;">'+w.name+'</span><span style="font-size:11px;color:var(--slate-400)">账面:'+w.qty+'</span><input class="ni" id="whChk'+w.id+'" placeholder="实盘" style="width:55px;margin-left:auto" value="'+w.qty+'"></div>';}m.innerHTML+='</div><div class="fg" style="margin-top:12px"><label class="fl">盘点人</label><input class="fi" id="whChkOp" placeholder="姓名"></div>';document.getElementById('mf').innerHTML='<button class="btn btn-secondary" onclick="cm()">取消</button><button class="btn btn-primary" onclick="whFullChkDo()">确认盘点</button>';}
+function whFullChkDo(){var op=document.getElementById('whChkOp').value.trim()||'盘点员',today=new Date().toISOString().slice(0,10),diffCnt=0;for(var i=0;i<WH.length;i++){var w=WH[i],inp=document.getElementById('whChk'+w.id);if(!inp)continue;var actual=parseInt(inp.value);if(isNaN(actual))actual=w.qty;if(actual!==w.qty){WHL.push({id:'chk'+Date.now()+i,itemId:w.id,type:'check',qty:Math.abs(actual-w.qty),bf:w.qty,af:actual,op:op,dt:today,note:actual>w.qty?'盘盈':'盘亏'});w.qty=actual;diffCnt++;}}if(diffCnt===0)WHL.push({id:'chk'+Date.now(),itemId:'all',type:'check',qty:0,bf:0,af:0,op:op,dt:today,note:'全盘 - 账实相符'}) ;sv();cm();whTab('check');t('盘点完成: '+diffCnt+'项差异已调整','s');}
+function whCycleChk(){var lis=WH.filter(function(w){var ms=w.minStock||0;return ms>0&&w.qty<=ms;});if(lis.length===0){t('无低库存物品','i');return;}var o=document.getElementById('mo');o.classList.add('open');document.getElementById('mt').innerHTML='<i data-lucide="refresh-cw" style="width:18px;height:18px;"></i> 循环盘点 ('+lis.length+'项)';var m=document.getElementById('mb');m.innerHTML='<div style="max-height:350px;overflow-y:auto;">';for(var i=0;i<lis.length;i++){var w=lis[i];m.innerHTML+='<div style="display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid var(--slate-100);"><span style="width:70px;font-size:11px;font-weight:500;color:var(--red)">⚠ '+w.code+'</span><span style="width:80px;font-size:12px;">'+w.name+'</span><span style="font-size:11px;color:var(--slate-400)">账面:'+w.qty+'</span><input class="ni" id="whChk'+w.id+'" placeholder="实盘" style="width:55px;margin-left:auto" value="'+w.qty+'"></div>';}m.innerHTML+='</div><div class="fg" style="margin-top:12px"><label class="fl">盘点人</label><input class="fi" id="whChkOp" placeholder="姓名"></div>';document.getElementById('mf').innerHTML='<button class="btn btn-secondary" onclick="cm()">取消</button><button class="btn btn-primary" onclick="whFullChkDo()">确认盘点</button>';}
+function whChk(id){var w=whFind(id);if(!w)return;var o=document.getElementById('mo');o.classList.add('open');document.getElementById('mt').innerHTML='<i data-lucide="clipboard-check" style="width:18px;height:18px;"></i> 盘点 '+w.name;var m=document.getElementById('mb');m.innerHTML='<div class="fg" style="margin-bottom:10px"><label class="fl">'+w.code+'</label><input class="fi" value="'+w.name+'" readonly style="background:#f5f5f5;font-weight:600"></div><div class="fr"><div class="fg"><label class="fl">账面库存</label><input class="fi" value="'+w.qty+' '+w.unit+'" readonly style="background:#f5f5f5"></div><div class="fg"><label class="fl">实盘数量 <span class="rq">*</span></label><input class="fi" type="number" id="whChkQty" value="'+w.qty+'" min="0"></div></div><div class="fg" style="margin-top:10px"><label class="fl">盘点人</label><input class="fi" id="whChkOp" placeholder="姓名"></div><input type="hidden" id="whChkId" value="'+w.id+'">';document.getElementById('mf').innerHTML='<button class="btn btn-secondary" onclick="cm()">取消</button><button class="btn btn-primary" onclick="whChkDo()">确认盘点</button>';}
+function whChkDo(){var id=document.getElementById('whChkId').value,w=whFind(id);if(!w)return;var actual=parseInt(document.getElementById('whChkQty').value)||0,op=document.getElementById('whChkOp').value.trim()||'盘点员',today=new Date().toISOString().slice(0,10),diff=actual-w.qty;WHL.push({id:'chk'+Date.now(),itemId:id,type:'check',qty:Math.abs(diff),bf:w.qty,af:actual,op:op,dt:today,note:diff===0?'账实相符':(diff>0?'盘盈+'+diff:'盘亏-'+Math.abs(diff))});w.qty=actual;sv();cm();rWh();t(w.name+' 盘点完成'+(diff!==0?'，差异'+diff:'，账实相符'),diff===0?'s':'i');}
+
+// === 附件 + 新增/编辑 ===
+function whAddItem(){
+  var co='';var ks=Object.keys(WH_CATS);for(var i=0;i<ks.length;i++)co+='<option value="'+ks[i]+'">'+ks[i]+'</option>';
+  var o=document.getElementById('mo');o.classList.add('open');
+  document.getElementById('mt').innerHTML='<i data-lucide="plus" style="width:18px;height:18px;"></i> 新增物品';
+  var m=document.getElementById('mb');
+  m.innerHTML='<div class="fr"><div class="fg"><label class="fl">编码</label><input class="fi" id="wmC" placeholder="如:BC-2026-001"></div><div class="fg"><label class="fl">名称 <span class="rq">*</span></label><input class="fi" id="wmN" placeholder="如:床单"></div></div>';
+  m.innerHTML+='<div class="fr"><div class="fg"><label class="fl">一级分类</label><select class="fi" id="wmC1">'+co+'</select></div><div class="fg"><label class="fl">二级分类</label><input class="fi" id="wmC2"></div></div>';
+  m.innerHTML+='<div class="fr"><div class="fg"><label class="fl">单位</label><input class="fi" id="wmU" value="件"></div><div class="fg"><label class="fl">初始数量</label><input class="fi" type="number" id="wmQ" value="0" min="0"></div><div class="fg"><label class="fl">安全库存</label><input class="fi" type="number" id="wmM" value="5" min="1"></div></div>';
+  m.innerHTML+='<div class="fr"><div class="fg"><label class="fl">存放库房</label><select class="fi" id="wmL"><option value="112">112·12号1F</option><option value="512">512·12号5F</option><option value="515">515·12号5F</option></select></div><div class="fg"><label class="fl">货架</label><input class="fi" id="wmS"></div><div class="fg"><label class="fl">供应商</label><input class="fi" id="wmSup"></div></div>';
+  document.getElementById('mf').innerHTML='<button class="btn btn-secondary" onclick="cm()">取消</button><button class="btn btn-primary" onclick="whAddSave()">保存</button>';
+}
+function whAddSave(){
+  var n=document.getElementById('wmN').value.trim();if(!n){t('请填写名称','e');return;}
+  var c=document.getElementById('wmC').value.trim()||('WH-'+Date.now().toString(36).slice(-6).toUpperCase()),q=parseInt(document.getElementById('wmQ').value)||0;
+  var w={id:'w'+Date.now()+Math.random().toString(36).slice(2,4),code:c,name:n,cat1:document.getElementById('wmC1').value,cat2:document.getElementById('wmC2').value.trim(),unit:document.getElementById('wmU').value.trim()||'件',qty:q,minStock:parseInt(document.getElementById('wmM').value)||5,maxStock:Math.max(q*2,20),loc:document.getElementById('wmL').value,shelf:document.getElementById('wmS').value.trim(),supplier:document.getElementById('wmSup').value.trim()};
+  WH.push(w);if(q>0)WHL.push({id:'l'+Date.now(),itemId:w.id,type:'in',qty:q,bf:0,af:q,op:'新增',dt:new Date().toISOString().slice(0,10),note:'初始盘入'});sv();cm();rWh();t('已添加:'+n,'s');
+}
+function whEdit(id){
+  var w=whFind(id);if(!w)return;var co='',ks=Object.keys(WH_CATS);for(var i=0;i<ks.length;i++)co+='<option value="'+ks[i]+'"'+(ks[i]===w.cat1?' selected':'')+'>'+ks[i]+'</option>';
+  var o=document.getElementById('mo');o.classList.add('open');document.getElementById('mt').innerHTML='<i data-lucide="edit" style="width:18px;height:18px;"></i> 编辑 '+w.name;
+  var m=document.getElementById('mb');
+  m.innerHTML='<div class="fr"><div class="fg"><label class="fl">编码</label><input class="fi" id="wmC" value="'+(w.code||'')+'"></div><div class="fg"><label class="fl">名称</label><input class="fi" id="wmN" value="'+w.name+'"></div></div>';
+  m.innerHTML+='<div class="fr"><div class="fg"><label class="fl">一级分类</label><select class="fi" id="wmC1">'+co+'</select></div><div class="fg"><label class="fl">二级分类</label><input class="fi" id="wmC2" value="'+(w.cat2||'')+'"></div></div>';
+  m.innerHTML+='<div class="fr"><div class="fg"><label class="fl">单位</label><input class="fi" id="wmU" value="'+w.unit+'"></div><div class="fg"><label class="fl">安全库存</label><input class="fi" type="number" id="wmM" value="'+(w.minStock||5)+'"></div></div>';
+  m.innerHTML+='<div class="fr"><div class="fg"><label class="fl">库房</label><select class="fi" id="wmL">'+['112','512','515'].map(function(l){return '<option value="'+l+'"'+(l===w.loc?' selected':'')+'>'+l+' '+(WH_LOCS[l]||'')+'</option>';}).join('')+'</select></div><div class="fg"><label class="fl">货架</label><input class="fi" id="wmS" value="'+(w.shelf||'')+'"></div><div class="fg"><label class="fl">供应商</label><input class="fi" id="wmSup" value="'+(w.supplier||'')+'"></div></div>';
+  m.innerHTML+='<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--slate-200)"><button class="btn btn-sm btn-danger" onclick="whDel(\''+id+'\')">删除此物品</button></div>';
+  document.getElementById('mf').innerHTML='<button class="btn btn-secondary" onclick="cm()">取消</button><button class="btn btn-primary" onclick="whEditSave(\''+id+'\')">保存</button>';
+}
+function whEditSave(id){var w=whFind(id);if(!w)return;w.code=document.getElementById('wmC').value.trim()||w.code;w.name=document.getElementById('wmN').value.trim()||w.name;w.cat1=document.getElementById('wmC1').value;w.cat2=document.getElementById('wmC2').value.trim();w.unit=document.getElementById('wmU').value.trim()||w.unit;w.minStock=parseInt(document.getElementById('wmM').value)||5;w.loc=document.getElementById('wmL').value;w.shelf=document.getElementById('wmS').value.trim();w.supplier=document.getElementById('wmSup').value.trim();sv();cm();rWh();t('已更新:'+w.name,'s');}
+function whDel(id){var w=whFind(id);if(!w)return;for(var i=0;i<WH.length;i++)if(WH[i].id===id){WH.splice(i,1);break;}sv();cm();rWh();t('已删除:'+w.name,'i');}
+
+// === 入库/出库 ===
+function whAct(tp,id){
+  var w=id?whFind(id):null;
+  var items='';if(!id)for(var i=0;i<WH.length;i++){var ww=WH[i];items+='<option value="'+ww.id+'">'+(ww.code||'')+' '+ww.name+' 库存:'+ww.qty+'</option>';}
+  var o=document.getElementById('mo');o.classList.add('open');
+  var ti=tp==='in'?'采购入库':'领用出库',ic=tp==='in'?'arrow-down-circle':'arrow-up-circle',bc=tp==='in'?'btn-success':'btn-danger';
+  document.getElementById('mt').innerHTML='<i data-lucide="'+ic+'" style="width:18px;height:18px;"></i> '+ti;
+  var m=document.getElementById('mb');
+  if(w){m.innerHTML='<div class="fg" style="margin-bottom:8px"><label class="fl">'+w.code+'</label><input class="fi" value="'+w.name+' 库存:'+w.qty+' '+w.unit+'" readonly style="background:#f5f5f5;font-weight:600"></div>';m.innerHTML+='<input type="hidden" id="whmItem" value="'+id+'">';}
+  else m.innerHTML='<div class="fg" style="margin-bottom:10px"><label class="fl">物品 <span class="rq">*</span></label><select class="fi" id="whmItem">'+items+'</select></div>';
+  m.innerHTML+='<div class="fr"><div class="fg"><label class="fl">'+(tp==='in'?'入库':'出库')+'数量 <span class="rq">*</span></label><input class="fi" type="number" id="whmQty" value="1" min="1"'+(tp==='out'&&w?' max="'+w.qty+'"':'')+'></div><div class="fg"><label class="fl">'+(tp==='in'?'操作人':'领用人')+'</label><input class="fi" id="whmOp" placeholder="姓名"></div></div>';
+  if(tp==='out')m.innerHTML+='<div class="fr"><div class="fg"><label class="fl">类型</label><select class="fi" id="whmType"><option value="out">领用出库</option><option value="loss">报损</option></select></div><div class="fg"><label class="fl">部门</label><input class="fi" id="whmDept" placeholder="如:客房部"></div></div>';
+  m.innerHTML+='<div class="fg" style="margin-top:8px"><label class="fl">备注</label><input class="fi" id="whmNote" placeholder="'+(tp==='in'?'采购入库':'培训班领取')+'"></div><input type="hidden" id="whmTP" value="'+tp+'">';
+  document.getElementById('mf').innerHTML='<button class="btn btn-secondary" onclick="cm()">取消</button><button class="btn '+bc+'" onclick="whActSave()">确认'+(tp==='in'?'入库':'出库')+'</button>';
+}
+function whActSave(){
+  var tp=document.getElementById('whmTP').value,itemId=document.getElementById('whmItem').value,qty=parseInt(document.getElementById('whmQty').value)||0,op=document.getElementById('whmOp').value.trim()||'仓管员',note=document.getElementById('whmNote').value.trim();
+  if(qty<=0){t('请输入有效数量','e');return;}var w=whFind(itemId);if(!w)return;
+  if(tp==='out'){
+    if(w.qty<qty){t('库存不足！当前:'+w.qty,'e');return;}
+    var tpt=document.getElementById('whmType').value,dept=document.getElementById('whmDept').value.trim();if(dept)op=dept+'-'+op;
+  }
+  var bf=w.qty;if(tp==='in')w.qty+=qty;else w.qty-=qty;
+  WHL.push({id:'l'+Date.now(),itemId:itemId,type:tp==='in'?'in':(tpt||'out'),qty:qty,bf:bf,af:w.qty,op:op,dt:new Date().toISOString().slice(0,10),note:note});
+  sv();cm();rWh();t((tp==='in'?'入库 ':'出库 ')+w.name+' '+(tp==='in'?'+':'-')+qty+', 当前:'+w.qty,'s');
+}
+
+// === 更新统计 & KPI ===
+function updateWhStats(){
+  var totalQty=0,lowCnt=0,locSet={};
+  for(var i=0;i<WH.length;i++){totalQty+=WH[i].qty;locSet[WH[i].loc]=1;if((WH[i].minStock||0)>0&&WH[i].qty<=WH[i].minStock)lowCnt++;}
+  var locCnt=0;for(var k in locSet)locCnt++;
+  document.getElementById('sSKU').textContent=WH.length;
+  document.getElementById('sQty').textContent=totalQty;
+  document.getElementById('sLoc').textContent=locCnt;
+  document.getElementById('sLow').textContent=lowCnt;
+  // KPI
+  var dh=document.getElementById('whKpi');
+  var monthAgo=new Date();monthAgo.setMonth(monthAgo.getMonth()-1);var monthOps=0;for(var i=0;i<WHL.length;i++)if(WHL[i].dt>=monthAgo.toISOString().slice(0,10))monthOps++;
+  var turnover=WH.length>0?(monthOps/WH.length).toFixed(1):'0.0';
+  dh.innerHTML='<div class="kpi-card"><div class="kpi-icon ki-blue"><i data-lucide="package"></i></div><div><div class="kpi-val">'+WH.length+'</div><div class="kpi-label">SKU 总数</div><div class="kpi-sub">'+Object.keys(WH_CATS).length+'个分类</div></div></div>';
+  dh.innerHTML+='<div class="kpi-card"><div class="kpi-icon ki-green"><i data-lucide="layers"></i></div><div><div class="kpi-val">'+totalQty+'</div><div class="kpi-label">库存总量</div><div class="kpi-sub">'+locCnt+'个库房</div></div></div>';
+  dh.innerHTML+='<div class="kpi-card"><div class="kpi-icon ki-purple"><i data-lucide="rotate-cw"></i></div><div><div class="kpi-val">'+turnover+'</div><div class="kpi-label">月周转率</div><div class="kpi-sub">30天 '+monthOps+'次操作</div></div></div>';
+  dh.innerHTML+='<div class="kpi-card"><div class="kpi-icon '+(lowCnt>5?'ki-red':'ki-amber')+'"><i data-lucide="alert-triangle"></i></div><div><div class="kpi-val" style="'+(lowCnt>5?'color:var(--red)':'')+'">'+lowCnt+'</div><div class="kpi-label">低库存预警</div><div class="kpi-sub">低于安全库存</div></div></div>';
+  lucide.createIcons();
+}
+
+// === 打印 ===
+function whPrint(){
+  var w=window.open('','_blank','width=950,height=750'),today=new Date().toISOString().slice(0,10),totalQty=0,lowCnt=0;
+  for(var i=0;i<WH.length;i++){totalQty+=WH[i].qty;if((WH[i].minStock||0)>0&&WH[i].qty<=WH[i].minStock)lowCnt++;}
+  var h='<html><head><meta charset="utf-8"><title>库房盘点报表</title><style>body{font-family:"SimSun","宋体",serif;padding:20px 30px;color:#333;font-size:13px}h1{text-align:center;font-size:22px;margin:10px 0 5px;letter-spacing:5px}.sub{text-align:center;color:#666;font-size:12px;margin-bottom:16px}.sum{display:flex;gap:20px;margin-bottom:16px;font-size:12px;padding:10px;border:1px solid #ccc;background:#fafafa}table{border-collapse:collapse;width:100%;font-size:12px;margin-bottom:15px}th,td{border:1px solid #333;padding:5px 6px;text-align:center}th{background:#e8e8e8;font-weight:600;font-size:11px}.gth{background:#d5e0f0;font-weight:700;text-align:left;font-size:12px}.low{color:#c00;font-weight:700}@media print{body{padding:15px}button{display:none}}</style></head><body><h1>库房盘点报表</h1><div class="sub">报表日期:'+today+' | 中国消防救援学院服务保障中心</div><div class="sum"><span>SKU:<strong>'+WH.length+'</strong></span><span>库存总量:<strong>'+totalQty+'</strong></span><span>低库存预警:<strong>'+(lowCnt>0?'<span class="low">'+lowCnt+'项</span>':'无')+'</strong></span></div>';
+  var catOrder=Object.keys(WH_CATS),idx=0;
+  h+='<table><tr><th style="width:35px">#</th><th style="width:70px">编码</th><th>名称</th><th style="width:55px">分类</th><th style="width:35px">单位</th><th style="width:45px">数量</th><th style="width:45px">安全库存</th><th>存放位置</th><th>供应商</th></tr>';
+  for(var ci=0;ci<catOrder.length;ci++){var cn=catOrder[ci],ws=[];for(var i=0;i<WH.length;i++)if(WH[i].cat1===cn)ws.push(WH[i]);if(ws.length===0)continue;var cq=0;for(var i=0;i<ws.length;i++)cq+=ws[i].qty;h+='<tr><td class="gth" colspan="9">'+cn+'（'+ws.length+'种，合计 '+cq+'件）</td></tr>';for(var wi=0;wi<ws.length;wi++){var w2=ws[wi];idx++;h+='<tr><td>'+idx+'</td><td style="font-family:monospace;font-size:10px;">'+(w2.code||'')+'</td><td style="text-align:left;">'+w2.name+'</td><td>'+w2.cat2+'</td><td>'+w2.unit+'</td><td'+(w2.qty<=(w2.minStock||5)?' class="low"':'')+'>'+w2.qty+'</td><td>'+(w2.minStock||'-')+'</td><td>'+(WH_LOCS[w2.loc]||w2.loc)+(w2.shelf?' '+w2.shelf:'')+'</td><td>'+(w2.supplier||'')+'</td></tr>';}}
+  h+='</table><div style="margin-top:30px;font-size:12px;display:flex;justify-content:space-between"><span>盘点人:____________</span><span>复核人:____________</span><span>负责人:____________</span></div><div style="text-align:center;margin-top:15px"><button onclick="window.print()" style="padding:8px 24px;font-size:14px;cursor:pointer">打 印</button> <button onclick="window.close()" style="padding:8px 24px;font-size:14px;cursor:pointer">关 闭</button></div></body></html>';
+  w.document.write(h);w.document.close();
+}
+
+// ===== 导入验收单 =====
+var impData = null;
+
+function cmImp(){document.getElementById('mo_imp').classList.remove('open');}
+function whImport(){
+  var o=document.getElementById('mo_imp');
+  o.classList.add('open');
+  var m=document.getElementById('mb_imp');
+  m.innerHTML='<div class="imp-zone" id="impZone" onclick="document.getElementById(\'impFile\').click()"><i data-lucide="file-up" style="width:36px;height:36px;color:var(--slate-400);margin-bottom:8px;"></i><div class="iz-title">点击上传或拖拽 Word 验收单 (.docx)</div><div class="iz-sub">支持《货物采购验收表》格式，自动识别设备列表和合同信息</div></div><input type="file" id="impFile" accept=".docx" style="display:none"><div id="impResult"></div>';
+  document.getElementById('mf_imp').innerHTML='<button class="btn btn-secondary" onclick="cmImp()">关闭</button>';
+  lucide.createIcons();
+  setTimeout(function(){
+    var zone=document.getElementById('impZone');if(!zone)return;
+    zone.ondragover=function(e){e.preventDefault();e.stopPropagation();zone.classList.add('drag');};
+    zone.ondragleave=function(e){e.preventDefault();zone.classList.remove('drag');};
+    zone.ondrop=function(e){e.preventDefault();zone.classList.remove('drag');impHandle(e.dataTransfer.files[0]);};
+    document.getElementById('impFile').onchange=function(){impHandle(this.files[0]);};
+  },100);
+}
+
+function impHandle(file){
+  if(!file||!file.name.endsWith('.docx')){t('请选择 .docx 文件','e');return;}
+  var reader=new FileReader();
+  reader.onload=function(e){
+    if(typeof mammoth==='undefined'){t('mammoth.js 未加载，请刷新后重试','e');return;}
+    mammoth.extractRawText({arrayBuffer:e.target.result}).then(function(r){impParse(r.value);}).catch(function(){impParseFallback();});
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function impParseFallback(){
+  t('请确保上传的是 Word .docx 格式验收单','e');
+}
+
+function impParse(raw){
+  var lines=raw.split(/\n/).map(function(l){return l.trim();}).filter(function(l){return l;});
+  var info={project:'',supplier:'',amount:'',date:''};
+  for(var i=0;i<Math.min(lines.length,20);i++){
+    var ln=lines[i];
+    if(/采购品目/.test(ln))info.project=ln.replace(/.*采购品目名称\s*/,'').trim();
+    if(/供应商/.test(ln))info.supplier=ln.replace(/.*供应商名称\s*/,'').trim();
+    if(/合同总金额/.test(ln)){var am=ln.match(/([\d.]+)/);if(am)info.amount=am[1];}
+    if(/验收日期/.test(ln)){var dm=ln.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);if(dm)info.date=dm[1]+'-'+dm[2].padStart(2,'0')+'-'+dm[3].padStart(2,'0');}
+  }
+  // 找验收记录表
+  var tblStart=-1;
+  for(var i=0;i<lines.length;i++){if(/验收记录.*序号|设备名称.*型号.*合同数量/.test(lines[i])){tblStart=i;break;}}
+  if(tblStart===-1){t('未找到验收记录表格，请确认文件格式','e');return;}
+
+  var items=[];
+  for(var i=tblStart+1;i<lines.length;i++){
+    var ln=lines[i];
+    if(/合同一致性|产品性能测试|验收结论|供应商代表|验收小组|备注/.test(ln))break;
+    var parts=ln.split(/\s{2,}/);
+    if(parts.length>=4&&/^\d+$/.test(parts[0])){
+      // 找到所有数字列
+      var nums=[];for(var j=0;j<parts.length;j++)if(/^\d+$/.test(parts[j]))nums.push(parseInt(parts[j]));
+      if(nums.length>=3){
+        var name=parts[1]||'';
+        var model='';
+        for(var j=2;j<parts.length;j++){if(!/^\d+$/.test(parts[j])){model=parts[j];break;}}
+        var cq=nums[nums.length-2],aq=nums[nums.length-1];
+        items.push({seq:nums[0],name:name,model:model,contractQty:cq,acceptQty:aq});
+      }
+    }
+  }
+
+  if(items.length===0){t('未解析到设备条目','e');return;}
+  impData={info:info,items:items};
+  impPreview();
+}
+
+function impPreview(){
+  if(!impData)return;var info=impData.info,items=impData.items;
+  var h='<div class="imp-meta">';
+  h+='<div class="im-row"><span class="im-label">项目</span><span class="im-val">'+(info.project||'未知')+'</span></div>';
+  h+='<div class="im-row"><span class="im-label">供应商</span><span class="im-val">'+(info.supplier||'未知')+'</span></div>';
+  h+='<div class="im-row"><span class="im-label">金额</span><span class="im-val">¥'+(info.amount||'-')+'</span></div>';
+  h+='<div class="im-row"><span class="im-label">日期</span><span class="im-val">'+(info.date||'-')+'</span></div>';
+  h+='</div>';
+  h+='<div class="imp-summary">已识别 <strong>'+items.length+'</strong> 项设备</div>';
+  h+='<div style="margin-bottom:10px;display:flex;gap:10px;flex-wrap:wrap"><div class="fg" style="min-width:120px"><label class="fl">入库分类</label><select class="fi" id="impCat">';
+  var ks=Object.keys(WH_CATS);var defCat='固定资产';for(var i=0;i<ks.length;i++)h+='<option value="'+ks[i]+'"'+(ks[i]===defCat?' selected':'')+'>'+ks[i]+'</option>';
+  h+='</select></div><div class="fg" style="min-width:120px"><label class="fl">目标库房</label><select class="fi" id="impLoc"><option value="112">112·12号1F</option><option value="512">512·12号5F</option><option value="515">515·12号5F</option></select></div><div class="fg" style="min-width:120px"><label class="fl">入库日期</label><input class="fi" type="date" id="impDate" value="'+new Date().toISOString().slice(0,10)+'"></div></div>';
+  h+='<div class="imp-preview"><table class="st"><tr><th style="width:35px">#</th><th>设备名称</th><th style="width:110px">型号</th><th style="width:60px">合同数</th><th style="width:60px">验收数</th></tr>';
+  for(var i=0;i<items.length;i++){var it=items[i];h+='<tr><td>'+it.seq+'</td><td style="text-align:left;font-weight:500">'+it.name+'</td><td style="font-size:11px;color:var(--slate-500)">'+it.model+'</td><td>'+it.contractQty+'</td><td style="font-weight:600">'+it.acceptQty+'</td></tr>';}
+  h+='</table></div>';
+  document.getElementById('mb_imp').innerHTML=h;
+  document.getElementById('mf_imp').innerHTML='<button class="btn btn-secondary" onclick="cmImp()">取消</button><button class="btn btn-success" onclick="impDo()">确认入库 '+items.length+' 项</button>';
+  lucide.createIcons();
+}
+
+function impDo(){
+  if(!impData)return;
+  var cat=document.getElementById('impCat').value,loc=document.getElementById('impLoc').value,date=document.getElementById('impDate').value;
+  var items=impData.items,info=impData.info,added=0;
+  for(var i=0;i<items.length;i++){
+    var it=items[i];
+    var code=cat.substring(0,2).toUpperCase()+'-'+date.replace(/-/g,'').slice(2)+'-'+(i+1).toString().padStart(3,'0');
+    var sub=WH_CATS[cat]?WH_CATS[cat].sub[0]:cat;
+    WH.push({id:'w'+Date.now()+Math.random().toString(36).slice(2,4),code:code,name:it.name,cat1:cat,cat2:sub,unit:'台',qty:it.acceptQty||it.contractQty,minStock:Math.max(1,Math.round(it.contractQty*0.1)),maxStock:Math.max(it.contractQty*2,10),loc:loc,shelf:'导入-'+date,supplier:info.supplier||''});
+    WHL.push({id:'l'+Date.now()+i,itemId:WH[WH.length-1].id,type:'in',qty:it.acceptQty||it.contractQty,bf:0,af:it.acceptQty||it.contractQty,op:'验收单导入',dt:date,note:'合同金额 ¥'+(info.amount||'-')+'  |  供应商 '+info.supplier});
+    added++;
+  }
+  sv();cmImp();rWh();t('成功导入 '+added+' 项，分类:'+cat+' 库房:'+(WH_LOCS[loc]||loc),'s');
+}
+
+// ===== Demo =====
+function demo(){
+  var t=new Date(),fm=function(d){return d.toISOString().slice(0,10);};
+  var d0=new Date(t);d0.setDate(d0.getDate()+1);
+  var d2=new Date(t);d2.setDate(d2.getDate()+2);
+  var d3=new Date(t);d3.setDate(d3.getDate()+3);
+  var d4=new Date(t);d4.setDate(d4.getDate()+4);
+  var d5=new Date(t);d5.setDate(d5.getDate()+5);
+  var d7=new Date(t);d7.setDate(d7.getDate()+7);
+  BK=[{id:'bk1',dep:'市场部',co:'李明',ph:'13800138001',pu:'Q2销售培训',pp:5,pa:120,pm:80,po:50,df:fm(d0),dt:fm(d2),rs:[{u:110101,na:'张伟'},{u:110102,na:'王强'},{u:110201,na:'李芳'},{u:120102,na:'赵丽'},{u:120103,na:'刘洋'}],st:'y',at:fm(t)},{id:'bk2',dep:'研发部',co:'张华',ph:'13900139002',pu:'新技术研讨会',pp:2,pa:200,pm:100,po:30,df:fm(d2),dt:fm(d4),rs:[{u:110301,na:'陈明'},{u:110302,na:'周华'}],st:'y',at:fm(t)},{id:'bk3',dep:'人力资源部',co:'王芳',pu:'新员工入职培训',pp:6,pa:120,pm:60,po:40,df:fm(d3),dt:fm(d5),rs:[{u:110202,na:'黄丽'},{u:110203,na:'吴强'},{u:120201,na:'郑敏'},{u:120202,na:'孙杰'},{u:120203,na:'钱伟'},{u:120204,na:'林芳'}],st:'y',at:fm(t)}];
+  WH=[{id:'w1',code:'BC-001',name:'床单',cat1:'布草',cat2:'床单',unit:'条',qty:80,minStock:15,maxStock:120,loc:'112',shelf:'A-1',supplier:'华纺布草'},{id:'w2',code:'BC-002',name:'被套',cat1:'布草',cat2:'被套',unit:'条',qty:60,minStock:10,maxStock:100,loc:'112',shelf:'A-2',supplier:'华纺布草'},{id:'w3',code:'BC-003',name:'枕套',cat1:'布草',cat2:'枕套',unit:'个',qty:100,minStock:20,maxStock:150,loc:'112',shelf:'A-3',supplier:'华纺布草'},{id:'w4',code:'BC-004',name:'浴巾',cat1:'布草',cat2:'浴巾',unit:'条',qty:80,minStock:12,maxStock:120,loc:'112',shelf:'B-1'},{id:'w5',code:'BC-005',name:'毛巾',cat1:'布草',cat2:'毛巾',unit:'条',qty:120,minStock:20,maxStock:180,loc:'112',shelf:'B-2'},{id:'w6',code:'KF-001',name:'洗漱套装',cat1:'客房用品',cat2:'洗漱套装',unit:'套',qty:200,minStock:30,maxStock:300,loc:'112',shelf:'D-1',supplier:'明辉酒店用品'},{id:'w7',code:'KF-002',name:'拖鞋',cat1:'客房用品',cat2:'拖鞋',unit:'双',qty:300,minStock:50,maxStock:500,loc:'112',shelf:'D-2',supplier:'明辉酒店用品'},{id:'w8',code:'KF-003',name:'衣架',cat1:'客房用品',cat2:'衣架',unit:'个',qty:60,minStock:10,maxStock:100,loc:'112',shelf:'C-2'},{id:'w9',code:'CL-001',name:'清洁剂',cat1:'清洁用品',cat2:'清洁剂',unit:'桶',qty:12,minStock:3,maxStock:25,loc:'512',shelf:'A-1',supplier:'绿伞清洁'},{id:'w10',code:'CL-002',name:'消毒液',cat1:'清洁用品',cat2:'消毒液',unit:'桶',qty:8,minStock:2,maxStock:20,loc:'512',shelf:'A-2',supplier:'绿伞清洁'},{id:'w11',code:'CL-003',name:'垃圾袋',cat1:'清洁用品',cat2:'垃圾袋',unit:'卷',qty:30,minStock:5,maxStock:50,loc:'512',shelf:'B-1'},{id:'w12',code:'CL-004',name:'拖把',cat1:'清洁用品',cat2:'拖把',unit:'把',qty:4,minStock:2,maxStock:12,loc:'512',shelf:'B-2'},{id:'w13',code:'WX-001',name:'LED灯泡',cat1:'维修物料',cat2:'LED灯泡',unit:'个',qty:25,minStock:5,maxStock:60,loc:'512',shelf:'C-1',supplier:'佛山照明'},{id:'w14',code:'WX-002',name:'电工胶带',cat1:'维修物料',cat2:'电工胶带',unit:'卷',qty:10,minStock:3,maxStock:30,loc:'512',shelf:'C-2'},{id:'w15',code:'BG-001',name:'A4打印纸',cat1:'办公用品',cat2:'A4打印纸',unit:'包',qty:25,minStock:5,maxStock:60,loc:'515',shelf:'A-1',supplier:'得力办公'},{id:'w16',code:'BG-002',name:'签字笔',cat1:'办公用品',cat2:'签字笔',unit:'盒',qty:15,minStock:3,maxStock:30,loc:'515',shelf:'A-2',supplier:'得力办公'},{id:'w17',code:'GD-001',name:'对讲机',cat1:'固定资产',cat2:'对讲机',unit:'台',qty:8,minStock:2,maxStock:15,loc:'515',shelf:'B-1',supplier:'通讯设备'},{id:'w18',code:'GD-002',name:'手推车',cat1:'固定资产',cat2:'手推车',unit:'台',qty:3,minStock:1,maxStock:5,loc:'515',shelf:'B-1'}];
+  WHL=[];for(var i=0;i<WH.length;i++)WHL.push({id:'wl'+i,itemId:WH[i].id,type:'in',qty:WH[i].qty,bf:0,af:WH[i].qty,op:'系统初始化',dt:fm(t),note:'初始盘入'});
+  var od=new Date(t);od.setDate(od.getDate()-2);WHL.push({id:'wla',itemId:'w6',type:'out',qty:20,bf:200,af:180,op:'客房部-李华',dt:fm(od),note:'培训班客房补充'});
+  od.setDate(od.getDate()+1);WHL.push({id:'wlb',itemId:'w15',type:'out',qty:5,bf:25,af:20,op:'办公室-王芳',dt:fm(od),note:'培训资料打印'});
+  od.setDate(od.getDate()+1);WHL.push({id:'wlc',itemId:'w9',type:'in',qty:4,bf:8,af:12,op:'采购部-张强',dt:fm(od),note:'清洁剂补货'});
+  sv();
+}
+
+// ===== Init =====
+function init(){
+  document.getElementById('cd').textContent=new Date().getFullYear()+'年'+(new Date().getMonth()+1)+'月'+new Date().getDate()+'日';
+  if(!ld())demo();
+  document.getElementById('bld').onchange=function(){ftT(parseInt(this.value));rPf();};
+  document.getElementById('df').onchange=function(){rPf();};document.getElementById('dt').onchange=function(){rPf();};
+  document.getElementById('zb').onchange=function(){rZl();};document.getElementById('zdf').onchange=function(){rZl();};document.getElementById('zdt').onchange=function(){rZl();};
+  iPf();iZl();rWh();
+}
+function rdy(){if(typeof lucide!=='undefined'){init();lucide.createIcons();return;}var n=0,ch=setInterval(function(){if(typeof lucide!=='undefined'){clearInterval(ch);init();lucide.createIcons();}if(++n>50){clearInterval(ch);init();}},100);}
+rdy();
+</script>
+</body></html>
