@@ -263,7 +263,7 @@ input,select,textarea{font:inherit}
       <button class="header-tab" onclick="sw(3)">库房</button>
     </div>
   </div>
-  <div class="header-right"><span id="cd"></span><span id="sync-st" style="margin-left:12px;font-size:12px;"></span></div>
+  <div class="header-right"><span id="cd"></span><span id="sync-st" style="margin-left:12px;font-size:12px;"></span><button class="header-btn" onclick="expData()" title="导出数据">📤 导出</button><button class="header-btn" onclick="impData()" title="导入数据">📥 导入</button><input type="file" id="impFile" accept=".json" style="display:none" onchange="handleImp(event)"></div>
 </header>
 <div class="stats-bar" id="sb-pf">
   <div class="stat-item"><div class="stat-icon b11"><i data-lucide="building-2"></i></div><div><div class="stat-value">11</div><div class="stat-label">11号楼</div></div></div>
@@ -953,6 +953,46 @@ function renderDateOverview(){
   container.innerHTML = html || '<div style="color:var(--slate-400);font-size:12px;">暂无数据</div>';
   listEl.innerHTML = listHtml;
   if(countEl) countEl.textContent = '（共 '+BK.length+' 条，'+nowCount+' 条进行中）';
+}
+
+
+// ========== 导出/导入数据 ==========
+function expData(){
+  var data={bk:BK,wh:WH,whl:WHL};
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='排房数据_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function impData(){
+  document.getElementById('impFile').click();
+}
+
+function handleImp(e){
+  var file=e.target.files[0];
+  if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      var data=JSON.parse(ev.target.result);
+      if(!confirm('导入将覆盖当前数据，确认继续？'))return;
+      BK=data.bk||[];
+      WH=data.wh||[];
+      WHL=data.whl||[];
+      sv();
+      alert('✅ 导入成功！共 '+BK.length+' 条排房记录');
+      // 刷新所有页面
+      if(typeof iPf==='function')iPf();
+      if(typeof iZl==='function')iZl();
+      if(typeof rWh==='function')rWh();
+      if(typeof renderDateOverview==='function')renderDateOverview();
+    }catch(err){alert('❌ 文件格式错误：'+err.message);}
+  };
+  reader.readAsText(file);
+  e.target.value='';
 }
 
 </script>
