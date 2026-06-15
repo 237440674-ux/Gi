@@ -4,6 +4,7 @@
 <title>培训班排房系统</title>
 <script src="https://unpkg.com/lucide@latest"></script>
 <script src="https://unpkg.com/mammoth@1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -235,7 +236,7 @@ input,select,textarea{font:inherit}
       <button class="header-tab" onclick="sw(3)">库房</button>
     </div>
   </div>
-  <div class="header-right"><span id="cd"></span></div>
+  <div class="header-right"><span id="cd"></span><span id="sync-st" style="margin-left:12px;font-size:12px;"></span></div>
 </header>
 <div class="stats-bar" id="sb-pf">
   <div class="stat-item"><div class="stat-icon b11"><i data-lucide="building-2"></i></div><div><div class="stat-value">11</div><div class="stat-label">11号楼</div></div></div>
@@ -327,6 +328,79 @@ var B12 = [
   {f:5,r:[501,502,503,504,505,506,507,508,510,513,514,516,517,518,519,520,521,522,523,525]}
 ];
 var ALL = [], sk = 'pf_v6';
+
+// ===== Supabase 云数据库 =====
+var SB_URL='https://isrxbtlcoslgbdgmcdcf.supabase.co';
+var SB_KEY='sb_publishable_4NJuFf9twJRIVwqY5aiiRg_QbuLD13D';
+var _sb=null, _saving=false;
+
+// 初始化Supabase客户端
+if(typeof window.supabase!=='undefined'&&window.supabase.createClient){
+  try{_sb=window.supabase.createClient(SB_URL,SB_KEY);}catch(e){console.error('Supabase初始化失败',e);}
+}
+
+// 同步状态显示
+function syncStatus(state){
+  var el=document.getElementById('sync-st');
+  if(!el)return;
+  if(state==='ok')el.innerHTML='<span style="color:#22c55e;font-size:12px;">● 已同步</span>';
+  else if(state==='syncing')el.innerHTML='<span style="color:#f59e0b;font-size:12px;">● 同步中...</span>';
+  else if(state==='err')el.innerHTML='<span style="color:#ef4444;font-size:12px;">● 离线</span>';
+  else el.innerHTML='<span style="color:#94a3b8;font-size:12px;">● 云端</span>';
+}
+
+// 从云端加载
+function loadFromCloud(cb){
+  if(!_sb){if(cb)cb(false);return;}
+  _sb.from('app_data').select('data').eq('id',1).single().then(function(r){
+    if(r.data&&r.data.data){
+      var p=r.data.data;
+      BK=p.bk||[];WH=p.wh||[];WHL=p.whl||[];
+      syncStatus('ok');
+      if(cb)cb(true);
+    }else{if(cb)cb(false);}
+  }).catch(function(e){console.error('云端加载失败',e);syncStatus('err');if(cb)cb(false);});
+}
+
+// 保存到云端（防抖）
+var _saveTimer=null;
+function saveToCloud(){
+  if(!_sb)return;
+  if(_saveTimer)clearTimeout(_saveTimer);
+  _saveTimer=setTimeout(function(){
+    syncStatus('syncing');
+    _sb.from('app_data').update({data:{bk:BK,wh:WH,whl:WHL},updated_at:new Date().toISOString()}).eq('id',1).then(function(r){
+      if(r.error){console.error('云端保存失败',r.error);syncStatus('err');}
+      else syncStatus('ok');
+    }).catch(function(e){console.error('云端保存异常',e);syncStatus('err');});
+  },800);
+}
+
+// 重写ld():优先云端，失败用本地
+function ld(){
+  var localOk=false;
+  try{var r=localStorage.getItem(sk);if(r){var p=JSON.parse(r);BK=p.bk||[];WH=p.wh||[];WHL=p.whl||[];localOk=true;}}catch(e){}
+  loadFromCloud(function(ok){
+    if(ok){
+      // 云端成功，更新本地
+      try{localStorage.setItem(sk,JSON.stringify({bk:BK,wh:WH,whl:WHL}));}catch(e){}
+      // 刷新界面
+      if(typeof iPf==='function')iPf();
+      if(typeof iZl==='function')iZl();
+      if(typeof rWh==='function')rWh();
+      if(typeof rPf==='function')rPf();
+    }
+  });
+  return localOk;
+}
+
+// 重写sv():本地+云端
+function sv(){
+  try{localStorage.setItem(sk,JSON.stringify({bk:BK,wh:WH,whl:WHL}));}catch(e){}
+  saveToCloud();
+}
+
+
 for(var i=0;i<B11.length;i++){var fl=B11[i];for(var j=0;j<fl.r.length;j++){var n=fl.r[j];ALL.push({uid:110000+n,num:n,bld:11,flr:fl.f});}}
 for(var i=0;i<B12.length;i++){var fl=B12[i];for(var j=0;j<fl.r.length;j++){var n=fl.r[j];ALL.push({uid:120000+n,num:n,bld:12,flr:fl.f});}}
 var BK=[],WH=[],WHL=[];
