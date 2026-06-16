@@ -372,18 +372,32 @@ input,select,textarea{font:inherit}
 @media(max-width:600px){.ov-kpi-row{grid-template-columns:repeat(2,1fr)}}
 
 /* 套间样式 */
-.rt-badge.rt-ste-s{background:linear-gradient(135deg,#dbeafe,#93c5fd);color:#1e40af;border-color:#3b82f6;box-shadow:0 1px 3px rgba(59,130,246,0.2);}
-.rt-badge.rt-ste-m{background:linear-gradient(135deg,#d1fae5,#6ee7b7);color:#065f46;border-color:#10b981;box-shadow:0 1px 3px rgba(16,185,129,0.2);}
-.rt-badge.rt-ste-l{background:linear-gradient(135deg,#fce7f3,#f9a8d4);color:#9d174d;border-color:#ec4899;box-shadow:0 1px 3px rgba(236,72,153,0.2);}
-.room-card.avl .rt-badge.rt-ste-s{background:linear-gradient(135deg,#dbeafe,#93c5fd);color:#1e40af;border-color:#3b82f6;}
-.room-card.avl .rt-badge.rt-ste-m{background:linear-gradient(135deg,#d1fae5,#6ee7b7);color:#065f46;border-color:#10b981;}
-.room-card.avl .rt-badge.rt-ste-l{background:linear-gradient(135deg,#fce7f3,#f9a8d4);color:#9d174d;border-color:#ec4899;}
-.room-card.sel .rt-badge.rt-ste-s{background:var(--blue);color:#fff;border-color:var(--blue-dark);}
-.room-card.sel .rt-badge.rt-ste-m{background:var(--green-dark);color:#fff;border-color:var(--green);}
-.room-card.sel .rt-badge.rt-ste-l{background:#db2777;color:#fff;border-color:#9d174d;}
-.room-card.bkd .rt-badge.rt-ste-s{background:#bfdbfe;color:#1e40af;border-color:#3b82f6;}
-.room-card.bkd .rt-badge.rt-ste-m{background:#a7f3d0;color:#065f46;border-color:#10b981;}
-.room-card.bkd .rt-badge.rt-ste-l{background:#f9a8d4;color:#9d174d;border-color:#ec4899;}
+.rt-badge.rt-ste-s,.rt-badge.rt-ste-m,.rt-badge.rt-ste-l{font-size:10px;padding:3px 12px;border-radius:12px;font-weight:700;letter-spacing:0.5px;display:inline-flex;align-items:center;gap:4px;box-shadow:0 2px 6px rgba(0,0,0,0.12);border-width:1.5px;}
+.rt-badge.rt-ste-s{background:linear-gradient(135deg,#eff6ff,#bfdbfe);color:#1e40af;border-color:#60a5fa;box-shadow:0 2px 8px rgba(59,130,246,0.25)}
+.rt-badge.rt-ste-m{background:linear-gradient(135deg,#ecfdf5,#6ee7b7);color:#065f46;border-color:#34d399;box-shadow:0 2px 8px rgba(16,185,129,0.25)}
+.rt-badge.rt-ste-l{background:linear-gradient(135deg,#fdf2f8,#f9a8d4);color:#9d174d;border-color:#f472b6;box-shadow:0 2px 8px rgba(236,72,153,0.25)}
+/* 空闲房间卡片的套间标签 */
+.room-card.avl .rt-badge.rt-ste-s{background:linear-gradient(135deg,#eff6ff,#bfdbfe);color:#1e40af;border-color:#60a5fa}
+.room-card.avl .rt-badge.rt-ste-m{background:linear-gradient(135deg,#ecfdf5,#6ee7b7);color:#065f46;border-color:#34d399}
+.room-card.avl .rt-badge.rt-ste-l{background:linear-gradient(135deg,#fdf2f8,#f9a8d4);color:#9d174d;border-color:#f472b6}
+/* 选中房间的套间标签 */
+.room-card.sel .rt-badge.rt-ste-s{background:#1e40af;color:#fff;border-color:#1e3a8a;box-shadow:0 2px 8px rgba(30,64,175,0.3)}
+.room-card.sel .rt-badge.rt-ste-m{background:#065f46;color:#fff;border-color:#047857;box-shadow:0 2px 8px rgba(6,95,70,0.3)}
+.room-card.sel .rt-badge.rt-ste-l{background:#9d174d;color:#fff;border-color:#831843;box-shadow:0 2px 8px rgba(157,23,77,0.3)}
+/* 已占用房间的套间标签 */
+.room-card.bkd .rt-badge.rt-ste-s{background:#bfdbfe;color:#1e40af;border-color:#60a5fa;opacity:0.7}
+.room-card.bkd .rt-badge.rt-ste-m{background:#a7f3d0;color:#065f46;border-color:#34d399;opacity:0.7}
+.room-card.bkd .rt-badge.rt-ste-l{background:#f9a8d4;color:#9d174d;border-color:#f472b6;opacity:0.7}
+/* 套间房间卡片左侧色条 */
+.room-card[data-type="小套"].avl{border-left:4px solid #3b82f6}
+.room-card[data-type="中套"].avl{border-left:4px solid #10b981}
+.room-card[data-type="大套"].avl{border-left:4px solid #ec4899}
+.room-card[data-type="小套"].bkd{border-left:4px solid #3b82f6}
+.room-card[data-type="中套"].bkd{border-left:4px solid #10b981}
+.room-card[data-type="大套"].bkd{border-left:4px solid #ec4899}
+.room-card[data-type="小套"].sel{border-left:4px solid var(--blue)!important}
+.room-card[data-type="中套"].sel{border-left:4px solid var(--green-dark)!important}
+.room-card[data-type="大套"].sel{border-left:4px solid #db2777!important}
 
 /* 响应式 */
 @media(max-width:768px){
@@ -596,9 +610,15 @@ ROOM_TYPES[301] = '大套'; ROOM_TYPES[401] = '大套';
 ROOM_TYPES[303] = '中套'; ROOM_TYPES[403] = '中套';
 function getRoomSuite(num){return ROOM_TYPES[num]||'';}
 function suiteStyle(st){
-  if(st==='小套')return 'background:linear-gradient(135deg,#dbeafe,#93c5fd);color:#1e40af;border-color:#3b82f6;';
-  if(st==='中套')return 'background:linear-gradient(135deg,#d1fae5,#6ee7b7);color:#065f46;border-color:#10b981;';
-  if(st==='大套')return 'background:linear-gradient(135deg,#fce7f3,#f9a8d4);color:#9d174d;border-color:#ec4899;';
+  if(st==='小套')return 'background:linear-gradient(135deg,#eff6ff,#bfdbfe);color:#1e40af;border-color:#60a5fa;';
+  if(st==='中套')return 'background:linear-gradient(135deg,#ecfdf5,#6ee7b7);color:#065f46;border-color:#34d399;';
+  if(st==='大套')return 'background:linear-gradient(135deg,#fdf2f8,#f9a8d4);color:#9d174d;border-color:#f472b6;';
+  return '';
+}
+function suiteIcon(st){
+  if(st==='小套')return '🟦';
+  if(st==='中套')return '🟩';
+  if(st==='大套')return '🟪';
   return '';
 }
 var ALL = [], sk = 'pf_v4';
@@ -783,7 +803,7 @@ function rPf(){
       var nhtml='',nm1='',nm2='';
       if(isS){
         var pCnt=selType==='double'?2:1;
-        var _st2=getRoomSuite(rm.num);var sb=_st2?'<span class="rt-badge" style="font-size:9px;padding:2px 8px;margin:2px auto;" + suiteStyle(_st2) + ">'+_st2+'</span>':(selType==='double'?'<span class="rt-badge rt-dbl" style="font-size:9px;padding:2px 8px;margin:2px auto;">标间</span>':'<span class="rt-badge rt-sgl" style="font-size:9px;padding:2px 8px;margin:2px auto;">单间</span>');
+        var _st2=getRoomSuite(rm.num);var sb=_st2?'<span class="rt-badge" style="font-size:10px;padding:3px 12px;margin:2px auto;" + suiteStyle(_st2) + ">'+suiteIcon(_st2)+' '+_st2+'</span>':(selType==='double'?'<span class="rt-badge rt-dbl" style="font-size:9px;padding:2px 8px;margin:2px auto;">标间</span>':'<span class="rt-badge rt-sgl" style="font-size:9px;padding:2px 8px;margin:2px auto;">单间</span>');
         var tg=selType==='double'?'<button class="rc-toggle" onclick="event.stopPropagation();rtc(this,\''+rm.num+'\','+rm.bld+')">⇄单</button>':'<button class="rc-toggle" onclick="event.stopPropagation();rtc(this,\''+rm.num+'\','+rm.bld+')">⇄标</button>';
         var selNm=sel[si].nm||'',selNm2=sel[si].nm2||'';
         if(selType==='double'){
@@ -793,9 +813,9 @@ function rPf(){
         }
         nhtml+='<div class="rnm" style="font-weight:500;">'+pCnt+'人</div>';
       }
-      else if(isB){var _st4=getRoomSuite(rm.num);nhtml=(_st4?'<div class="rnm" style="color:var(--red);font-weight:500;">'+_st4+'</div>':'<div class="rnm" style="color:var(--red);font-weight:500;">占用</div>')+(names.length>0?'<div class="rnm">'+names.slice(0,2).join(',')+'</div>':'')}
-      else{var _st3=getRoomSuite(rm.num);nhtml=_st3?'<div class="rnm" style="color:var(--green-dark);">'+_st3+'</div>':'<div class="rnm" style="color:var(--green-dark);">空闲</div>';}
-      h+='<div class="'+cls+'" data-num="'+rm.num+'" data-bld="'+rm.bld+'" data-type="'+(isS?selType:'single')+'"><div class="rn">'+rm.num+'</div><div class="rt">客房 '+flr+'F</div><div class="rd"></div>'+nhtml+(isB&&bi?'<div class="rbb">'+bi.dep+'</div>':'')+'</div>';}
+      else if(isB){var _st4=getRoomSuite(rm.num);nhtml=(_st4?'<div class="rnm" style="color:var(--red);font-weight:600;">'+suiteIcon(_st4)+' '+_st4+'</div>':'<div class="rnm" style="color:var(--red);font-weight:500;">占用</div>')+(names.length>0?'<div class="rnm">'+names.slice(0,2).join(',')+'</div>':'')}
+      else{var _st3=getRoomSuite(rm.num);nhtml=_st3?'<div class="rnm" style="font-weight:600;">'+suiteIcon(_st3)+' '+_st3+'</div>':'<div class="rnm" style="color:var(--green-dark);">空闲</div>';}
+      h+='<div class="'+cls+'" data-num="'+rm.num+'" data-bld="'+rm.bld+'" data-type="'+(isS?selType:(getRoomSuite(rm.num)||'single'))+'"><div class="rn">'+rm.num+'</div><div class="rt">客房 '+flr+'F</div><div class="rd"></div>'+nhtml+(isB&&bi?'<div class="rbb">'+bi.dep+'</div>':'')+'</div>';}
     h+='</div></div>';}
   var selBox = document.getElementById('selBox');
   c.innerHTML = h;
