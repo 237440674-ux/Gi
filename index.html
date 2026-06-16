@@ -1578,7 +1578,7 @@ function rZl(){
   var ar=tc>0?(tr/tc).toFixed(1):0,uc=0;for(var k in ur)uc++;var dc=0;for(var k in dd)dc++;
   h+=_st('总班数',tc)+_st('占用房间',tr)+_st('不同房间',uc)+_st('总人次',tp)+_st('涉及部门',dc)+_st('平均间数',ar);
   h+='</div><div style="margin-top:6px;font-size:12px;color:var(--slate-500);">11号楼 '+b11+' 间 &middot; 12号楼 '+b12+' 间 &middot; 平均 '+ar+' 间/班</div></div>';
-  h+='<div class="scard"><h3><i data-lucide="clipboard-list" style="width:16px;height:16px;vertical-align:middle;"></i> 排房明细</h3><table class="st"><tr><th>入住~退房</th><th>部门</th><th>联系人</th><th>内容</th><th>人数</th><th>房间数</th><th>房间（入住人）</th><th>会议场地</th><th>保障</th><th>住宿</th><th>餐费</th><th>其他</th><th>费用</th><th>操作</th></tr>';
+  h+='<div class="scard"><h3 style="display:flex;align-items:center;justify-content:space-between;"><span><i data-lucide="clipboard-list" style="width:16px;height:16px;vertical-align:middle;"></i> 排房明细</span><button class="btn btn-sm btn-secondary" onclick="clearOldBK()" style="font-size:11px;padding:2px 10px;">清除旧数据</button></h3><table class="st"><tr><th>入住~退房</th><th>部门</th><th>联系人</th><th>内容</th><th>人数</th><th>房间数</th><th>房间（入住人）</th><th>会议场地</th><th>保障</th><th>住宿</th><th>餐费</th><th>其他</th><th>费用</th><th>操作</th></tr>';
   for(var i=0;i<bks.length;i++){var b=bks[i],rns=rnListWithName(b.rs),rnStr=rns.join('、');
     var bzTag='';if(b.mf||b.vh){bzTag='';if(b.mf)bzTag+='<span style="background:var(--blue-light);color:var(--blue);padding:1px 4px;border-radius:3px;font-size:9px;margin-right:2px;">会务</span>';if(b.vh)bzTag+='<span style="background:var(--champagne-light);color:var(--champagne-dark);padding:1px 4px;border-radius:3px;font-size:9px;">车辆</span>';}
     h+='<tr><td>'+b.df+'~'+b.dt+'</td><td><strong>'+b.dep+'</strong></td><td>'+b.co+'</td><td>'+(b.pu||'-')+'</td><td>'+(b.pp||'-')+'</td><td style="text-align:center;font-weight:600;">'+b.rs.length+'</td><td><span class="rl">'+rnStr+'</span></td><td style="font-size:11px;">'+(b.mt||'-')+'</td><td>'+(bzTag||'-')+'</td><td style="text-align:center;">'+(b.pa?b.pa:'-')+'</td><td style="text-align:center;">'+(b.pm?b.pm:'-')+'</td><td style="text-align:center;">'+(b.po?b.po:'-')+'</td><td style="text-align:center;font-weight:600;color:var(--red);">'+((b.pa||0)+(b.pm||0)+(b.po||0)&&b.pp?((b.pa||0)+(b.pm||0)+(b.po||0))*b.pp:'-')+'</td><td><button class="btn btn-sm btn-primary" onclick="printBk(\''+b.id+'\')" style="margin-right:4px;">签到表</button><button class="btn btn-sm btn-primary" onclick="printBill(\''+b.id+'\')" style="margin-right:4px;">水单</button><button class="btn btn-sm btn-danger" onclick="db(\''+b.id+'\')">取消</button></td></tr>';}
@@ -2128,7 +2128,7 @@ function renderRangeList(first, last, today){
     rngEl.innerHTML = '';
     return;
   }
-  var h = '<div class="ov-range-header">📋 当月排房明细</div>';
+  var h = '<div class="ov-range-header" style="display:flex;align-items:center;justify-content:space-between;">📋 当月排房明细<button class="btn btn-sm btn-secondary" onclick="clearOldBK()" style="font-size:11px;padding:2px 10px;">清除旧数据</button></div>';
   for(var i = 0; i < bks.length; i++){
     var bk = bks[i];
     var df = bk.df.slice(5).replace('-','/'), dt = bk.dt.slice(5).replace('-','/');
@@ -2147,6 +2147,16 @@ function renderRangeList(first, last, today){
       + '</div>';
   }
   rngEl.innerHTML = h;
+}
+
+function clearOldBK(){
+  var before=BK.length;
+  BK=BK.filter(function(b){return b.st!=='c';});
+  var removed=before-BK.length;
+  if(removed===0){t('没有需要清除的旧数据','i');return;}
+  sv();
+  rZl();iPf();renderDateOverview();
+  t('已清除 '+removed+' 条旧记录','s');
 }
 
 function setCheckIn(ds){
