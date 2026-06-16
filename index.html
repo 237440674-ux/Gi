@@ -4,7 +4,6 @@
 <title>培训班排房系统</title>
 <script src="https://unpkg.com/lucide@latest"></script>
 <script src="https://unpkg.com/mammoth@1.6.0/mammoth.browser.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -375,12 +374,12 @@ var ALL = [], sk = 'pf_v6';
 // ===== Supabase 云数据库 =====
 var SB_URL='https://isrxbtlcoslgbdgmcdcf.supabase.co';
 var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzcnhidGxjb3NsZ2JkZ21jZGNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE1MzQ2ODcsImV4cCI6MjA5NzExMDY4N30.CWYMiODdJ96_fYATAt0lXJXdG2rrybSDqSzpxcmnQjg';
-var _sb=null, _saving=false;
+// _sb 在下方初始化为 REST API URL
 
-// 初始化Supabase客户端
-if(typeof window.supabase!=='undefined'&&window.supabase.createClient){
-  try{_sb=window.supabase.createClient(SB_URL,SB_KEY);}catch(e){console.error('Supabase初始化失败',e);}
-}
+// 初始化Supabase REST客户端（无需外部库）
+var _sb=SB_URL+'/rest/v1';
+// 通用的请求头
+function _h(){return{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};}
 
 // 同步状态显示
 function syncStatus(state){
@@ -395,9 +394,11 @@ function syncStatus(state){
 // 从云端加载
 function loadFromCloud(cb){
   if(!_sb){if(cb)cb(false);return;}
-  _sb.from('app_data').select('data').eq('id',1).single().then(function(r){
-    if(r.data&&r.data.data){
-      var p=r.data.data;
+  fetch(_sb+'/app_data?id=eq.1&select=data',{headers:_h()})
+  .then(function(r){return r.json();})
+  .then(function(r){
+    if(r&&r.length>0&&r[0].data){
+      var p=r[0].data;
       BK=p.bk||[];WH=p.wh||[];WHL=p.whl||[];
       syncStatus('ok');
       if(cb)cb(true);
@@ -412,8 +413,10 @@ function saveToCloud(){
   if(_saveTimer)clearTimeout(_saveTimer);
   _saveTimer=setTimeout(function(){
     syncStatus('syncing');
-    _sb.from('app_data').update({data:{bk:BK,wh:WH,whl:WHL},updated_at:new Date().toISOString()}).eq('id',1).then(function(r){
-      if(r.error){console.error('云端保存失败',r.error);syncStatus('err');}
+    var body=JSON.stringify({data:{bk:BK,wh:WH,whl:WHL},updated_at:new Date().toISOString()});
+    fetch(_sb+'/app_data?id=eq.1',{method:'PATCH',headers:Object.assign(_h(),{'Prefer':'return=minimal'}),body:body})
+    .then(function(r){
+      if(!r.ok){console.error('云端保存失败',r.status);syncStatus('err');}
       else syncStatus('ok');
     }).catch(function(e){console.error('云端保存异常',e);syncStatus('err');});
   },800);
