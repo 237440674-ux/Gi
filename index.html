@@ -562,73 +562,57 @@ input,select,textarea{font:inherit}
 .ni2,.ni3{flex:1;padding:5px 8px;border:1px solid var(--slate-200);border-radius:4px;font-size:12px;outline:none;transition:all var(--transition);background:var(--slate-50)}
 .ni2:focus,.ni3:focus{border-color:var(--champagne);background:#fff;box-shadow:0 0 0 2px var(--champagne-glow)}
 
-/* 快速占用模式切换按钮 */
-.quick-mode-toggle{
-  margin-bottom: 20px;
-  padding: 16px 20px;
-  background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
-  border: 2px solid #facc15;
-  border-radius: var(--radius-md);
-  box-shadow: 0 2px 8px rgba(250, 204, 21, 0.15);
-  transition: all var(--transition);
-}
-.quick-mode-toggle:hover{
-  box-shadow: 0 4px 12px rgba(250, 204, 21, 0.25);
-  transform: translateY(-1px);
-}
-.toggle-label{
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  user-select: none;
-  font-size: 14px;
-  color: var(--slate-700);
-}
-.toggle-label input[type="checkbox"]{
-  display: none;
-}
-.toggle-slider{
-  position: relative;
-  width: 48px;
-  height: 26px;
-  background: var(--slate-300);
-  border-radius: 13px;
-  transition: all var(--transition);
-  flex-shrink: 0;
-}
-.toggle-slider::before{
-  content: '';
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #fff;
-  top: 3px;
-  left: 3px;
-  transition: all var(--transition);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-.toggle-label input[type="checkbox"]:checked + .toggle-slider{
-  background: linear-gradient(135deg, var(--champagne), var(--champagne-dark));
-}
-.toggle-label input[type="checkbox"]:checked + .toggle-slider::before{
-  transform: translateX(22px);
-}
-.toggle-text{
-  font-weight: 600;
-  color: var(--slate-700);
-  font-size: 13px;
-}
-.toggle-label input[type="checkbox"]:checked ~ .toggle-text{
-  color: var(--champagne-dark);
-}
-
 /* 必填标记美化 */
 .rq{
   color: #ef4444;
   font-weight: 700;
   margin-left: 2px;
+}
+
+/* 房间类型选择器 */
+.room-type-selector{
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, var(--slate-50) 0%, #fff 100%);
+  border: 1.5px solid var(--slate-200);
+  border-radius: var(--radius-md);
+}
+.room-type-selector .fl{
+  margin-bottom: 8px;
+  display: block;
+}
+.rt-toggle-group{
+  display: flex;
+  gap: 8px;
+}
+.rt-toggle-btn{
+  flex: 1;
+  padding: 10px 16px;
+  border: 2px solid var(--slate-200);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--slate-600);
+}
+.rt-toggle-btn:hover{
+  border-color: var(--blue);
+  background: var(--blue-light);
+  color: var(--blue-dark);
+}
+.rt-toggle-btn.active[data-type="single"]{
+  border-color: var(--blue);
+  background: linear-gradient(135deg, #eef2ff 0%, #dbeafe 100%);
+  color: var(--blue-dark);
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+}
+.rt-toggle-btn.active[data-type="double"]{
+  border-color: var(--champagne);
+  background: linear-gradient(135deg, var(--champagne-light) 0%, #f5e6c8 100%);
+  color: var(--champagne-dark);
+  box-shadow: 0 0 0 3px var(--champagne-glow);
 }
 
 /* 表单字段美化 */
@@ -810,24 +794,51 @@ input,select,textarea{font:inherit}
   </div>
   <div class="bp">
     <h3><i data-lucide="calendar-check"></i> 提交排房申请</h3>
-    <!-- 快速占用选项 -->
-    <div class="quick-mode-toggle">
-      <label class="toggle-label">
-        <input type="checkbox" id="quickMode" onchange="toggleQuickMode()">
-        <span class="toggle-slider"></span>
-        <span class="toggle-text">快速占用模式（直接输入人数，系统自动分配房间）</span>
-      </label>
+    
+    <!-- 房间类型选择 -->
+    <div class="room-type-selector">
+      <label class="fl">房间类型</label>
+      <div class="rt-toggle-group">
+        <button class="rt-toggle-btn active" data-type="single" onclick="selectRoomType('single')">👤 单间</button>
+        <button class="rt-toggle-btn" data-type="double" onclick="selectRoomType('double')">👥 标间</button>
+      </div>
     </div>
-    <div class="fr"><div class="fg"><label class="fl">部门 <span class="rq">*</span></label><input class="fi" id="dep" placeholder="如：市场部"></div><div class="fg"><label class="fl">联系人 <span class="rq">*</span></label><input class="fi" id="con" placeholder="姓名"></div><div class="fg"><label class="fl">电话 <span class="rq">*</span></label><input class="fi" id="ph" placeholder="手机号"></div></div>
-    <div class="fr"><div class="fg"><label class="fl">培训内容</label><input class="fi" id="pur" placeholder="如：新员工入职培训"></div><div class="fg" id="ppField"><label class="fl">入住人数</label><input class="fi" type="text" id="pp" readonly style="background:#f5f5f5;font-weight:600;color:var(--blue);" placeholder="选房后自动计算"></div><div class="fg" id="roomCountField" style="display:none;"><label class="fl">占用房间数 <span class="rq">*</span></label><input class="fi" type="number" id="roomCount" placeholder="输入房间数" min="1" onchange="updateQuickRoomCount()"></div><div class="fg"><label class="fl">住宿标准</label><input class="fi" type="number" id="pa" placeholder="元/人/天" min="0"></div><div class="fg"><label class="fl">餐费标准</label><input class="fi" type="number" id="pm" placeholder="元/人/天" min="0"></div><div class="fg"><label class="fl">其他费用</label><input class="fi" type="number" id="po" placeholder="元/人" min="0"></div></div>
-    <div class="fg" id="selRoomField">
-      <label class="fl">已选房间 <span class="rq">*</span> <span style="font-weight:400;color:var(--slate-400);margin-left:6px;">点击下方房间卡片选择/取消</span></label>
-      <div class="srl" id="selR"><div class="sel-hint">请点击下方房间卡片选择</div></div>
+    
+    <div class="fr">
+      <div class="fg"><label class="fl">部门 <span class="rq">*</span></label><input class="fi" id="dep" placeholder="如：市场部"></div>
+      <div class="fg"><label class="fl">联系人 <span class="rq">*</span></label><input class="fi" id="con" placeholder="姓名"></div>
+      <div class="fg"><label class="fl">电话 <span class="rq">*</span></label><input class="fi" id="ph" placeholder="手机号"></div>
     </div>
-    <div id="quickRoomList" style="display:none;margin-top:12px;">
-      <div class="fg"><label class="fl">自动分配的房间</label><div class="srl" id="quickRms"></div></div>
+    
+    <div class="fr">
+      <div class="fg"><label class="fl">培训内容</label><input class="fi" id="pur" placeholder="如：新员工入职培训"></div>
+      <div class="fg">
+        <label class="fl">入住人数 <span class="rq">*</span></label>
+        <input class="fi" type="number" id="pp" placeholder="输入人数" min="1" onchange="autoAssignRooms()">
+      </div>
+      <div class="fg"><label class="fl">住宿标准</label><input class="fi" type="number" id="pa" placeholder="元/人/天" min="0"></div>
+      <div class="fg"><label class="fl">餐费标准</label><input class="fi" type="number" id="pm" placeholder="元/人/天" min="0"></div>
+      <div class="fg"><label class="fl">其他费用</label><input class="fi" type="number" id="po" placeholder="元/人" min="0"></div>
     </div>
-    <div style="display:flex;justify-content:flex-end;margin-top:16px;"><button class="btn btn-success" onclick="sub()" style="padding:10px 32px;font-size:14px;border-radius:var(--radius-sm);"><i data-lucide="send"></i> 确认提交</button></div>
+    
+    <!-- 自动排房按钮 -->
+    <div style="margin: 12px 0;">
+      <button class="btn btn-primary" onclick="autoAssignRooms()" style="padding: 8px 20px;font-size: 13px;">
+        <i data-lucide="sparkles"></i> 自动排房
+      </button>
+      <span style="font-size: 12px;color: var(--slate-500);margin-left: 12px;">根据入住人数和房间类型自动分配可用房间</span>
+    </div>
+    
+    <div class="fg">
+      <label class="fl">已选房间 <span class="rq">*</span> <span style="font-weight:400;color:var(--slate-400);margin-left:6px;">点击下方房间卡片选择/取消，或点击"自动排房"</span></label>
+      <div class="srl" id="selR"><div class="sel-hint">请选择房间或点击"自动排房"</div></div>
+    </div>
+    
+    <div style="display:flex;justify-content:flex-end;margin-top:16px;">
+      <button class="btn btn-success" onclick="sub()" style="padding:10px 32px;font-size:14px;border-radius:var(--radius-sm);">
+        <i data-lucide="send"></i> 确认提交
+      </button>
+    </div>
   </div>
   <div id="rc"><div class="emp"><i data-lucide="building-2"></i><p>请选择楼栋、楼层和日期</p></div></div>
 </div>
@@ -1025,69 +1036,6 @@ function t(msg,ty){
   el.appendChild(d);setTimeout(function(){d.style.opacity='0';d.style.transition='opacity 300ms';setTimeout(function(){d.remove();},300);},3000);
 }
 
-// ========== 快速占用模式 ==========
-function toggleQuickMode(){
-  var isQuick = document.getElementById('quickMode').checked;
-  document.getElementById('ppField').style.display = isQuick ? 'none' : '';
-  document.getElementById('roomCountField').style.display = isQuick ? '' : 'none';
-  document.getElementById('selRoomField').style.display = isQuick ? 'none' : '';
-  document.getElementById('quickRoomList').style.display = isQuick ? '' : 'none';
-  
-  if(!isQuick){
-    document.getElementById('quickRms').innerHTML = '';
-    document.getElementById('roomCount').value = '';
-  }
-}
-
-function updateQuickRoomCount(){
-  var roomCount = parseInt(document.getElementById('roomCount').value);
-  if(!roomCount || roomCount <= 0){
-    document.getElementById('quickRms').innerHTML = '<div class="sel-hint">请输入有效的房间数</div>';
-    return;
-  }
-  
-  var fd = document.getElementById('df').value;
-  var td = document.getElementById('dt').value;
-  if(!fd || !td){
-    document.getElementById('quickRms').innerHTML = '<div class="sel-hint">请先选择入住和退房日期</div>';
-    return;
-  }
-  
-  // 获取可用房间
-  var availableRooms = getAvailableRooms(fd, td, roomCount);
-  
-  if(availableRooms.length === 0){
-    document.getElementById('quickRms').innerHTML = '<div class="sel-hint" style="color:var(--red);">选定日期范围内没有可用房间</div>';
-    return;
-  }
-  
-  if(availableRooms.length < roomCount){
-    document.getElementById('quickRms').innerHTML = '<div class="sel-hint" style="color:var(--orange);">警告：可用房间只有 ' + availableRooms.length + ' 间，少于请求的 ' + roomCount + ' 间</div>';
-  }
-  
-  // 显示自动分配的房间
-  var html = '<div style="display:flex;flex-wrap:wrap;gap:6px;padding:8px 0;">';
-  for(var i = 0; i < Math.min(availableRooms.length, roomCount); i++){
-    var room = availableRooms[i];
-    var bldName = room.bld === 11 ? '11号楼' : '12号楼';
-    html += '<span class="srt2" style="background:var(--green-light);color:var(--green-dark);border:1px solid rgba(34,197,94,0.3);">' + room.num + ' (' + bldName + ')</span>';
-  }
-  html += '</div>';
-  document.getElementById('quickRms').innerHTML = html;
-}
-
-function getAvailableRooms(fd, td, limit){
-  var available = [];
-  for(var i = 0; i < ALL.length; i++){
-    var room = ALL[i];
-    if(!isBkd(room.num, fd, td)){
-      available.push(room);
-      if(limit && available.length >= limit) break;
-    }
-  }
-  return available;
-}
-
 function rb(bld,flr){var r=[];for(var i=0;i<ALL.length;i++){if(ALL[i].bld===bld&&(!flr||flr==='a'||ALL[i].flr==flr))r.push(ALL[i]);}return r;}
 function isBkd(num,fd,td){
   if(!fd||!td)return false;var d=new Date(fd),end=new Date(td);
@@ -1135,7 +1083,86 @@ function rPf(){
     h+='</div></div>';}
   c.innerHTML=h;updS();
 }
-function cr(num){var fd=document.getElementById('df').value,td=document.getElementById('dt').value,b=parseInt(document.getElementById('bld').value);if(!fd||!td){t('请先选择入住和退房日期','e');return;}if(isBkd(num,fd,td)){t('该房间在选定时间范围内已被预约','e');return;}var el=document.getElementById('selR'),tbody=el.querySelector('tbody');if(!tbody){el.innerHTML='';el.style.padding='0';tbody=document.createElement('tbody');var tbl=document.createElement('table');tbl.className='bill-table';tbl.innerHTML='<thead><tr><th style="width:60px">房号</th><th style="width:75px">房型</th><th style="width:50px">人数</th><th style="width:55px">楼栋</th><th>入住人</th><th style="width:36px"></th></tr></thead>';tbl.appendChild(tbody);el.appendChild(tbl);}var existing=null;Array.from(tbody.querySelectorAll('tr')).forEach(function(r){if(parseInt(r.getAttribute('d-n'))===num&&parseInt(r.getAttribute('d-b'))===b)existing=r;});if(existing){existing.remove();}else{var tr=document.createElement('tr');tr.setAttribute('d-n',num);tr.setAttribute('d-b',b);tr.setAttribute('d-t','single');var rt='single';buildRow(tr,rt,b);tbody.appendChild(tr);}rPf();updatePP();}
+
+// ========== 房间类型选择与自动排房 ==========
+var roomTypePref = 'single'; // 默认单间
+
+function selectRoomType(type){
+  roomTypePref = type;
+  document.querySelectorAll('.rt-toggle-btn').forEach(function(btn){
+    btn.classList.remove('active');
+  });
+  document.querySelector('.rt-toggle-btn[data-type="'+type+'"]').classList.add('active');
+  t('已选择' + (type==='single'?'单间':'标间'), 'i');
+}
+
+function autoAssignRooms(){
+  var fd = document.getElementById('df').value,
+      td = document.getElementById('dt').value,
+      pp = parseInt(document.getElementById('pp').value);
+  
+  if(!fd || !td){
+    t('请先选择入住和退房日期', 'e');
+    return;
+  }
+  if(!pp || pp <= 0){
+    t('请填写入住人数', 'e');
+    return;
+  }
+  
+  // 计算需要多少个房间
+  var pplPerRoom = roomTypePref === 'double' ? 2 : 1;
+  var neededRooms = Math.ceil(pp / pplPerRoom);
+  
+  // 获取可用房间
+  var availableRooms = [];
+  for(var i = 0; i < ALL.length; i++){
+    var room = ALL[i];
+    if(!isBkd(room.num, fd, td)){
+      availableRooms.push(room);
+      if(availableRooms.length >= neededRooms) break;
+    }
+  }
+  
+  if(availableRooms.length === 0){
+    t('选定日期范围内没有可用房间', 'e');
+    return;
+  }
+  
+  if(availableRooms.length < neededRooms){
+    t('可用房间不足，当前只有 ' + availableRooms.length + ' 间可用，但需要 ' + neededRooms + ' 间', 'w');
+  }
+  
+  // 清空已选房间
+  document.getElementById('selR').innerHTML = '';
+  var el = document.getElementById('selR'),
+      tbody = document.createElement('tbody');
+  var tbl = document.createElement('table');
+  tbl.className = 'bill-table';
+  tbl.innerHTML = '<thead><tr><th style="width:60px">房号</th><th style="width:75px">房型</th><th style="width:50px">人数</th><th style="width:55px">楼栋</th><th>入住人</th><th style="width:36px"></th></tr></thead>';
+  tbl.appendChild(tbody);
+  el.innerHTML = '';
+  el.style.padding = '0';
+  el.appendChild(tbl);
+  
+  // 自动分配房间
+  var roomsToAssign = Math.min(availableRooms.length, neededRooms);
+  for(var i = 0; i < roomsToAssign; i++){
+    var room = availableRooms[i];
+    var tr = document.createElement('tr');
+    tr.setAttribute('d-n', room.num);
+    tr.setAttribute('d-b', room.bld);
+    tr.setAttribute('d-t', roomTypePref);
+    buildRow(tr, roomTypePref, room.bld);
+    tbody.appendChild(tr);
+  }
+  
+  rPf();
+  updatePP();
+  t('已自动分配 ' + roomsToAssign + ' 间' + (roomTypePref==='single'?'单间':'标间'), 's');
+}
+
+function cr(num){var fd=document.getElementById('df').value,td=document.getElementById('dt').value,b=parseInt(document.getElementById('bld').value);if(!fd||!td){t('请先选择入住和退房日期','e');return;}if(isBkd(num,fd,td)){t('该房间在选定时间范围内已被预约','e');return;}var el=document.getElementById('selR'),tbody=el.querySelector('tbody');if(!tbody){el.innerHTML='';el.style.padding='0';tbody=document.createElement('tbody');var tbl=document.createElement('table');tbl.className='bill-table';tbl.innerHTML='<thead><tr><th style="width:60px">房号</th><th style="width:75px">房型</th><th style="width:50px">人数</th><th style="width:55px">楼栋</th><th>入住人</th><th style="width:36px"></th></tr></thead>';tbl.appendChild(tbody);el.appendChild(tbl);}var existing=null;Array.from(tbody.querySelectorAll('tr')).forEach(function(r){if(parseInt(r.getAttribute('d-n'))===num&&parseInt(r.getAttribute('d-b'))===b)existing=r;});if(existing){existing.remove();}else{var tr=document.createElement('tr');tr.setAttribute('d-n',num);tr.setAttribute('d-b',b);tr.setAttribute('d-t',roomTypePref);var rt=roomTypePref;buildRow(tr,rt,b);tbody.appendChild(tr);}rPf();updatePP();}
 function buildRow(tr,rt,b){var num=parseInt(tr.getAttribute('d-n'));var isDbl=(rt==='double');var typeLabel=isDbl?'<span class="rt-badge rt-dbl-sm">👥 标间</span>':'<span class="rt-badge rt-sgl-sm">👤 单间</span>';var pCnt=isDbl?2:1;var toggleBtn=isDbl?'<button class="rt-toggle" onclick="tgRt(this.parentElement.parentElement)" title="切换为单间">⇄ 切单间</button>':'<button class="rt-toggle" onclick="tgRt(this.parentElement.parentElement)" title="切换为标间">⇄ 切标间</button>';var nameHtml=isDbl?'<div style="display:flex;gap:4px;align-items:center;"><input class="ni2" placeholder="入住人1" maxlength="8"><input class="ni3" placeholder="入住人2" maxlength="8"></div>':'<input class="ni2" placeholder="姓名" maxlength="8">';tr.innerHTML='<td class="room-num">'+num+'</td><td>'+typeLabel+' '+toggleBtn+'</td><td style="font-weight:700;color:'+(isDbl?'var(--champagne-dark)':'var(--blue)')+';">'+pCnt+'人</td><td>'+(b===11?'11号楼':'12号楼')+'</td><td style="display:flex;gap:4px;align-items:center;">'+nameHtml+'</td><td><span class="rdel2" onclick="rRm(this)">&times;</span></td>';}
 function tgRt(tr){var rt=tr.getAttribute('d-t');var newRt=(rt==='double'?'single':'double');tr.setAttribute('d-t',newRt);var b=parseInt(tr.getAttribute('d-b'));buildRow(tr,newRt,b);updatePP();rPf();}
 function rRm(el){el.closest('tr').remove();var tbody=document.querySelector('#selR tbody');if(!tbody||tbody.children.length===0){document.getElementById('selR').innerHTML='<div class="sel-hint">请点击下方房间卡片选择</div>';document.getElementById('selR').style.padding='';}rPf();updatePP();}
@@ -1148,46 +1175,22 @@ function sub(){
       pur = document.getElementById('pur').value.trim(),
       fd = document.getElementById('df').value,
       td = document.getElementById('dt').value,
-      isQuick = document.getElementById('quickMode').checked,
+      pp = parseInt(document.getElementById('pp').value),
       sel = gS();
   
   // 必填验证
   if(!dep){t('请填写部门','e');return;}
   if(!co){t('请填写联系人','e');return;}
   if(!ph){t('请填写电话','e');return;}
+  if(!pp || pp <= 0){t('请填写入住人数','e');return;}
   if(!fd || !td){t('请选择入住和退房日期','e');return;}
+  if(sel.length === 0){t('请至少选择一个房间','e');return;}
   
-  if(isQuick){
-    // 快速占用模式
-    var roomCount = parseInt(document.getElementById('roomCount').value);
-    if(!roomCount || roomCount <= 0){t('请填写占用房间数','e');return;}
-    
-    // 获取可用房间
-    var availableRooms = getAvailableRooms(fd, td, roomCount);
-    if(availableRooms.length === 0){
-      t('选定日期范围内没有可用房间','e');
+  // 检查房间是否已被预约
+  for(var i = 0; i < sel.length; i++){
+    if(isBkd(sel[i].n, fd, td)){
+      t('房间 '+sel[i].n+' 在选定时间范围内已被预约','e');
       return;
-    }
-    
-    if(availableRooms.length < roomCount){
-      t('可用房间不足，当前只有 ' + availableRooms.length + ' 间可用','e');
-      return;
-    }
-    
-    // 使用自动分配的房间
-    sel = availableRooms.slice(0, roomCount).map(function(room){
-      return {n: room.num, b: room.bld, tp: 'single', nm: '', nm2: ''};
-    });
-    
-    t('系统已自动分配 ' + roomCount + ' 间房间','i');
-  } else {
-    // 正常模式
-    if(sel.length === 0){t('请至少选择一个房间','e');return;}
-    for(var i = 0; i < sel.length; i++){
-      if(isBkd(sel[i].n, fd, td)){
-        t('房间 '+sel[i].n+' 在选定时间范围内已被预约','e');
-        return;
-      }
     }
   }
   
@@ -1203,9 +1206,9 @@ function sub(){
   var pa = parseFloat(document.getElementById('pa').value) || 0,
       pm = parseFloat(document.getElementById('pm').value) || 0,
       po = parseFloat(document.getElementById('po').value) || 0,
-      pp = 0;
+      totalPP = 0;
   for(var i = 0; i < sel.length; i++){
-    pp += (sel[i].tp === 'double' ? 2 : 1);
+    totalPP += (sel[i].tp === 'double' ? 2 : 1);
   }
   
   // 保存到数据库
@@ -1215,7 +1218,7 @@ function sub(){
     co: co,
     ph: ph,
     pu: pur || '培训',
-    pp: pp,
+    pp: totalPP,
     pa: pa,
     pm: pm,
     po: po,
@@ -1237,9 +1240,7 @@ function sub(){
   document.getElementById('pa').value = '';
   document.getElementById('pm').value = '';
   document.getElementById('po').value = '';
-  document.getElementById('roomCount').value = '';
-  document.getElementById('quickRms').innerHTML = '';
-  document.getElementById('selR').innerHTML = '<div class="sel-hint">请点击下方房间卡片选择</div>';
+  document.getElementById('selR').innerHTML = '<div class="sel-hint">请选择房间或点击"自动排房"</div>';
   
   rPf();
   t(dep + ' 于 ' + fd + '~' + td + ' 使用 ' + sel.length + ' 间房 申请已提交', 's');
