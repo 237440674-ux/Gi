@@ -113,38 +113,28 @@ input,select,textarea{font:inherit}
 .fl .rq{color:var(--red)}
 .fi{width:100%;padding:8px 12px;border:1px solid var(--slate-200);border-radius:var(--radius-sm);font-size:13px;color:var(--slate-800);background:#fff;transition:all var(--transition)}.fi:hover{border-color:var(--slate-300)}
 .fi:focus{outline:none;border-color:var(--champagne);box-shadow:0 0 0 3px var(--champagne-glow)}
-/* 已选房间 — 全新设计 */
-.sel-panel{margin-top:8px}
-.sel-summary{display:flex;align-items:center;gap:12px;padding:10px 14px;background:linear-gradient(135deg,var(--blue-light) 0%,#f0f5ff 100%);border:1px solid rgba(30,64,175,0.1);border-radius:8px;margin-bottom:10px;font-size:12px;flex-wrap:wrap;animation:su .25s ease-out}
-.sel-summary-icon{width:30px;height:30px;border-radius:8px;background:var(--blue);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.sel-summary-stat{display:flex;flex-direction:column;gap:0}
-.sel-summary-stat .sv{font-size:18px;font-weight:800;color:var(--navy);line-height:1.1}
-.sel-summary-stat .sl{font-size:10px;color:var(--slate-500);letter-spacing:0.3px}
-.sel-summary-divider{width:1px;height:28px;background:rgba(30,64,175,0.12);flex-shrink:0}
-.sel-summary-chips{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
-.sel-chip{display:inline-flex;align-items:center;gap:3px;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:600;letter-spacing:0.2px}
-.sel-chip-champ{background:linear-gradient(135deg,var(--champagne-light),#f5e6c8);color:var(--champagne-dark);border:1px solid rgba(201,169,110,0.3)}
-.sel-chip-blue{background:linear-gradient(135deg,var(--blue-light),#dbeafe);color:var(--blue);border:1px solid rgba(30,64,175,0.15)}
-.sel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;min-height:42px;padding:8px;border:1.5px dashed var(--slate-300);border-radius:8px;background:var(--slate-50);transition:border var(--transition)}.sel-grid:focus-within{border-color:var(--champagne);box-shadow:0 0 0 2px var(--champagne-glow)}
-.sel-card{background:#fff;border:1px solid var(--slate-200);border-radius:8px;padding:7px 9px;font-size:12px;box-shadow:0 1px 2px rgba(10,22,40,0.04);transition:all var(--transition);position:relative;display:flex;flex-direction:column;gap:3px}.sel-card:hover{box-shadow:0 2px 8px rgba(10,22,40,0.08);border-color:var(--slate-300)}
+/* 已选房间 — 三列卡片 */
+.sel-panel{padding:0}
+.sel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;min-height:48px;padding:12px;border:1.5px dashed var(--slate-300);border-radius:var(--radius-sm);background:var(--slate-50);transition:border var(--transition)}.sel-grid:focus-within{border-color:var(--champagne);box-shadow:0 0 0 2px var(--champagne-glow)}
+.sel-card{background:#fff;border:1px solid var(--slate-200);border-radius:8px;padding:10px 12px;font-size:12px;box-shadow:0 1px 2px rgba(10,22,40,0.04);transition:all var(--transition);display:flex;flex-direction:column;gap:6px}.sel-card:hover{box-shadow:0 2px 8px rgba(10,22,40,0.08);border-color:var(--slate-300)}
 .sel-card-top{display:flex;align-items:center;justify-content:space-between}
-.sel-card-room{display:flex;align-items:center;gap:5px}
-.sel-card-num{font-weight:800;font-size:16px;color:var(--navy);line-height:1}
-.sel-card-bld{font-size:9px;font-weight:500;color:var(--slate-400);padding:1px 5px;background:var(--slate-100);border-radius:4px}
-.sel-card-del{width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:var(--slate-400);font-size:12px;font-weight:700;cursor:pointer;transition:all var(--transition);background:transparent;border:none;line-height:1}.sel-card-del:hover{background:#fef2f2;color:var(--red)}
-.sel-card-meta{display:flex;align-items:center;gap:3px;flex-wrap:wrap}
-.sel-card-cnt{font-weight:700;font-size:10px;padding:2px 7px;border-radius:8px;line-height:1.4}
+.sel-card-room{display:flex;align-items:center;gap:6px}
+.sel-card-num{font-weight:800;font-size:18px;color:var(--navy);line-height:1}
+.sel-card-bld{font-size:10px;font-weight:500;color:var(--slate-400);padding:2px 6px;background:var(--slate-100);border-radius:4px}
+.sel-card-del{width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:var(--slate-400);font-size:14px;font-weight:700;cursor:pointer;transition:all var(--transition);background:transparent;border:none;line-height:1;flex-shrink:0}.sel-card-del:hover{background:#fef2f2;color:var(--red)}
+.sel-card-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sel-card-cnt{font-weight:700;font-size:11px;padding:2px 8px;border-radius:10px;line-height:1.5;flex-shrink:0}
 .sel-card-cnt.sgl{background:var(--blue-light);color:var(--blue)}
 .sel-card-cnt.dbl{background:var(--champagne-light);color:var(--champagne-dark)}
-.sel-card-toggle{display:inline-flex;align-items:center;gap:1px;padding:1px 5px;border-radius:5px;font-size:9px;font-weight:600;cursor:pointer;background:var(--slate-100);color:var(--slate-500);border:1px solid var(--slate-200);transition:all var(--transition);white-space:nowrap}.sel-card-toggle:hover{background:var(--champagne-light);color:var(--champagne-dark);border-color:var(--champagne)}
-.sel-card-names{display:flex;gap:3px;align-items:center}
-.sel-card-names .ni2,.sel-card-names .ni3{width:48px;border:1px solid var(--slate-200);border-radius:4px;background:var(--slate-50);font-size:10px;padding:2px 4px;outline:none;text-align:center;transition:all var(--transition);height:22px}.sel-card-names .ni2:focus,.sel-card-names .ni3:focus{border-color:var(--champagne);background:#fff;box-shadow:0 0 0 2px var(--champagne-glow)}
-.sel-hint{color:var(--slate-400);font-size:12px;padding:12px 8px;text-align:center;grid-column:1/-1;display:flex;flex-direction:column;align-items:center;gap:6px}
-.sel-hint-icon{width:36px;height:36px;border-radius:50%;background:var(--slate-100);display:inline-flex;align-items:center;justify-content:center;font-size:16px;color:var(--slate-400)}
-.sel-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:8px;flex-wrap:wrap}
-.sel-count-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:8px;font-size:11px;font-weight:600;background:var(--slate-100);color:var(--slate-600)}
-.sel-count-badge strong{color:var(--navy);font-size:14px}
-.sel-actions{display:flex;gap:6px}
+.sel-card-toggle{display:inline-flex;align-items:center;gap:2px;padding:2px 7px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;background:var(--slate-100);color:var(--slate-500);border:1px solid var(--slate-200);transition:all var(--transition);white-space:nowrap;flex-shrink:0}.sel-card-toggle:hover{background:var(--champagne-light);color:var(--champagne-dark);border-color:var(--champagne)}
+.sel-card-names{display:flex;gap:4px;align-items:center}
+.sel-card-names .ni2,.sel-card-names .ni3{flex:1;min-width:0;border:1px solid var(--slate-200);border-radius:4px;background:var(--slate-50);font-size:11px;padding:4px 6px;outline:none;text-align:center;transition:all var(--transition);height:26px}.sel-card-names .ni2:focus,.sel-card-names .ni3:focus{border-color:var(--champagne);background:#fff;box-shadow:0 0 0 2px var(--champagne-glow)}
+.sel-hint{color:var(--slate-400);font-size:13px;padding:14px 8px;text-align:center;grid-column:1/-1;display:flex;flex-direction:column;align-items:center;gap:8px}
+.sel-hint-icon{width:40px;height:40px;border-radius:50%;background:var(--slate-100);display:inline-flex;align-items:center;justify-content:center;font-size:18px;color:var(--slate-400)}
+.sel-actions-bar{display:flex;align-items:center;justify-content:space-between;margin-top:12px;gap:10px;flex-wrap:wrap}
+.sel-stats{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--slate-500)}
+.sel-stats strong{font-weight:800;color:var(--navy);font-size:18px;margin:0 3px}
+.sel-stats .sep{width:1px;height:16px;background:var(--slate-300);margin:0 4px}
 .rtag{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;background:var(--blue-light);color:var(--blue);border:1px solid rgba(30,64,175,0.15);transition:all var(--transition)}.rtag:hover{background:var(--blue);color:#fff}
 .rtag .rdel{width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:var(--blue);color:#fff;font-size:9px;cursor:pointer}
 .sc-list{display:flex;flex-direction:column;gap:12px}
@@ -956,24 +946,16 @@ input,select,textarea{font:inherit}
 
     <!-- 步骤3：已选房间 -->
     <div class="form-section">
-      <div class="form-section-title"><span class="step-num">3</span> 已选房间 <span class="rq">*</span></div>
+      <div class="form-section-title"><span class="step-num">3</span> 已选房间 <span class="rq">*</span> <span class="sel-stats" id="selStats" style="display:none">已选<strong id="selStatsNum">0</strong>间</span></div>
       <div class="sel-panel">
-        <div class="sel-summary" id="selSummary" style="display:none">
-          <div class="sel-summary-icon">🏠</div>
-          <div class="sel-summary-stat"><span class="sv" id="selSumRooms">0</span><span class="sl">房间</span></div>
-          <div class="sel-summary-divider"></div>
-          <div class="sel-summary-stat"><span class="sv" id="selSumPeople">0</span><span class="sl">入住人</span></div>
-          <div class="sel-summary-divider"></div>
-          <div class="sel-summary-chips" id="selChips"></div>
-        </div>
-        <div class="sel-grid" id="selR"><div class="sel-hint"><span class="sel-hint-icon">☝️</span>请拖动或点击下方房间卡片选择</div></div>
-        <div class="sel-bottom" id="selBottom" style="display:none">
-          <div class="sel-count-badge">已选 <strong id="selCountNum">0</strong> 间</div>
-          <div class="sel-actions">
-            <button class="btn btn-sm btn-secondary" onclick="clearSel()" style="padding:5px 14px;font-size:12px;">
+        <div class="sel-grid" id="selR"><div class="sel-hint"><span class="sel-hint-icon">☝</span>请拖动或点击下方房间卡片选择</div></div>
+        <div class="sel-actions-bar" id="selActionsBar" style="display:none">
+          <div class="sel-stats" id="selStats2">已选 <strong id="selCountNum">0</strong> 间房间</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-sm btn-secondary" onclick="clearSel()" style="padding:6px 16px;font-size:12px;">
               <i data-lucide="trash-2" style="width:13px;height:13px;"></i> 清空
             </button>
-            <button class="btn btn-success" onclick="sub()" style="padding:7px 24px;font-size:13px;border-radius:var(--radius-sm);">
+            <button class="btn btn-success" onclick="sub()" style="padding:8px 28px;font-size:13px;border-radius:var(--radius-sm);">
               <i data-lucide="send" style="width:14px;height:14px;"></i> 确认提交
             </button>
           </div>
@@ -1409,47 +1391,31 @@ function cr(num){
   }
   // 检查已选列表是否为空
   if(!el.querySelector('.sel-card')){
-    el.innerHTML='<div class="sel-hint"><span class="sel-hint-icon">☝️</span>请选择房间或点击"自动排房"</div>';
+    el.innerHTML='<div class="sel-hint"><span class="sel-hint-icon">☝</span>请选择房间或点击"自动排房"</div>';
   }
   updatePP();
   updSelSummary();
 }
 function buildRow(card,rt,b){var num=parseInt(card.getAttribute('d-n'));var isDbl=(rt==='double');var pCnt=isDbl?2:1;var toggleBtn=isDbl?'<button class="sel-card-toggle" onclick="tgRt(this.closest(\'.sel-card\'))" title="切单间">⇄ 单</button>':'<button class="sel-card-toggle" onclick="tgRt(this.closest(\'.sel-card\'))" title="切标间">⇄ 标</button>';var nameHtml=isDbl?'<div class="sel-card-names"><input class="ni2" placeholder="人1" maxlength="8"><input class="ni3" placeholder="人2" maxlength="8"></div>':'<div class="sel-card-names"><input class="ni2" placeholder="姓名" maxlength="8"></div>';card.innerHTML='<div class="sel-card-top"><div class="sel-card-room"><span class="sel-card-num">'+num+'</span><span class="sel-card-bld">'+(b===11?'11号楼':'12号楼')+'</span></div><span class="sel-card-del" onclick="rRm(this)">&times;</span></div><div class="sel-card-meta"><span class="sel-card-cnt '+(isDbl?'dbl':'sgl')+'">'+pCnt+'人</span>'+toggleBtn+'</div>'+nameHtml;}
 function tgRt(card){var rt=card.getAttribute('d-t');var newRt=(rt==='double'?'single':'double');card.setAttribute('d-t',newRt);var b=parseInt(card.getAttribute('d-b'));buildRow(card,newRt,b);updatePP();updSelSummary();rPf();}
-function rRm(el){el.closest('.sel-card').remove();var grid=document.getElementById('selR');if(!grid.querySelector('.sel-card')){grid.innerHTML='<div class="sel-hint"><span class="sel-hint-icon">☝️</span>请拖动或点击下方房间卡片选择</div>';}rPf();updatePP();updSelSummary();}
+function rRm(el){el.closest('.sel-card').remove();var grid=document.getElementById('selR');if(!grid.querySelector('.sel-card')){grid.innerHTML='<div class="sel-hint"><span class="sel-hint-icon">☝</span>请拖动或点击下方房间卡片选择</div>';}rPf();updatePP();updSelSummary();}
 function updatePP(){var cnt=0,grid=document.getElementById('selR');if(grid){Array.from(grid.querySelectorAll('.sel-card')).forEach(function(card){var tp=card.getAttribute('d-t')||'single';cnt+=(tp==='double'?2:1);});}var el=document.getElementById('pp');if(el)el.value=cnt||'';}
 function updSelSummary(){
   var grid=document.getElementById('selR');
   var cards=grid?grid.querySelectorAll('.sel-card'):[];
-  var summary=document.getElementById('selSummary');
-  var bottom=document.getElementById('selBottom');
-  if(cards.length===0){
-    if(summary)summary.style.display='none';
-    if(bottom)bottom.style.display='none';
-    return;
-  }
-  if(summary)summary.style.display='flex';
-  if(bottom)bottom.style.display='flex';
-  var roomCnt=cards.length,pplCnt=0,b11=0,b12=0,sgl=0,dbl=0;
-  cards.forEach(function(c){
-    var tp=c.getAttribute('d-t')||'single';
-    var b=parseInt(c.getAttribute('d-b'));
-    pplCnt+=(tp==='double'?2:1);
-    if(b===11)b11++;else b12++;
-    if(tp==='single')sgl++;else dbl++;
-  });
-  var sumRooms=document.getElementById('selSumRooms');if(sumRooms)sumRooms.textContent=roomCnt;
-  var sumPeople=document.getElementById('selSumPeople');if(sumPeople)sumPeople.textContent=pplCnt;
-  var countNum=document.getElementById('selCountNum');if(countNum)countNum.textContent=roomCnt;
-  // 更新芯片标签
-  var chips=document.getElementById('selChips');
-  if(chips){
-    var h='';
-    if(sgl>0)h+='<span class="sel-chip sel-chip-blue">👤 单间 ×'+sgl+'</span>';
-    if(dbl>0)h+='<span class="sel-chip sel-chip-champ">👥 标间 ×'+dbl+'</span>';
-    if(b11>0)h+='<span class="sel-chip sel-chip-blue">11号楼 ×'+b11+'</span>';
-    if(b12>0)h+='<span class="sel-chip sel-chip-champ">12号楼 ×'+b12+'</span>';
-    chips.innerHTML=h;
+  var cnt=cards.length;
+  var statsBar=document.getElementById('selActionsBar');
+  var statsNum=document.getElementById('selCountNum');
+  var titleStat=document.getElementById('selStats');
+  var titleStatNum=document.getElementById('selStatsNum');
+  if(cnt===0){
+    if(statsBar)statsBar.style.display='none';
+    if(titleStat)titleStat.style.display='none';
+  }else{
+    if(statsBar)statsBar.style.display='flex';
+    if(titleStat)titleStat.style.display='inline-flex';
+    if(statsNum)statsNum.textContent=cnt;
+    if(titleStatNum)titleStatNum.textContent=cnt;
   }
 }
 function clearSel(){document.getElementById('selR').innerHTML='<div class="sel-hint"><span class="sel-hint-icon">☝️</span>请拖动或点击下方房间卡片选择</div>';rPf();updatePP();updSelSummary();t('已清空选择','i');}
