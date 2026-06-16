@@ -291,6 +291,17 @@ input,select,textarea{font:inherit}
 /* 过去 */
 .ov-cal .day.past{opacity:0.3;pointer-events:none}
 
+/* 选中态 */
+.ov-cal .day.sel{box-shadow:inset 0 0 0 2.5px var(--navy),0 0 0 3px rgba(10,22,40,0.15) !important;z-index:2;transform:scale(1.06)}
+.ov-cal .day.sel.occ{background:var(--blue-dark) !important}
+
+/* 日期信息条 */
+.ov-info{display:none;align-items:center;gap:16px;margin-top:14px;padding:10px 16px;background:linear-gradient(135deg,var(--champagne-light),#fff);border:1px solid var(--champagne);border-radius:var(--radius-sm);font-size:12px;color:var(--slate-600);flex-wrap:wrap}
+.ov-info.show{display:flex}
+.ov-info .oi-date{font-weight:700;color:var(--navy)}
+.ov-info .oi-stat{font-size:11px;color:var(--slate-500)}
+.ov-info .oi-stat strong{color:var(--navy);font-size:13px}
+
 /* Hover */
 .ov-cal .day:not(.empty):not(.past):hover{transform:scale(1.06);box-shadow:var(--shadow-md);z-index:2}
 
@@ -385,6 +396,7 @@ input,select,textarea{font:inherit}
         </select>
       </div>
       <div class="ov-cal" id="ovCal"></div>
+      <div class="ov-info" id="ovInfo"></div>
       <div class="ov-summary" id="ovSummary"></div>
     </div>
   </div>
@@ -1103,7 +1115,7 @@ function renderCal(){
     var isToday = (date.getTime() === today.getTime());
     var isPast = date < today;
     var cls = 'day' + (isToday ? ' today' : '') + (isPast ? ' past' : '') + (occ > 0 ? ' occ' : ' free');
-    h += '<div class="'+cls+'" title="'+ds+'\n已占用 '+occ+' 间  ·  可安排 '+(totalRooms-occ)+' 间">'
+    h += '<div class="'+cls+'" onclick="calDayClick(this,\''+ds+'\','+occ+','+(totalRooms-occ)+')" title="'+ds+'\n已占用 '+occ+' 间  ·  可安排 '+(totalRooms-occ)+' 间">'
         + '<span class="dn">'+d+'</span>'
         + '<span class="oc">'+(occ > 0 ? occ+'间' : '空')+'</span>'
         + '</div>';
@@ -1123,6 +1135,41 @@ function renderCal(){
     var bks = BK.filter(function(b){ return b.st !== 'c'; });
     countEl.textContent = bks.length + ' 条记录';
   }
+}
+
+function calDayClick(el, ds, occ, avl){
+  // 反选
+  if(el.classList.contains('sel')){
+    el.classList.remove('sel');
+    document.getElementById('ovInfo').classList.remove('show');
+    return;
+  }
+  // 清除之前选中
+  var allDays = document.querySelectorAll('#ovCal .day.sel');
+  for(var i = 0; i < allDays.length; i++) allDays[i].classList.remove('sel');
+  // 选中当前
+  el.classList.add('sel');
+  // 显示信息条
+  var infoEl = document.getElementById('ovInfo');
+  var dsLabel = ds.slice(5).replace('-','/');
+  infoEl.innerHTML = 
+    '<span class="oi-date">📅 '+ds+'</span>'+
+    '<span class="oi-stat">已占用 <strong style="color:var(--red)">'+occ+'</strong> 间</span>'+
+    '<span class="oi-stat">可安排 <strong style="color:var(--green-dark)">'+avl+'</strong> 间</span>'+
+    '<button class="btn btn-sm btn-primary" onclick="setCheckIn(\''+ds+'\')" style="margin-left:auto">选为入住日期</button>';
+  infoEl.classList.add('show');
+}
+
+function setCheckIn(ds){
+  document.getElementById('df').value = ds;
+  // 退房默认+1天
+  var d = new Date(ds+'T00:00:00');
+  d.setDate(d.getDate()+1);
+  document.getElementById('dt').value = d.toISOString().slice(0,10);
+  rPf();
+  renderCal();
+  // 滚动到排房表单
+  document.querySelector('.bp').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 // 兼容旧调用
