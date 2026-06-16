@@ -314,6 +314,17 @@ input,select,textarea{font:inherit}
 .ov-summary .s-num.green{color:var(--green-dark)}
 .ov-summary .s-label{font-size:11px;color:var(--slate-400)}
 
+/* 日期范围列表 */
+.ov-ranges{margin-top:14px;display:flex;flex-direction:column;gap:3px;max-height:180px;overflow-y:auto}
+.ov-range-row{display:flex;align-items:center;gap:10px;padding:5px 12px;border-radius:6px;font-size:12px;transition:background var(--transition)}
+.ov-range-row:hover{background:var(--slate-50)}
+.ov-range-row .rr-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.ov-range-row .rr-dates{font-size:11px;color:var(--slate-500);min-width:130px;font-family:'SF Mono','Menlo',monospace}
+.ov-range-row .rr-dep{font-weight:600;color:var(--navy);min-width:70px}
+.ov-range-row .rr-info{font-size:10px;color:var(--slate-400)}
+.ov-range-row .rr-rooms{font-weight:700;color:var(--blue);margin-left:auto}
+.ov-range-header{font-size:10px;font-weight:600;color:var(--slate-400);padding:4px 12px;border-bottom:1px solid var(--slate-100);margin-bottom:4px;letter-spacing:0.5px}
+
 #dateOvBody.hide{display:none}
 .ni2{width:100%;padding:5px 8px;border:1px solid var(--slate-200);border-radius:4px;font-size:12px;outline:none;transition:all var(--transition);background:var(--slate-50)}.ni2:focus{border-color:var(--champagne);background:#fff;box-shadow:0 0 0 2px var(--champagne-glow)}.ni3{width:100%;padding:5px 8px;border:1px solid var(--slate-200);border-radius:4px;font-size:12px;outline:none;transition:all var(--transition);background:var(--slate-50)}.ni3:focus{border-color:var(--champagne);background:#fff;box-shadow:0 0 0 2px var(--champagne-glow)}.bill-table{width:100%;border-collapse:collapse;}.bill-table th{padding:7px 8px;text-align:left;font-size:11px;font-weight:600;color:var(--slate-500);border-bottom:2px solid var(--champagne);letter-spacing:0.3px}.bill-table td{padding:7px 8px;font-size:13px;vertical-align:middle;border-bottom:1px solid var(--slate-100)}.rdel2{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--slate-100);color:var(--slate-500);font-size:12px;cursor:pointer;transition:all var(--transition)}.rdel2:hover{background:var(--red);color:#fff}
 
@@ -397,6 +408,7 @@ input,select,textarea{font:inherit}
       </div>
       <div class="ov-cal" id="ovCal"></div>
       <div class="ov-info" id="ovInfo"></div>
+      <div class="ov-ranges" id="ovRanges"></div>
       <div class="ov-summary" id="ovSummary"></div>
     </div>
   </div>
@@ -1122,6 +1134,9 @@ function renderCal(){
   }
   calEl.innerHTML = h;
 
+  // 日期范围列表
+  renderRangeList(first, last, today);
+
   // 底部统计
   var sumEl = document.getElementById('ovSummary');
   sumEl.innerHTML = 
@@ -1149,15 +1164,72 @@ function calDayClick(el, ds, occ, avl){
   for(var i = 0; i < allDays.length; i++) allDays[i].classList.remove('sel');
   // 选中当前
   el.classList.add('sel');
+  // 查找包含该日期的预约
+  var ranges = [];
+  for(var i = 0; i < BK.length; i++){
+    if(BK[i].st === 'c') continue;
+    if(!BK[i].df || !BK[i].dt) continue;
+    var df = BK[i].df, dt = BK[i].dt;
+    if(ds >= df && ds <= dt){
+      ranges.push({dep:BK[i].dep, df:df.slice(5), dt:dt.slice(5), rooms:BK[i].rs.length});
+    }
+  }
   // 显示信息条
   var infoEl = document.getElementById('ovInfo');
   var dsLabel = ds.slice(5).replace('-','/');
+  var rngHtml = '';
+  if(ranges.length > 0){
+    rngHtml = '<span class="oi-stat">|</span>';
+    for(var i = 0; i < ranges.length; i++){
+      rngHtml += '<span class="oi-stat">'+ranges[i].dep+' <strong>'+ranges[i].df+'~'+ranges[i].dt+'</strong> '+ranges[i].rooms+'间</span>';
+    }
+  }
   infoEl.innerHTML = 
     '<span class="oi-date">📅 '+ds+'</span>'+
     '<span class="oi-stat">已占用 <strong style="color:var(--red)">'+occ+'</strong> 间</span>'+
     '<span class="oi-stat">可安排 <strong style="color:var(--green-dark)">'+avl+'</strong> 间</span>'+
+    rngHtml +
     '<button class="btn btn-sm btn-primary" onclick="setCheckIn(\''+ds+'\')" style="margin-left:auto">选为入住日期</button>';
   infoEl.classList.add('show');
+}
+
+function renderRangeList(first, last, today){
+  var rngEl = document.getElementById('ovRanges');
+  if(!rngEl) return;
+  // 筛选当月内有交集的预约
+  var bks = [];
+  for(var i = 0; i < BK.length; i++){
+    if(BK[i].st === 'c') continue;
+    if(!BK[i].df || !BK[i].dt) continue;
+    var dFrom = new Date(BK[i].df); dFrom.setHours(0,0,0,0);
+    var dTo = new Date(BK[i].dt); dTo.setHours(0,0,0,0);
+    if(dTo < first || dFrom > last) continue;
+    bks.push(BK[i]);
+  }
+  bks.sort(function(a,b){ return a.df.localeCompare(b.df); });
+  if(bks.length === 0){
+    rngEl.innerHTML = '';
+    return;
+  }
+  var h = '<div class="ov-range-header">📋 当月排房明细</div>';
+  for(var i = 0; i < bks.length; i++){
+    var bk = bks[i];
+    var df = bk.df.slice(5).replace('-','/'), dt = bk.dt.slice(5).replace('-','/');
+    var dFrom = new Date(bk.df); dFrom.setHours(0,0,0,0);
+    var dTo = new Date(bk.dt); dTo.setHours(0,0,0,0);
+    var dotColor;
+    if(today >= dFrom && today <= dTo) dotColor = 'var(--blue)';
+    else if(today < dFrom) dotColor = 'var(--amber)';
+    else dotColor = 'var(--slate-300)';
+    h += '<div class="ov-range-row">'
+      + '<span class="rr-dot" style="background:'+dotColor+'"></span>'
+      + '<span class="rr-dates">'+df+' ~ '+dt+'</span>'
+      + '<span class="rr-dep">'+bk.dep+'</span>'
+      + '<span class="rr-info">'+(bk.pu||'')+(bk.pp?' '+bk.pp+'人':'')+'</span>'
+      + '<span class="rr-rooms">'+bk.rs.length+'间</span>'
+      + '</div>';
+  }
+  rngEl.innerHTML = h;
 }
 
 function setCheckIn(ds){
