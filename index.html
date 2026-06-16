@@ -245,32 +245,75 @@ input,select,textarea{font:inherit}
   .kpi-row{grid-template-columns:1fr 1fr}.row2{grid-template-columns:1fr}.wh-grid{grid-template-columns:1fr}
 }
 
+/* 日期占用月历 */
 .date-overview{border:1px solid var(--slate-200);border-radius:var(--radius-lg);margin:18px 28px 22px;background:#fff;overflow:hidden;box-shadow:var(--shadow)}
-.date-ov-header{display:flex;align-items:center;gap:8px;padding:14px 20px;cursor:pointer;font-size:14px;font-weight:700;color:var(--navy);background:linear-gradient(to right,var(--slate-50),#fff);border-bottom:1px solid var(--slate-200);transition:background var(--transition);letter-spacing:0.3px}
-.date-ov-header:hover{background:var(--slate-100);}
-.date-ov-header i.rotated{transform:rotate(-90deg);}
-.date-ov-body{padding:14px 18px;}
-.date-ov-body.hide{display:none;}
-.date-ov-legend{display:flex;gap:20px;font-size:11px;color:var(--slate-500);margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed var(--slate-200);}
-.ov-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:middle;}
-.date-ov-timeline{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
-.ov-bar{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--radius-sm);font-size:12px;color:#fff;cursor:pointer;position:relative;transition:opacity var(--transition);box-shadow:0 1px 3px rgba(0,0,0,0.15);}
-.ov-bar:hover{opacity:0.85;}
-.ov-bar .ov-dates{font-size:10px;opacity:0.9;}
-.date-ov-list{max-height:200px;overflow-y:auto;border-radius:var(--radius-sm);}
-.ov-item{display:flex;align-items:center;gap:12px;padding:8px 10px;border-bottom:1px solid var(--slate-100);font-size:12px;transition:background var(--transition);}.ov-item:hover{background:var(--slate-50);}
-.ov-item:last-child{border-bottom:none;}
-.ov-item .ov-status{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.ov-item .ov-range{color:var(--slate-500);font-size:11px;min-width:160px;}
-.ov-item .ov-dep{font-weight:500;color:var(--navy);}
-.ov-item .ov-rooms{color:var(--slate-400);font-size:11px;}
-.ov-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:12px;}
-.ov-cal-cell{text-align:center;padding:3px 0;font-size:10px;border-radius:3px;}
-.ov-cal-cell.head{background:var(--slate-100);font-weight:600;color:var(--slate-500);}
-.ov-cal-cell.occ{background:var(--blue-light);color:var(--blue);font-weight:500;}
-.ov-cal-cell.occ-many{background:var(--red-light);color:var(--red);font-weight:500;}
-.ov-cal-month{font-size:11px;font-weight:600;color:var(--navy);margin:6px 0 4px;}
-#dateOvBody.hide{display:none;}
+.date-ov-header{display:flex;align-items:center;gap:10px;padding:16px 20px;cursor:pointer;background:linear-gradient(to right,var(--slate-50),#fff);border-bottom:1px solid var(--slate-200);transition:background var(--transition)}
+.date-ov-header:hover{background:var(--slate-100)}
+.date-ov-header i.rotated{transform:rotate(-90deg)}
+.date-ov-body{padding:18px 20px}
+.date-ov-body.hide{display:none}
+
+/* 月份导航 */
+.ov-nav{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.ov-nav-btn{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid var(--slate-200);background:#fff;color:var(--slate-600);cursor:pointer;font-size:14px;transition:all var(--transition)}
+.ov-nav-btn:hover{background:var(--slate-100);border-color:var(--slate-300)}
+.ov-nav-title{font-size:16px;font-weight:700;color:var(--navy);min-width:100px;text-align:center;letter-spacing:0.5px}
+.ov-nav-spacer{flex:1}
+.ov-nav-select{padding:5px 12px;border:1px solid var(--slate-200);border-radius:var(--radius-sm);font-size:12px;color:var(--slate-700);background:#fff;outline:none;cursor:pointer}
+
+/* 日历网格 */
+.ov-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:16px}
+.ov-cal .wkd{text-align:center;font-size:11px;font-weight:600;color:var(--slate-400);padding:6px 0;letter-spacing:0.5px}
+.ov-cal .wkd.wk{color:var(--red)}
+.ov-cal .day{position:relative;min-height:44px;padding:3px 4px;border-radius:6px;background:var(--slate-50);text-align:center;cursor:pointer;transition:all var(--transition);border:1px solid transparent}
+.ov-cal .day:hover{border-color:var(--champagne);box-shadow:var(--shadow)}
+.ov-cal .day.past{opacity:0.45;cursor:default}
+.ov-cal .day.empty{opacity:0;pointer-events:none}
+.ov-cal .day .dnum{font-size:13px;font-weight:700;color:var(--slate-700);margin-bottom:2px}
+.ov-cal .day.today .dnum{width:24px;height:24px;line-height:24px;border-radius:50%;background:var(--navy);color:#fff;display:inline-block;font-size:12px}
+.ov-cal .day .dbar{height:4px;border-radius:2px;margin-top:auto;transition:all var(--transition)}
+.ov-cal .day .docc{font-size:9px;font-weight:600;margin-top:1px}
+.ov-cal .day.lvl-0 .docc{color:var(--green);}
+.ov-cal .day.lvl-0 .dbar{background:var(--green);opacity:0.3}
+.ov-cal .day.lvl-1 .docc{color:var(--blue)}
+.ov-cal .day.lvl-1 .dbar{background:var(--blue);opacity:0.6}
+.ov-cal .day.lvl-2 .docc{color:var(--amber)}
+.ov-cal .day.lvl-2 .dbar{background:var(--amber);opacity:0.75}
+.ov-cal .day.lvl-3 .docc{color:var(--red)}
+.ov-cal .day.lvl-3 .dbar{background:var(--red);opacity:0.85}
+.ov-cal .day.today{border:1.5px solid var(--champagne);background:var(--champagne-light)}
+
+/* 统计条 */
+.ov-stats{display:flex;align-items:center;gap:24px;padding:14px 18px;background:var(--slate-50);border-radius:var(--radius-sm);margin-bottom:14px;flex-wrap:wrap;border:1px solid var(--slate-100)}
+.ov-stats .st-item{display:flex;flex-direction:column;gap:2px}
+.ov-stats .st-label{font-size:10px;color:var(--slate-400);font-weight:500;letter-spacing:0.5px;text-transform:uppercase}
+.ov-stats .st-val{font-size:20px;font-weight:800;color:var(--navy)}
+.ov-stats .st-val.avl{color:var(--green)}
+.ov-stats .st-val.occ{color:var(--red)}
+.ov-stats .st-bar-wrap{flex:1;min-width:120px}
+.ov-stats .st-bar-track{height:8px;background:var(--slate-200);border-radius:4px;overflow:hidden}
+.ov-stats .st-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--green),var(--amber),var(--red));transition:width 400ms ease}
+.ov-stats .st-pct{font-size:12px;font-weight:600;color:var(--slate-500);margin-top:4px}
+
+/* 日期详情弹窗 */
+.ov-day-detail{padding:8px;margin-top:4px;background:#fff;border:1px solid var(--champagne);border-radius:var(--radius-sm);font-size:11px;display:none}
+.ov-day-detail.show{display:block}
+.ov-day-detail .dd-item{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--slate-100)}
+.ov-day-detail .dd-item:last-child{border-bottom:none}
+.ov-day-detail .dd-dep{font-weight:600;color:var(--navy)}
+.ov-day-detail .dd-rooms{color:var(--slate-500);font-size:10px}
+
+/* 预订列表 */
+.ov-bk-list{margin-top:12px}
+.ov-bk-list .bk-row{display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:var(--radius-sm);font-size:12px;transition:background var(--transition);cursor:default}
+.ov-bk-list .bk-row:hover{background:var(--slate-50)}
+.ov-bk-list .bk-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ov-bk-list .bk-range{color:var(--slate-500);font-size:11px;min-width:145px;font-family:monospace}
+.ov-bk-list .bk-dep{font-weight:600;color:var(--navy)}
+.ov-bk-list .bk-info{color:var(--slate-400);font-size:11px}
+.ov-bk-list .bk-rooms{font-weight:600;color:var(--champagne-dark);margin-left:auto}
+
+#dateOvBody.hide{display:none}
 .ni2{width:100%;padding:5px 8px;border:1px solid var(--slate-200);border-radius:4px;font-size:12px;outline:none;transition:all var(--transition);background:var(--slate-50)}.ni2:focus{border-color:var(--champagne);background:#fff;box-shadow:0 0 0 2px var(--champagne-glow)}.ni3{width:100%;padding:5px 8px;border:1px solid var(--slate-200);border-radius:4px;font-size:12px;outline:none;transition:all var(--transition);background:var(--slate-50)}.ni3:focus{border-color:var(--champagne);background:#fff;box-shadow:0 0 0 2px var(--champagne-glow)}.bill-table{width:100%;border-collapse:collapse;}.bill-table th{padding:7px 8px;text-align:left;font-size:11px;font-weight:600;color:var(--slate-500);border-bottom:2px solid var(--champagne);letter-spacing:0.3px}.bill-table td{padding:7px 8px;font-size:13px;vertical-align:middle;border-bottom:1px solid var(--slate-100)}.rdel2{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--slate-100);color:var(--slate-500);font-size:12px;cursor:pointer;transition:all var(--transition)}.rdel2:hover{background:var(--red);color:#fff}
 
 /* 房型切换按钮 — 精致小药丸 */
@@ -336,17 +379,25 @@ input,select,textarea{font:inherit}
   <div class="date-overview" id="dateOv">
     <div class="date-ov-header" onclick="document.getElementById('dateOvBody').classList.toggle('hide');this.querySelector('i').classList.toggle('rotated');">
       <i data-lucide="chevron-down" style="width:16px;height:16px;transition:transform .2s;"></i>
-      <span>📅 日期占用总览</span>
+      <span>📅 房间占用日历</span>
       <span id="dateOvCount" style="margin-left:auto;font-size:12px;color:var(--slate-500);"></span>
     </div>
     <div class="date-ov-body" id="dateOvBody">
-      <div class="date-ov-legend">
-        <span class="ov-dot" style="background:var(--blue);"></span>进行中
-        <span class="ov-dot" style="background:var(--amber);"></span>即将开始
-        <span class="ov-dot" style="background:var(--slate-300);"></span>已结束
+      <div class="ov-nav">
+        <button class="ov-nav-btn" onclick="changeCalMonth(-1)" title="上月">◀</button>
+        <span class="ov-nav-title" id="ovMonthTitle">2026年6月</span>
+        <button class="ov-nav-btn" onclick="changeCalMonth(1)" title="下月">▶</button>
+        <div class="ov-nav-spacer"></div>
+        <select class="ov-nav-select" id="ovBldFilter" onchange="renderCal()">
+          <option value="all">全部楼栋</option>
+          <option value="11">11号楼</option>
+          <option value="12">12号楼</option>
+        </select>
       </div>
-      <div class="date-ov-timeline" id="ovTimeline"></div>
-      <div class="date-ov-list" id="ovList"></div>
+      <div class="ov-cal" id="ovCal"></div>
+      <div class="ov-stats" id="ovStats"></div>
+      <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px;">📋 排房列表</div>
+      <div class="ov-bk-list" id="ovBkList"></div>
     </div>
   </div>
   <div class="bp">
@@ -975,8 +1026,8 @@ function demo(){
 function init(){
   document.getElementById('cd').textContent=new Date().getFullYear()+'年'+(new Date().getMonth()+1)+'月'+new Date().getDate()+'日';
   if(!ld())demo();
-  document.getElementById('bld').onchange=function(){ftT(parseInt(this.value));rPf();};
-  document.getElementById('df').onchange=function(){rPf();};document.getElementById('dt').onchange=function(){rPf();};
+  document.getElementById('bld').onchange=function(){ftT(parseInt(this.value));rPf();renderCal();};
+  document.getElementById('df').onchange=function(){rPf();renderCal();};document.getElementById('dt').onchange=function(){rPf();renderCal();};
   document.getElementById('zb').onchange=function(){rZl();};document.getElementById('zdf').onchange=function(){rZl();};document.getElementById('zdt').onchange=function(){rZl();};
   iPf();iZl();rWh();
 }
@@ -984,56 +1035,191 @@ function rdy(){if(typeof lucide!=='undefined'){init();lucide.createIcons();retur
 rdy();
 
 // ========== 日期占用总览 ==========
-function renderDateOverview(){
-  var container = document.getElementById('ovTimeline');
-  var listEl = document.getElementById('ovList');
-  var countEl = document.getElementById('dateOvCount');
-  if(!container || !listEl) return;
-  if(!BK || BK.length === 0){
-    container.innerHTML = '<div style="color:var(--slate-400);font-size:12px;padding:8px 0;">暂无排房记录</div>';
-    listEl.innerHTML = '';
-    if(countEl) countEl.textContent = '（无记录）';
-    return;
-  }
-  var today = new Date(); today.setHours(0,0,0,0);
-  // 按入住日期排序
-  var sorted = BK.slice().sort(function(a,b){ return (a.df||'').localeCompare(b.df||''); });
-  var html = '';
-  var listHtml = '';
-  var nowCount = 0;
-  sorted.forEach(function(bk){
-    if(bk.st==='c')return;
-    var df = bk.df||'', dt = bk.dt||'';
-    if(!df) return;
-    var dFrom = new Date(df);
-    var dTo = new Date(dt);
-    dFrom.setHours(0,0,0,0);
-    dTo.setHours(0,0,0,0);
-    var status, color;
-    if(today >= dFrom && today <= dTo){ status='进行中'; color='var(--blue)'; nowCount++; }
-    else if(today < dFrom){ status='即将开始'; color='var(--amber)'; }
-    else { status='已结束'; color='var(--slate-300)'; }
-    var dep = bk.dep||bk.g||'未知部门';
-    var pur = bk.pur||'';
-    var rooms = (bk.rooms||[]).length;
-    // 时间条
-    html += '<div class="ov-bar" style="background:'+color+';" title="'+dep+' '+df+'~'+dt+'">'
-          + '<span>'+dep+'</span>'
-          + '<span class="ov-dates">'+df.slice(5)+' ~ '+dt.slice(5)+'</span>'
-          + '<span style="font-size:10px;opacity:0.8;">'+rooms+'间</span>'
-          + '</div>';
-    // 列表项
-    listHtml += '<div class="ov-item">'
-          + '<span class="ov-status" style="background:'+color+'"></span>'
-          + '<span class="ov-range">'+df+' ~ '+dt+'</span>'
-          + '<span class="ov-dep">'+dep+'</span>'
-          + '<span class="ov-rooms">'+rooms+'间'+(pur?' · '+pur:'')+'</span>'
-          + '</div>';
-  });
-  container.innerHTML = html || '<div style="color:var(--slate-400);font-size:12px;">暂无数据</div>';
-  listEl.innerHTML = listHtml;
-  if(countEl) countEl.textContent = '（共 '+BK.length+' 条，'+nowCount+' 条进行中）';
+// ========== 月份日历占用视图 ==========
+var calYear, calMonth;
+
+function initCal(){
+  var now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth() + 1; // 1-12
+  renderCal();
 }
+
+function changeCalMonth(delta){
+  calMonth += delta;
+  if(calMonth < 1){ calMonth = 12; calYear--; }
+  if(calMonth > 12){ calMonth = 1; calYear++; }
+  renderCal();
+}
+
+function renderCal(){
+  var bldFilter = document.getElementById('ovBldFilter') ? document.getElementById('ovBldFilter').value : 'all';
+  document.getElementById('ovMonthTitle').textContent = calYear+'年'+calMonth+'月';
+
+  // 统计每天占用房间数
+  var dayMap = {}; // 'YYYY-MM-DD' -> Set of room numbers(uid)
+  var first = new Date(calYear, calMonth-1, 1);
+  var last = new Date(calYear, calMonth, 0);
+  var today = new Date(); today.setHours(0,0,0,0);
+
+  for(var i = 0; i < BK.length; i++){
+    var bk = BK[i];
+    if(bk.st === 'c') continue;
+    if(!bk.df || !bk.dt) continue;
+    var dFrom = new Date(bk.df); dFrom.setHours(0,0,0,0);
+    var dTo = new Date(bk.dt); dTo.setHours(0,0,0,0);
+    if(dTo < first || dFrom > last) continue;
+    var d = new Date(Math.max(dFrom.getTime(), first.getTime()));
+    var end = new Date(Math.min(dTo.getTime(), last.getTime()));
+    while(d <= end){
+      var ds = d.toISOString().slice(0,10);
+      if(!dayMap[ds]) dayMap[ds] = {};
+      for(var j = 0; j < bk.rs.length; j++){
+        var uid = uVal(bk.rs[j]);
+        var g = gu(uid);
+        if(g && (bldFilter === 'all' || g.bld === parseInt(bldFilter))){
+          dayMap[ds][uid] = true;
+        }
+      }
+      d.setDate(d.getDate() + 1);
+    }
+  }
+
+  // 总房间数(按楼栋过滤)
+  var totalRooms = 0;
+  for(var i = 0; i < ALL.length; i++){
+    if(bldFilter === 'all' || ALL[i].bld === parseInt(bldFilter)) totalRooms++;
+  }
+
+  // 当月日均占用
+  var totalOcc = 0, maxOcc = 0, occDays = 0;
+  var dayKeys = Object.keys(dayMap).sort();
+  for(var i = 0; i < dayKeys.length; i++){
+    var cnt = Object.keys(dayMap[dayKeys[i]]).length;
+    totalOcc += cnt; occDays++;
+    if(cnt > maxOcc) maxOcc = cnt;
+  }
+  var avgOcc = occDays > 0 ? Math.round(totalOcc / occDays) : 0;
+
+  // 渲染日历网格
+  var calEl = document.getElementById('ovCal');
+  var wkds = ['日','一','二','三','四','五','六'];
+  var h = '';
+  for(var w = 0; w < 7; w++) h += '<div class="wkd'+(w===0||w===6?' wk':'')+'">'+wkds[w]+'</div>';
+
+  var startDow = first.getDay(); // 0=Sun
+  var daysInMonth = last.getDate();
+  for(var i = 0; i < startDow; i++) h += '<div class="day empty"></div>';
+
+  for(var d = 1; d <= daysInMonth; d++){
+    var date = new Date(calYear, calMonth-1, d);
+    var ds = date.toISOString().slice(0,10);
+    var occCount = dayMap[ds] ? Object.keys(dayMap[ds]).length : 0;
+    var avl = totalRooms - occCount;
+    var pct = totalRooms > 0 ? Math.round(occCount/totalRooms*100) : 0;
+    var isToday = (date.getTime() === today.getTime());
+    var isPast = date < today;
+    var lvl = occCount === 0 ? 0 : (pct < 25 ? 1 : (pct < 50 ? 2 : 3));
+    var occText = occCount > 0 ? occCount+'间' : '';
+    var avlText = avl > 0 ? '余'+avl : '满';
+
+    h += '<div class="day lvl-'+lvl+(isToday?' today':'')+(isPast?' past':'')+'" onclick="showDayDetail(\''+ds+'\','+occCount+','+totalRooms+')" title="'+ds+' 占用:'+occCount+' 可排:'+avl+'">'
+        + '<div class="dnum">'+d+'</div>'
+        + '<div class="docc" style="min-height:12px;">'+(occCount>0?occText:avlText)+'</div>'
+        + '<div class="dbar" style="width:'+Math.max(4,pct)+'%;margin:0 auto;"></div>'
+        + '</div>';
+  }
+  calEl.innerHTML = h;
+
+  // 统计条
+  var statsEl = document.getElementById('ovStats');
+  statsEl.innerHTML = ''
+    + '<div class="st-item"><span class="st-label">总房间</span><span class="st-val">'+totalRooms+'间</span></div>'
+    + '<div class="st-item"><span class="st-label">当月最大占用</span><span class="st-val occ">'+maxOcc+'间</span></div>'
+    + '<div class="st-item"><span class="st-label">当月平均占用</span><span class="st-val avl">'+avgOcc+'间</span></div>'
+    + '<div class="st-item"><span class="st-label">可安排</span><span class="st-val avl">'+(totalRooms - avgOcc)+'间</span></div>'
+    + '<div class="st-bar-wrap"><div class="st-bar-track"><div class="st-bar-fill" style="width:'+(totalRooms>0?Math.round(avgOcc/totalRooms*100):0)+'%"></div></div><div class="st-pct">占用率 '+(totalRooms>0?Math.round(avgOcc/totalRooms*100):0)+'%</div></div>';
+
+  // 排房列表
+  renderBkList(bldFilter);
+
+  // 标题计数
+  var countEl = document.getElementById('dateOvCount');
+  if(countEl) {
+    var bks = BK.filter(function(b){ return b.st !== 'c'; });
+    countEl.textContent = '（'+bks.length+' 条记录）';
+  }
+}
+
+function showDayDetail(ds, occCount, totalRooms){
+  // 点击某天显示当天预约详情
+  var existing = document.getElementById('dayDetail_'+ds);
+  if(existing){ existing.remove(); return; }
+  var details = [];
+  for(var i = 0; i < BK.length; i++){
+    var bk = BK[i];
+    if(bk.st === 'c') continue;
+    if(!bk.df || !bk.dt) continue;
+    var dFrom = new Date(bk.df); dFrom.setHours(0,0,0,0);
+    var dTo = new Date(bk.dt); dTo.setHours(0,0,0,0);
+    var d = new Date(ds+'T00:00:00');
+    if(d >= dFrom && d <= dTo){
+      var rns = rnListWithName(bk.rs);
+      details.push({dep: bk.dep, co: bk.co||'', rooms: bk.rs.length, rns: rns, df: bk.df, dt: bk.dt});
+    }
+  }
+  var h = '<div class="ov-day-detail show" id="dayDetail_'+ds+'"><div style="font-weight:700;color:var(--navy);margin-bottom:6px;">'+ds+' 占用 '+occCount+'/'+totalRooms+' 间</div>';
+  if(details.length === 0){
+    h += '<div style="color:var(--slate-400);">当日无预约</div>';
+  } else {
+    for(var i = 0; i < details.length; i++){
+      var d = details[i];
+      h += '<div class="dd-item"><span class="dd-dep">'+d.dep+'</span><span class="dd-rooms">'+d.rooms+'间: '+d.rns.join(',')+'</span></div>';
+    }
+  }
+  h += '<div style="text-align:right;margin-top:4px;"><button class="rt-toggle" onclick="this.parentElement.parentElement.remove()">关闭 ✕</button></div></div>';
+  // 找到对应日期的cell插入
+  var cells = document.querySelectorAll('#ovCal .day');
+  for(var i = 0; i < cells.length; i++){
+    if(cells[i].getAttribute('onclick') && cells[i].getAttribute('onclick').indexOf("'"+ds+"'") >= 0){
+      cells[i].insertAdjacentHTML('afterend', h);
+      break;
+    }
+  }
+}
+
+function renderBkList(bldFilter){
+  var listEl = document.getElementById('ovBkList');
+  if(!listEl) return;
+  var bks = BK.filter(function(b){ return b.st !== 'c'; });
+  bks.sort(function(a,b){ return (b.df||'').localeCompare(a.df||''); });
+  var today = new Date(); today.setHours(0,0,0,0);
+  var h = '';
+  for(var i = 0; i < bks.length; i++){
+    var bk = bks[i];
+    var dFrom = new Date(bk.df); dFrom.setHours(0,0,0,0);
+    var dTo = new Date(bk.dt); dTo.setHours(0,0,0,0);
+    var status, dotColor;
+    if(today >= dFrom && today <= dTo){ status='进行中'; dotColor='var(--blue)'; }
+    else if(today < dFrom){ status='即将'; dotColor='var(--amber)'; }
+    else { status='结束'; dotColor='var(--slate-300)'; }
+    var rns = rnListWithName(bk.rs);
+    h += '<div class="bk-row">'
+        + '<span class="bk-dot" style="background:'+dotColor+'"></span>'
+        + '<span class="bk-range">'+bk.df+' ~ '+bk.dt+'</span>'
+        + '<span class="bk-dep">'+bk.dep+'</span>'
+        + '<span class="bk-info">'+(bk.pu||'')+(bk.pp?' '+bk.pp+'人':'')+'</span>'
+        + '<span class="bk-rooms">'+bk.rs.length+'间</span>'
+        + '</div>';
+  }
+  if(!h) h = '<div style="color:var(--slate-400);font-size:12px;padding:8px;">暂无排房记录</div>';
+  listEl.innerHTML = h;
+}
+
+// 兼容旧调用
+function renderDateOverview(){ initCal(); }
+
+// 初始化：在 iPf 中也会调用 renderDateOverview
 
 
 // ========== 导出/导入数据 ==========
