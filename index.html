@@ -56,9 +56,9 @@ input,select,textarea{font:inherit}
 .floor-header .fc{font-size:11px;color:var(--slate-400);margin-left:auto}
 .floor-header .fc span{font-weight:600;color:var(--slate-600)}
 .room-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:7px}
-.room-card{background:#fff;border-radius:var(--radius-sm);border:1px solid var(--slate-200);padding:9px 7px;cursor:pointer;text-align:center;user-select:none;position:relative;transition:all var(--transition)}
-.room-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);border-color:var(--slate-300)}
-.room-card .rn{font-size:14px;font-weight:700;color:var(--slate-800);letter-spacing:0.3px}
+.room-card{background:#fff;border-radius:8px;border:1px solid var(--slate-200);padding:10px 8px;cursor:pointer;text-align:center;user-select:none;position:relative;transition:all 250ms cubic-bezier(0.4,0,0.2,1);overflow:hidden}
+.room-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-3px);border-color:var(--slate-300)}
+.room-card .rn{font-size:15px;font-weight:800;color:var(--slate-800);letter-spacing:0.3px}
 .room-card .rt{font-size:10px;color:var(--slate-400)}
 .room-card .rd{display:inline-block;width:8px;height:8px;border-radius:50%;margin-top:3px}
 .room-card .rnm{font-size:9px;color:var(--slate-500);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -254,25 +254,31 @@ input,select,textarea{font:inherit}
 #dateOvBody.hide{display:none;}
 .ni2{width:100%;padding:4px 6px;border:1px solid var(--slate-200);border-radius:3px;font-size:12px;outline:none;}.ni2:focus{border-color:var(--blue);}.ni3{width:100%;padding:4px 6px;border:1px solid var(--slate-200);border-radius:3px;font-size:12px;outline:none;}.ni3:focus{border-color:var(--blue);}.bill-table{width:100%;border-collapse:collapse;}.bill-table th{padding:6px 8px;text-align:left;font-size:11px;font-weight:600;color:var(--slate-500);border-bottom:1px solid var(--slate-200);}.bill-table td{padding:6px 8px;font-size:13px;vertical-align:middle;}.rdel2{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--slate-200);color:var(--slate-600);font-size:12px;cursor:pointer;}.rdel2:hover{background:var(--red);color:#fff;}
 
-/* 标间选中态 */
-.room-card.sel.dbl{border-left:3px solid var(--gold) !important;background:var(--gold-light);box-shadow:0 0 0 1px var(--gold),0 2px 8px rgba(184,134,11,0.2);}
-.room-card.sel.dbl .rnm,.room-card.sel.dbl .rn{color:var(--gold-dark) !important;}
-.room-card.sel.dbl .rd{background:var(--gold) !important;}
-/* 房间类型徽章 */
-.rt-badge{display:inline-block;padding:1px 5px;border-radius:3px;font-size:9px;font-weight:600;letter-spacing:0.5px;margin-bottom:1px;}
-.rt-badge.rt-sgl{background:var(--blue-light);color:var(--blue);border:1px solid rgba(37,99,235,0.3);}
-.rt-badge.rt-dbl{background:var(--gold-light);color:var(--gold-dark);border:1px solid rgba(184,134,11,0.4);}
-.rt-badge.rt-sgl-sm{background:var(--blue-light);color:var(--blue);font-size:10px;padding:2px 6px;border-radius:4px;}
-.rt-badge.rt-dbl-sm{background:var(--gold-light);color:var(--gold-dark);font-size:10px;padding:2px 6px;border-radius:4px;}
+/* 房间类型徽章 - 精致胶囊风格 */
+.rt-badge{display:inline-flex;align-items:center;gap:2px;padding:2px 9px;border-radius:10px;font-size:9px;font-weight:700;letter-spacing:0.5px;line-height:1.5;white-space:nowrap;transition:all var(--transition)}
+.rt-badge.rt-sgl{background:linear-gradient(135deg,#dbeafe 0%,#eff6ff 100%);color:#1d4ed8;border:1px solid rgba(37,99,235,0.25);box-shadow:0 1px 3px rgba(37,99,235,0.1)}
+.rt-badge.rt-dbl{background:linear-gradient(135deg,#fef3c7 0%,#fffbeb 100%);color:#92600a;border:1px solid rgba(184,134,11,0.3);box-shadow:0 1px 3px rgba(184,134,11,0.12)}
+.rt-badge.rt-sgl-sm{background:linear-gradient(135deg,#dbeafe 0%,#eff6ff 100%);color:#1d4ed8;font-size:10px;padding:3px 10px;border-radius:10px;border:1px solid rgba(37,99,235,0.2);box-shadow:0 1px 2px rgba(37,99,235,0.06)}
+.rt-badge.rt-dbl-sm{background:linear-gradient(135deg,#fef3c7 0%,#fffbeb 100%);color:#92600a;font-size:10px;padding:3px 10px;border-radius:10px;border:1px solid rgba(184,134,11,0.25);box-shadow:0 1px 2px rgba(184,134,11,0.08)}
 /* 已选房间类型标记 */
-.room-card .rt-badge{margin:0 auto 2px;}
+.room-card .rt-badge{margin:1px auto 3px}
+/* 空闲标间底部金色细线 */
+.room-card.avl[data-type="double"]{border-bottom:2px solid rgba(184,134,11,0.5)}
+/* 选中态 - 单间(默认) */
+.room-card.sel[data-type="single"]{border-left:3px solid var(--blue) !important;background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%) !important;box-shadow:0 0 0 1.5px var(--blue),0 4px 14px rgba(37,99,235,0.2) !important}
+.room-card.sel[data-type="single"] .rn{color:var(--blue-dark) !important}
+.room-card.sel[data-type="single"] .rnm{color:var(--blue) !important}
+.room-card.sel[data-type="single"] .rd{background:var(--blue) !important}
+/* 选中态 - 标间 */
+.room-card.sel[data-type="double"]{border-left:3px solid var(--gold) !important;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%) !important;box-shadow:0 0 0 1.5px var(--gold),0 4px 14px rgba(184,134,11,0.22) !important}
+.room-card.sel[data-type="double"] .rn{color:var(--gold-dark) !important}
+.room-card.sel[data-type="double"] .rnm{color:var(--gold-dark) !important}
+.room-card.sel[data-type="double"] .rd{background:var(--gold) !important}
 /* 输入框统一风格 */
-.ni{width:100%;border:none;border-bottom:1.5px dashed var(--slate-300);background:transparent;font-size:12px;padding:2px 4px;outline:none;transition:border var(--transition);}
-.ni:focus{border-bottom-color:var(--blue);border-bottom-style:solid;}
-.ni2,.ni3{flex:1;padding:5px 8px;border:1px solid var(--slate-200);border-radius:4px;font-size:12px;outline:none;transition:all var(--transition);background:var(--slate-50);}
-.ni2:focus,.ni3:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 2px rgba(37,99,235,0.1);}
-/* 标间选中卡片样式 */
-.room-card.sel[data-type="double"]{border-left-color:var(--gold);}
+.ni{width:100%;border:none;border-bottom:1.5px dashed var(--slate-300);background:transparent;font-size:12px;padding:2px 4px;outline:none;transition:border var(--transition)}
+.ni:focus{border-bottom-color:var(--blue);border-bottom-style:solid}
+.ni2,.ni3{flex:1;padding:5px 8px;border:1px solid var(--slate-200);border-radius:4px;font-size:12px;outline:none;transition:all var(--transition);background:var(--slate-50)}
+.ni2:focus,.ni3:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 2px rgba(37,99,235,0.1)}
 </style>
 </head><body>
 <header class="header">
@@ -566,15 +572,16 @@ function rPf(){
     h+='<div class="floor-section"><div class="floor-header"><h3>'+nm+' '+flr+'F</h3><span class="fb">共 '+total+' 间</span><span class="fc">空闲 <span>'+(total-bkd)+'</span> / 已排 <span>'+bkd+'</span> / 共 <span>'+total+'</span> 间</span></div><div class="room-grid">';
     for(var ri=0;ri<rms.length;ri++){var rm=rms[ri],isS=false;for(var si=0;si<sel.length;si++){if(sel[si].n===rm.num&&sel[si].b===rm.bld){isS=true;break;}}
       var isB=fd&&td&&isBkd(rm.num,fd,td),bi=isB?getBk(rm.num,fd):null,names=isB?getBkNames(rm.num,fd,td):[];
-      var cls='room-card avl';if(isS)cls='room-card sel'+(srt==='double'?' dbl':'');else if(isB)cls='room-card bkd';
-      var nhtml='';if(isS){var srt=getRoomType(rm.num);var sb=srt==='double'?'<span class="rt-badge rt-dbl">标间</span>':'<span class="rt-badge rt-sgl">单间</span>';nhtml=sb+'<div class="rnm" style="color:var(--blue);font-weight:500;">已选</div>'+(srt==='double'?'<div class="rnm"><input class="ni" placeholder="人1" maxlength="4"><input class="ni" placeholder="人2" maxlength="4" style="margin-top:1px;"></div>':'<div class="rnm"><input class="ni" placeholder="姓名" maxlength="6"></div>');}
+      var rmt=getRoomType(rm.num);
+      var cls='room-card avl';if(isS)cls='room-card sel';else if(isB)cls='room-card bkd';
+      var nhtml='';if(isS){var sb=rmt==='double'?'<span class="rt-badge rt-dbl">👥 标间</span>':'<span class="rt-badge rt-sgl">👤 单间</span>';nhtml=sb+'<div class="rnm" style="font-weight:500;">已选</div>'+(rmt==='double'?'<div class="rnm"><input class="ni" placeholder="入住人1" maxlength="4"><input class="ni" placeholder="入住人2" maxlength="4" style="margin-top:1px;"></div>':'<div class="rnm"><input class="ni" placeholder="姓名" maxlength="6"></div>');}
       else if(isB){nhtml='<div class="rnm" style="color:var(--red);font-weight:500;">占用</div>'+(names.length>0?'<div class="rnm">'+names.slice(0,2).join(',')+'</div>':'')}
-      else{var art=getRoomType(rm.num);nhtml=(art==='double'?'<span class="rt-badge rt-dbl-sm">标间</span>':'<span class="rt-badge rt-sgl-sm">单间</span>')+'<div class="rnm" style="color:var(--green-dark);">空闲</div>';}
-      h+='<div class="'+cls+'" onclick="cr('+rm.num+')"><div class="rn">'+rm.num+'</div><div class="rt">客房 '+flr+'F</div><div class="rd"></div>'+nhtml+(isB&&bi?'<div class="rbb">'+bi.dep+'</div>':'')+'</div>';}
+      else{var ab=rmt==='double'?'<span class="rt-badge rt-dbl-sm">👥 标间</span>':'<span class="rt-badge rt-sgl-sm">👤 单间</span>';nhtml=ab+'<div class="rnm" style="color:var(--green-dark);">空闲</div>';}
+      h+='<div class="'+cls+'" data-type="'+rmt+'" onclick="cr('+rm.num+')"><div class="rn">'+rm.num+'</div><div class="rt">客房 '+flr+'F</div><div class="rd"></div>'+nhtml+(isB&&bi?'<div class="rbb">'+bi.dep+'</div>':'')+'</div>';}
     h+='</div></div>';}
   c.innerHTML=h;updS();
 }
-function cr(num){var fd=document.getElementById('df').value,td=document.getElementById('dt').value,b=parseInt(document.getElementById('bld').value);if(!fd||!td){t('请先选择入住和退房日期','e');return;}if(isBkd(num,fd,td)){t('该房间在选定时间范围内已被预约','e');return;}var el=document.getElementById('selR'),tbody=el.querySelector('tbody');var rt=getRoomType(num);var isDbl=(rt==='double');if(!tbody){el.innerHTML='';el.style.padding='0';tbody=document.createElement('tbody');var tbl=document.createElement('table');tbl.className='bill-table';tbl.innerHTML='<thead><tr><th style="width:60px">房号</th><th style="width:50px">类型</th><th style="width:50px">楼栋</th><th>入住人</th><th style="width:40px"></th></tr></thead>';tbl.appendChild(tbody);el.appendChild(tbl);}var existing=null;Array.from(tbody.querySelectorAll('tr')).forEach(function(r){if(parseInt(r.getAttribute('d-n'))===num&&parseInt(r.getAttribute('d-b'))===b)existing=r;});if(existing){existing.remove();}else{var tr=document.createElement('tr');tr.setAttribute('d-n',num);tr.setAttribute('d-b',b);tr.setAttribute('d-t',rt);var typeLabel=isDbl?'<span class="rt-badge rt-dbl-sm" style="display:inline-flex;">标间</span>':'<span class="rt-badge rt-sgl-sm" style="display:inline-flex;">单间</span>';var nameHtml=isDbl?'<div style="display:flex;gap:4px;"><input class="ni2" placeholder="入住人1" maxlength="8"><input class="ni3" placeholder="入住人2" maxlength="8"></div>':'<input class="ni2" placeholder="姓名" maxlength="8">';tr.innerHTML='<td class="room-num">'+num+'</td><td>'+typeLabel+'</td><td>'+(b===11?'11号楼':'12号楼')+'</td><td style="display:flex;gap:4px;">'+nameHtml+'</td><td><span class="rdel2" onclick="rRm(this)">&times;</span></td>';tbody.appendChild(tr);}rPf();updatePP();}
+function cr(num){var fd=document.getElementById('df').value,td=document.getElementById('dt').value,b=parseInt(document.getElementById('bld').value);if(!fd||!td){t('请先选择入住和退房日期','e');return;}if(isBkd(num,fd,td)){t('该房间在选定时间范围内已被预约','e');return;}var el=document.getElementById('selR'),tbody=el.querySelector('tbody');var rt=getRoomType(num);var isDbl=(rt==='double');if(!tbody){el.innerHTML='';el.style.padding='0';tbody=document.createElement('tbody');var tbl=document.createElement('table');tbl.className='bill-table';tbl.innerHTML='<thead><tr><th style="width:60px">房号</th><th style="width:50px">类型</th><th style="width:50px">楼栋</th><th>入住人</th><th style="width:40px"></th></tr></thead>';tbl.appendChild(tbody);el.appendChild(tbl);}var existing=null;Array.from(tbody.querySelectorAll('tr')).forEach(function(r){if(parseInt(r.getAttribute('d-n'))===num&&parseInt(r.getAttribute('d-b'))===b)existing=r;});if(existing){existing.remove();}else{var tr=document.createElement('tr');tr.setAttribute('d-n',num);tr.setAttribute('d-b',b);tr.setAttribute('d-t',rt);var typeLabel=isDbl?'<span class="rt-badge rt-dbl-sm">👥 标间</span>':'<span class="rt-badge rt-sgl-sm">👤 单间</span>';var nameHtml=isDbl?'<div style="display:flex;gap:4px;"><input class="ni2" placeholder="入住人1" maxlength="8"><input class="ni3" placeholder="入住人2" maxlength="8"></div>':'<input class="ni2" placeholder="姓名" maxlength="8">';tr.innerHTML='<td class="room-num">'+num+'</td><td>'+typeLabel+'</td><td>'+(b===11?'11号楼':'12号楼')+'</td><td style="display:flex;gap:4px;">'+nameHtml+'</td><td><span class="rdel2" onclick="rRm(this)">&times;</span></td>';tbody.appendChild(tr);}rPf();updatePP();}
 function rRm(el){el.closest('tr').remove();var tbody=document.querySelector('#selR tbody');if(!tbody||tbody.children.length===0){document.getElementById('selR').innerHTML='<div class="sel-hint">请点击下方房间卡片选择</div>';document.getElementById('selR').style.padding='';}rPf();updatePP();}
 function updatePP(){var cnt=0,tbody=document.querySelector('#selR tbody');if(tbody){Array.from(tbody.querySelectorAll('tr')).forEach(function(tr){var tp=tr.getAttribute('d-t')||'single';cnt+=(tp==='double'?2:1);});}var el=document.getElementById('pp');if(el)el.value=cnt||'';}
 function updS(){var fd=document.getElementById('df').value,td=document.getElementById('dt').value;if(!fd||!td){document.getElementById('sAvl').textContent='-';document.getElementById('sBkd').textContent='-';return;}var cnt=0,d=new Date(fd),end=new Date(td);while(d<=end){var ds=d.toISOString().slice(0,10);for(var i=0;i<BK.length;i++){var b=BK[i];if(b.st!=='c'&&ds>=b.df&&ds<=b.dt)cnt+=b.rs.length;}d.setDate(d.getDate()+1);}var days=Math.max(1,Math.round((end-new Date(fd))/86400000)+1);document.getElementById('sAvl').textContent=ALL.length-Math.round(cnt/days);document.getElementById('sBkd').textContent=Math.round(cnt/days);}
