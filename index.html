@@ -371,6 +371,10 @@ input,select,textarea{font:inherit}
 @media(max-width:900px){.ov-kpi-row{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.ov-kpi-row{grid-template-columns:repeat(2,1fr)}}
 
+/* 套间样式 */
+.rt-badge.rt-ste{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;border-color:#d97706;}
+.room-card.sel .rt-badge.rt-ste{background:linear-gradient(135deg,#fde68a,#f59e0b);color:#fff;border-color:#d97706;}
+
 /* 响应式 */
 @media(max-width:768px){
   .header{padding:0 16px}.header-logo span{display:none}.header-tabs{gap:2px;margin-left:12px}.header-tab{padding:4px 10px;font-size:12px}
@@ -566,8 +570,7 @@ var B11 = [
   {f:1,r:[101,102]},
   {f:2,r:[201,202,203,205,206,207,208,210,211,212,213,215,216,217,218,220,222]},
   {f:3,r:[301,302,303,305,306,307,308,310,311,312,313,315,316,317,318,320,322]},
-  {f:4,r:[401,402,403,405,406,407,408,410,411,412,413,415,416,417,418,420,422]},
-  {f:5,r:[501,502,503]}
+  {f:4,r:[401,402,403,405,406,407,408,410,411,412,413,415,416,417,418,420,422]}
 ];
 var B12 = [
   {f:1,r:[102,103,104,105,106,107,108,109,110,111,113,114,115,116,117,118,119,120,121,122,123]},
@@ -576,6 +579,12 @@ var B12 = [
   {f:4,r:[401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,419,420,421,422,423,425,427]},
   {f:5,r:[501,502,503,504,505,506,507,508,510,513,514,516,517,518,519,520,521,522,523,525]}
 ];
+
+var ROOM_TYPES = {};
+ROOM_TYPES[201] = '小套'; ROOM_TYPES[203] = '小套';
+ROOM_TYPES[301] = '大套'; ROOM_TYPES[401] = '大套';
+ROOM_TYPES[303] = '中套'; ROOM_TYPES[403] = '中套';
+function getRoomSuite(num){return ROOM_TYPES[num]||'';}
 var ALL = [], sk = 'pf_v4';
 for(var i=0;i<B11.length;i++){var fl=B11[i];for(var j=0;j<fl.r.length;j++){var n=fl.r[j];ALL.push({uid:110000+n,num:n,bld:11,flr:fl.f});}}
 for(var i=0;i<B12.length;i++){var fl=B12[i];for(var j=0;j<fl.r.length;j++){var n=fl.r[j];ALL.push({uid:120000+n,num:n,bld:12,flr:fl.f});}}
@@ -758,7 +767,7 @@ function rPf(){
       var nhtml='',nm1='',nm2='';
       if(isS){
         var pCnt=selType==='double'?2:1;
-        var sb=selType==='double'?'<span class="rt-badge rt-dbl" style="font-size:9px;padding:2px 8px;margin:2px auto;">标间</span>':'<span class="rt-badge rt-sgl" style="font-size:9px;padding:2px 8px;margin:2px auto;">单间</span>';
+        var _st2=getRoomSuite(rm.num);var sb=_st2?'<span class="rt-badge rt-ste" style="font-size:9px;padding:2px 8px;margin:2px auto;">'+_st2+'</span>':(selType==='double'?'<span class="rt-badge rt-dbl" style="font-size:9px;padding:2px 8px;margin:2px auto;">标间</span>':'<span class="rt-badge rt-sgl" style="font-size:9px;padding:2px 8px;margin:2px auto;">单间</span>');
         var tg=selType==='double'?'<button class="rc-toggle" onclick="event.stopPropagation();rtc(this,\''+rm.num+'\','+rm.bld+')">⇄单</button>':'<button class="rc-toggle" onclick="event.stopPropagation();rtc(this,\''+rm.num+'\','+rm.bld+')">⇄标</button>';
         var selNm=sel[si].nm||'',selNm2=sel[si].nm2||'';
         if(selType==='double'){
@@ -768,8 +777,8 @@ function rPf(){
         }
         nhtml+='<div class="rnm" style="font-weight:500;">'+pCnt+'人</div>';
       }
-      else if(isB){nhtml='<div class="rnm" style="color:var(--red);font-weight:500;">占用</div>'+(names.length>0?'<div class="rnm">'+names.slice(0,2).join(',')+'</div>':'')}
-      else{nhtml='<div class="rnm" style="color:var(--green-dark);">空闲</div>';}
+      else if(isB){var _st4=getRoomSuite(rm.num);nhtml=(_st4?'<div class="rnm" style="color:var(--red);font-weight:500;">'+_st4+'</div>':'<div class="rnm" style="color:var(--red);font-weight:500;">占用</div>')+(names.length>0?'<div class="rnm">'+names.slice(0,2).join(',')+'</div>':'')}
+      else{var _st3=getRoomSuite(rm.num);nhtml=_st3?'<div class="rnm" style="color:var(--green-dark);">'+_st3+'</div>':'<div class="rnm" style="color:var(--green-dark);">空闲</div>';}
       h+='<div class="'+cls+'" data-num="'+rm.num+'" data-bld="'+rm.bld+'" data-type="'+(isS?selType:'single')+'"><div class="rn">'+rm.num+'</div><div class="rt">客房 '+flr+'F</div><div class="rd"></div>'+nhtml+(isB&&bi?'<div class="rbb">'+bi.dep+'</div>':'')+'</div>';}
     h+='</div></div>';}
   var selBox = document.getElementById('selBox');
