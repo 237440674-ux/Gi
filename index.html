@@ -27,40 +27,43 @@ html{font-size:14px}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--slate-50);color:var(--slate-700);line-height:1.5}
 button{cursor:pointer;font:inherit;color:inherit;border:none;background:none}
 input,select,textarea{font:inherit}
-.header{background:linear-gradient(135deg,var(--navy) 0%,#162240 60%,var(--navy-light) 100%);color:#fff;padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(10,22,40,0.25);border-bottom:2px solid var(--champagne)}
+.header{background:linear-gradient(135deg,var(--navy) 0%,#162240 60%,var(--navy-light) 100%);color:#fff;padding:0 28px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(10,22,40,0.3);border-bottom:2px solid var(--champagne);backdrop-filter:blur(12px)}
 .header-left{display:flex;align-items:center;gap:14px}
 .header-logo{font-size:18px;font-weight:700;display:flex;align-items:center;gap:10px;letter-spacing:1px;color:#fff}
 .header-logo svg{width:22px;height:22px;color:var(--champagne)}
 .header-logo span{background:linear-gradient(90deg,#fff,var(--champagne-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.header-tabs{display:flex;gap:4px;margin-left:28px}
-.header-tab{padding:7px 20px;border-radius:8px;font-size:13px;font-weight:500;color:rgba(255,255,255,0.65);transition:all var(--transition);position:relative}
+.header-tabs{display:flex;gap:2px;margin-left:28px}
+.header-tab{padding:6px 18px;border-radius:8px;font-size:13px;font-weight:500;color:rgba(255,255,255,0.6);transition:all var(--transition);position:relative;letter-spacing:0.5px}
 .header-tab:hover{background:rgba(255,255,255,0.08);color:#fff}
-.header-tab.act{background:linear-gradient(135deg,rgba(201,169,110,0.2),rgba(201,169,110,0.1));color:var(--champagne-light);font-weight:600;box-shadow:inset 0 0 0 1px rgba(201,169,110,0.3)}
-.toolbar{background:#fff;border-bottom:1px solid var(--slate-200);padding:14px 28px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:var(--shadow)}
+.header-tab.act{background:linear-gradient(135deg,rgba(201,169,110,0.25),rgba(201,169,110,0.12));color:var(--champagne-light);font-weight:600;box-shadow:inset 0 0 0 1px rgba(201,169,110,0.35)}
+.header-btn{padding:5px 14px;border-radius:6px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.75);background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);transition:all var(--transition);margin-left:6px;cursor:pointer}
+.header-btn:hover{background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.25)}
+.toolbar{background:#fff;border-bottom:1px solid var(--slate-200);padding:12px 28px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:0 1px 3px rgba(10,22,40,0.04)}
 .toolbar-group{display:flex;align-items:center;gap:6px}
 .toolbar-label{font-size:12px;font-weight:600;color:var(--slate-500);white-space:nowrap;letter-spacing:0.3px}
 .toolbar-select{padding:6px 14px;border:1px solid var(--slate-200);border-radius:var(--radius-sm);font-size:13px;color:var(--slate-700);background:#fff;outline:none;cursor:pointer;transition:all var(--transition)}.toolbar-select:focus{border-color:var(--champagne);box-shadow:0 0 0 2px var(--champagne-glow)}
 .toolbar-date{padding:6px 14px;border:1px solid var(--slate-200);border-radius:var(--radius-sm);font-size:13px;color:var(--slate-700);background:#fff;outline:none;transition:all var(--transition)}.toolbar-date:focus{border-color:var(--champagne);box-shadow:0 0 0 2px var(--champagne-glow)}
 .toolbar-divider{width:1px;height:24px;background:var(--slate-200)}
-.stats-bar{display:flex;background:#fff;border-bottom:1px solid var(--slate-200);padding:0 28px;overflow-x:auto;box-shadow:var(--shadow)}
-.stat-item{display:flex;align-items:center;gap:10px;padding:14px 24px;border-right:1px solid var(--slate-100)}
+.stats-bar{display:flex;background:#fff;border-bottom:1px solid var(--slate-200);padding:0 28px;overflow-x:auto;box-shadow:0 1px 4px rgba(10,22,40,0.04)}
+.stat-item{display:flex;align-items:center;gap:10px;padding:12px 22px;border-right:1px solid var(--slate-100);transition:background var(--transition)}
+.stat-item:hover{background:var(--slate-50)}
 .stat-item:last-child{border-right:none}
-.stat-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.stat-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.06)}
 .stat-icon svg{width:18px;height:18px}
-.stat-value{font-size:20px;font-weight:800;color:var(--slate-800)}
+.stat-value{font-size:22px;font-weight:800;color:var(--navy);letter-spacing:-0.5px}
 .stat-label{font-size:11px;color:var(--slate-500);font-weight:500;letter-spacing:0.3px}
-.stat-icon.b11{background:var(--blue-light);color:var(--blue)}
-.stat-icon.b12{background:var(--indigo-light);color:var(--indigo)}
-.stat-icon.avl{background:var(--green-light);color:var(--green-dark)}
-.stat-icon.bkd{background:var(--red-light);color:var(--red)}
-.stat-icon.wh{background:var(--amber-light);color:var(--amber)}
+.stat-icon.b11{background:linear-gradient(135deg,var(--blue-light),#dbeafe);color:var(--blue)}
+.stat-icon.b12{background:linear-gradient(135deg,var(--indigo-light),#e0e7ff);color:var(--indigo)}
+.stat-icon.avl{background:linear-gradient(135deg,var(--green-light),#d1fae5);color:var(--green-dark)}
+.stat-icon.bkd{background:linear-gradient(135deg,var(--red-light),#fee2e2);color:var(--red)}
+.stat-icon.wh{background:linear-gradient(135deg,var(--amber-light),#fef3c7);color:var(--amber)}
 .main{padding:24px 28px 40px;max-width:1440px;margin:0 auto}
 .page{display:none}
 .page.act{display:block}
 .floor-section{margin-bottom:32px}
 .floor-header{display:flex;align-items:center;gap:14px;margin-bottom:14px;padding:4px 0}
-.floor-header h3{font-size:16px;font-weight:700;color:var(--navy);letter-spacing:0.3px}
-.floor-header .fb{background:linear-gradient(135deg,var(--navy),var(--navy-light));color:#fff;font-size:10px;font-weight:700;padding:4px 12px;border-radius:10px;box-shadow:var(--shadow);letter-spacing:0.5px}
+.floor-header h3{font-size:17px;font-weight:700;color:var(--navy);letter-spacing:0.3px}
+.floor-header .fb{background:linear-gradient(135deg,var(--navy),var(--navy-light));color:#fff;font-size:10px;font-weight:700;padding:4px 14px;border-radius:12px;box-shadow:0 2px 6px rgba(10,22,40,0.15);letter-spacing:0.5px}
 .floor-header .fc{font-size:11px;color:var(--slate-400);margin-left:auto}
 .floor-header .fc span{font-weight:600;color:var(--champagne-dark)}
 .room-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
@@ -91,9 +94,9 @@ input,select,textarea{font:inherit}
 .room-card.just-selected{animation:selectPulse 0.3s ease-out;}
 @keyframes selectPulse{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
 .floor-tabs{display:flex;gap:4px;flex-wrap:wrap}
-.floor-tab{padding:5px 14px;border-radius:14px;font-size:12px;font-weight:500;color:var(--slate-600);background:var(--slate-100);transition:all var(--transition)}
-.floor-tab:hover{background:var(--slate-200)}
-.floor-tab.act{background:var(--navy);color:#fff;box-shadow:var(--shadow)}
+.floor-tab{padding:5px 16px;border-radius:16px;font-size:12px;font-weight:500;color:var(--slate-600);background:var(--slate-100);transition:all var(--transition)}
+.floor-tab:hover{background:var(--slate-200);color:var(--navy)}
+.floor-tab.act{background:linear-gradient(135deg,var(--navy),var(--navy-light));color:#fff;box-shadow:0 2px 8px rgba(10,22,40,0.2)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;white-space:nowrap;transition:all var(--transition)}
 .btn svg{width:14px;height:14px}
 .btn-primary{background:var(--blue);color:#fff;box-shadow:0 2px 4px rgba(30,64,175,0.3)}
@@ -103,9 +106,9 @@ input,select,textarea{font:inherit}
 .btn-success:hover{box-shadow:var(--shadow-lg);transform:translateY(-1px)}
 .btn-danger{background:var(--red);color:#fff;box-shadow:0 2px 4px rgba(185,28,28,0.3)}
 .btn-sm{padding:4px 10px;font-size:12px}
-.bp{background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius-lg);padding:28px;margin-bottom:24px;box-shadow:var(--shadow-md);position:relative;overflow:hidden}
+.bp{background:#fff;border:1px solid var(--slate-100);border-radius:var(--radius-lg);padding:28px;margin-bottom:24px;box-shadow:0 2px 8px rgba(10,22,40,0.05);position:relative;overflow:hidden}
 .bp::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--champagne),var(--champagne-dark),var(--champagne))}
-.bp h3{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:18px;display:flex;align-items:center;gap:8px;padding-bottom:14px;border-bottom:1px solid var(--slate-200);letter-spacing:0.5px}
+.bp h3{font-size:17px;font-weight:700;color:var(--navy);margin-bottom:20px;display:flex;align-items:center;gap:10px;padding-bottom:16px;border-bottom:2px solid var(--champagne-light);letter-spacing:0.5px}
 .bp h3 svg{color:var(--champagne)}
 .bp .fr{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
 .fg{margin-bottom:0}
@@ -114,7 +117,7 @@ input,select,textarea{font:inherit}
 .fi{width:100%;padding:8px 12px;border:1px solid var(--slate-200);border-radius:var(--radius-sm);font-size:13px;color:var(--slate-800);background:#fff;transition:all var(--transition)}.fi:hover{border-color:var(--slate-300)}
 .fi:focus{outline:none;border-color:var(--champagne);box-shadow:0 0 0 3px var(--champagne-glow)}
 /* 选择结果操作栏（地板底下） */
-.sel-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius-sm);margin-top:16px;box-shadow:var(--shadow);flex-wrap:wrap}
+.sel-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;background:linear-gradient(135deg,#fff,var(--champagne-light));border:1.5px solid var(--champagne);border-radius:var(--radius-md);margin-top:18px;box-shadow:0 2px 10px var(--champagne-glow);flex-wrap:wrap}
 .sel-bar-info{font-size:13px;color:var(--slate-600)}.sel-bar-info strong{font-weight:800;color:var(--navy);font-size:18px}
 .sel-bar-acts{display:flex;gap:8px}
 /* 房间卡片内姓名输入 */
@@ -135,8 +138,9 @@ input,select,textarea{font:inherit}
 .sc-card .srt2{padding:2px 8px;background:var(--slate-100);border-radius:4px;font-size:12px;color:var(--slate-700);font-weight:500}
 .sc-card .sci{font-size:12px;color:var(--slate-500);margin-top:6px;display:flex;gap:16px;flex-wrap:wrap}
 .sc-card .sca{margin-top:8px;display:flex;gap:6px}
-.scard{background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:16px;box-shadow:var(--shadow)}
-.scard h3{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.scard{background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius-lg);padding:22px 26px;margin-bottom:16px;box-shadow:0 2px 8px rgba(10,22,40,0.05);transition:all 0.3s cubic-bezier(0.4,0,0.2,1)}
+.scard:hover{box-shadow:0 6px 20px rgba(10,22,40,0.1)}
+.scard h3{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;gap:10px}
 .scard h3 svg{color:var(--champagne)}
 .st{width:100%;border-collapse:collapse;font-size:13px}
 .st th{text-align:left;padding:6px 8px;color:var(--slate-400);font-weight:500;border-bottom:1px solid var(--slate-200);font-size:12px}
@@ -176,14 +180,15 @@ input,select,textarea{font:inherit}
 .bill-table .room-num{font-weight:700;font-size:14px}
 
 /* === 库房管理系统 === */
-.wh-tabs{display:flex;gap:4px;margin-bottom:16px}
-.wh-tab{padding:6px 16px;border-radius:6px;font-size:13px;font-weight:500;color:var(--slate-600);background:var(--slate-100)}
-.wh-tab:hover{background:var(--slate-200)}
-.wh-tab.act{background:var(--navy);color:#fff}
+.wh-tabs{display:flex;gap:4px;margin-bottom:18px}
+.wh-tab{padding:7px 18px;border-radius:8px;font-size:13px;font-weight:500;color:var(--slate-600);background:var(--slate-100);transition:all var(--transition)}
+.wh-tab:hover{background:var(--slate-200);color:var(--navy)}
+.wh-tab.act{background:linear-gradient(135deg,var(--navy),var(--navy-light));color:#fff;box-shadow:0 2px 6px rgba(10,22,40,0.15)}
 /* KPI 卡片 */
 .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-.kpi-card{background:#fff;border:1px solid var(--slate-200);border-radius:10px;padding:16px;display:flex;align-items:center;gap:14px}
-.kpi-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.kpi-card{background:#fff;border:1px solid var(--slate-200);border-radius:12px;padding:18px;display:flex;align-items:center;gap:14px;transition:all 0.3s cubic-bezier(0.4,0,0.2,1)}
+.kpi-card:hover{box-shadow:0 6px 18px rgba(10,22,40,0.08);transform:translateY(-1px)}
+.kpi-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
 .kpi-icon svg{width:22px;height:22px}
 .kpi-val{font-size:26px;font-weight:700;color:var(--slate-800);line-height:1.1}
 .kpi-label{font-size:11px;color:var(--slate-500)}
@@ -197,8 +202,8 @@ input,select,textarea{font:inherit}
 .row2{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:20px}
 /* 物品卡片网格 */
 .wh-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px}
-.wh-card{background:#fff;border:1px solid var(--slate-200);border-radius:8px;padding:14px 16px;transition:box-shadow var(--transition)}
-.wh-card:hover{box-shadow:var(--shadow-lg)}
+.wh-card{background:#fff;border:1px solid var(--slate-200);border-radius:10px;padding:16px 18px;transition:all 0.3s cubic-bezier(0.4,0,0.2,1)}
+.wh-card:hover{box-shadow:0 8px 24px rgba(10,22,40,0.1);transform:translateY(-2px);border-color:var(--champagne)}
 .wh-card .wc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
 .wh-card .wc-code{font-size:10px;font-family:monospace;color:var(--slate-400);background:var(--slate-100);padding:1px 6px;border-radius:3px}
 .wh-card .wc-cat{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;white-space:nowrap}
@@ -468,18 +473,18 @@ input,select,textarea{font:inherit}
 }
 
 /* ===== 房间占用日历 ===== */
-.date-overview{border:1px solid var(--slate-200);border-radius:var(--radius-lg);margin:18px 28px 22px;background:#fff;overflow:hidden;box-shadow:var(--shadow)}
-.date-ov-header{display:flex;align-items:center;gap:10px;padding:14px 20px;cursor:pointer;background:linear-gradient(to right,var(--slate-50),#fff);border-bottom:1px solid var(--slate-200);transition:background var(--transition);user-select:none}
-.date-ov-header:hover{background:var(--slate-100)}
+.date-overview{border:1px solid var(--slate-200);border-radius:var(--radius-lg);margin:18px 28px 22px;background:#fff;overflow:hidden;box-shadow:0 2px 10px rgba(10,22,40,0.06)}
+.date-ov-header{display:flex;align-items:center;gap:10px;padding:14px 20px;cursor:pointer;background:linear-gradient(to right,var(--slate-50),#fff);border-bottom:1px solid var(--slate-200);transition:all var(--transition);user-select:none}
+.date-ov-header:hover{background:var(--champagne-light)}
 .date-ov-header i.rotated{transform:rotate(-90deg)}
 .date-ov-body{padding:20px}
 .date-ov-body.hide{display:none}
 
 /* 导航 */
 .ov-nav{display:flex;align-items:center;gap:8px;margin-bottom:18px}
-.ov-nav-btn{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--slate-200);background:#fff;color:var(--slate-500);cursor:pointer;font-size:14px;transition:all var(--transition)}
-.ov-nav-btn:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
-.ov-nav-title{font-size:17px;font-weight:700;color:var(--navy);min-width:110px;text-align:center;letter-spacing:1px}
+.ov-nav-btn{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--slate-200);background:#fff;color:var(--slate-500);cursor:pointer;font-size:14px;transition:all var(--transition);box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+.ov-nav-btn:hover{background:var(--navy);color:#fff;border-color:var(--navy);box-shadow:0 2px 8px rgba(10,22,40,0.2)}
+.ov-nav-title{font-size:18px;font-weight:700;color:var(--navy);min-width:120px;text-align:center;letter-spacing:1px}
 .ov-nav-spacer{flex:1}
 .ov-nav-select{padding:5px 14px;border:1.5px solid var(--slate-200);border-radius:20px;font-size:12px;font-weight:500;color:var(--slate-600);background:#fff;outline:none;cursor:pointer;transition:all var(--transition)}
 .ov-nav-select:focus{border-color:var(--champagne)}
@@ -500,7 +505,19 @@ input,select,textarea{font:inherit}
 .ov-cal .day.free .dn{color:var(--slate-400)}
 .ov-cal .day.free .oc{color:var(--slate-400);opacity:0}
 
-/* 占用 */
+/* 占用 - 渐变色热力图 */
+.ov-cal .day.occ-light{background:linear-gradient(135deg,#dbeafe,#bfdbfe);border:1px solid #93c5fd}
+.ov-cal .day.occ-light .dn{color:var(--blue-dark)}
+.ov-cal .day.occ-light .oc{color:var(--blue)}
+
+.ov-cal .day.occ-mid{background:linear-gradient(135deg,#93c5fd,#60a5fa);border:1px solid #3b82f6}
+.ov-cal .day.occ-mid .dn{color:#fff}
+.ov-cal .day.occ-mid .oc{color:rgba(255,255,255,0.9)}
+
+.ov-cal .day.occ-heavy{background:linear-gradient(135deg,#3b82f6,var(--blue-dark));border:1px solid var(--blue-dark)}
+.ov-cal .day.occ-heavy .dn{color:#fff}
+.ov-cal .day.occ-heavy .oc{color:rgba(255,255,255,0.85)}
+
 .ov-cal .day.occ{background:var(--blue);border:1px solid var(--blue-dark)}
 .ov-cal .day.occ .dn{color:#fff}
 .ov-cal .day.occ .oc{color:rgba(255,255,255,0.85)}
@@ -514,11 +531,11 @@ input,select,textarea{font:inherit}
 .ov-cal .day.past{opacity:0.3;pointer-events:none}
 
 /* 选中态 */
-.ov-cal .day.sel{box-shadow:inset 0 0 0 2.5px var(--navy),0 0 0 3px rgba(10,22,40,0.15) !important;z-index:2;transform:scale(1.06)}
+.ov-cal .day.sel{box-shadow:inset 0 0 0 2.5px var(--champagne),0 0 0 3px var(--champagne-glow) !important;z-index:2;transform:scale(1.06)}
 .ov-cal .day.sel.occ{background:var(--blue-dark) !important}
 
 /* 日期信息条 */
-.ov-info{display:none;align-items:center;gap:16px;margin-top:14px;padding:10px 16px;background:linear-gradient(135deg,var(--champagne-light),#fff);border:1px solid var(--champagne);border-radius:var(--radius-sm);font-size:12px;color:var(--slate-600);flex-wrap:wrap}
+.ov-info{display:none;align-items:center;gap:16px;margin-top:14px;padding:12px 18px;background:linear-gradient(135deg,var(--champagne-light),#fff);border:1.5px solid var(--champagne);border-radius:var(--radius-md);font-size:12px;color:var(--slate-600);flex-wrap:wrap;box-shadow:0 2px 8px var(--champagne-glow)}
 .ov-info.show{display:flex}
 .ov-info .oi-date{font-weight:700;color:var(--navy)}
 .ov-info .oi-stat{font-size:11px;color:var(--slate-500)}
@@ -528,7 +545,7 @@ input,select,textarea{font:inherit}
 .ov-cal .day:not(.empty):not(.past):hover{transform:scale(1.06);box-shadow:var(--shadow-md);z-index:2}
 
 /* 底部统计 */
-.ov-summary{display:flex;align-items:center;gap:24px;margin-top:16px;padding:12px 18px;background:linear-gradient(135deg,var(--slate-50),#fff);border-radius:var(--radius-sm);border:1px solid var(--slate-100);font-size:12px;color:var(--slate-500);flex-wrap:wrap}
+.ov-summary{display:flex;align-items:center;gap:24px;margin-top:16px;padding:14px 20px;background:linear-gradient(135deg,var(--slate-50),#fff);border-radius:var(--radius-md);border:1px solid var(--slate-100);font-size:12px;color:var(--slate-500);flex-wrap:wrap}
 .ov-summary .s-item{display:flex;align-items:center;gap:6px}
 .ov-summary .s-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .ov-summary .s-num{font-size:18px;font-weight:800;color:var(--navy)}
@@ -538,14 +555,14 @@ input,select,textarea{font:inherit}
 
 /* 日期范围列表 */
 .ov-ranges{margin-top:14px;display:flex;flex-direction:column;gap:3px;max-height:180px;overflow-y:auto}
-.ov-range-row{display:flex;align-items:center;gap:10px;padding:5px 12px;border-radius:6px;font-size:12px;transition:background var(--transition)}
-.ov-range-row:hover{background:var(--slate-50)}
+.ov-range-row{display:flex;align-items:center;gap:10px;padding:7px 12px;border-radius:8px;font-size:12px;transition:all var(--transition)}
+.ov-range-row:hover{background:var(--champagne-light);transform:translateX(2px)}
 .ov-range-row .rr-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .ov-range-row .rr-dates{font-size:11px;color:var(--slate-500);min-width:130px;font-family:'SF Mono','Menlo',monospace}
 .ov-range-row .rr-dep{font-weight:600;color:var(--navy);min-width:70px}
 .ov-range-row .rr-info{font-size:10px;color:var(--slate-400)}
 .ov-range-row .rr-rooms{font-weight:700;color:var(--blue);margin-left:auto}
-.ov-range-header{font-size:10px;font-weight:600;color:var(--slate-400);padding:4px 12px;border-bottom:1px solid var(--slate-100);margin-bottom:4px;letter-spacing:0.5px}
+.ov-range-header{font-size:11px;font-weight:700;color:var(--slate-500);padding:6px 12px;border-bottom:1px solid var(--champagne-light);margin-bottom:6px;letter-spacing:0.5px}
 
 #dateOvBody.hide{display:none}
 .ni2{width:100%;padding:5px 8px;border:1px solid var(--slate-200);border-radius:4px;font-size:12px;outline:none;transition:all var(--transition);background:var(--slate-50)}.ni2:focus{border-color:var(--champagne);background:#fff;box-shadow:0 0 0 2px var(--champagne-glow)}.ni3{width:100%;padding:5px 8px;border:1px solid var(--slate-200);border-radius:4px;font-size:12px;outline:none;transition:all var(--transition);background:var(--slate-50)}.ni3:focus{border-color:var(--champagne);background:#fff;box-shadow:0 0 0 2px var(--champagne-glow)}.bill-table{width:100%;border-collapse:collapse;}.bill-table th{padding:7px 8px;text-align:left;font-size:11px;font-weight:600;color:var(--slate-500);border-bottom:2px solid var(--champagne);letter-spacing:0.3px}.bill-table td{padding:7px 8px;font-size:13px;vertical-align:middle;border-bottom:1px solid var(--slate-100)}.rdel2{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--slate-100);color:var(--slate-500);font-size:12px;cursor:pointer;transition:all var(--transition)}.rdel2:hover{background:var(--red);color:#fff}
@@ -637,34 +654,39 @@ input,select,textarea{font:inherit}
 
 /* 表单分步样式 */
 .form-section{
-  background: var(--slate-50);
-  border: 1px solid var(--slate-100);
+  background: linear-gradient(135deg, var(--slate-50) 0%, #fff 100%);
+  border: 1.5px solid var(--slate-200);
   border-radius: var(--radius-md);
-  padding: 18px 20px;
-  margin-bottom: 16px;
+  padding: 20px 22px;
+  margin-bottom: 18px;
+  transition: border-color var(--transition);
+}
+.form-section:hover{
+  border-color: var(--champagne);
 }
 .form-section-title{
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--navy);
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   letter-spacing: 0.3px;
 }
 .step-num{
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--champagne), var(--champagne-dark));
   color: #fff;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  box-shadow: 0 2px 6px var(--champagne-glow);
 }
 .form-row-main{
   display: flex;
@@ -1019,7 +1041,7 @@ var B12 = [
   {f:4,r:[401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,419,420,421,422,423,425,427]},
   {f:5,r:[501,502,503,504,505,506,507,508,510,513,514,516,517,518,519,520,521,522,523,525]}
 ];
-var ALL = [], sk = 'pf_v6';
+var ALL = [], sk = 'pf_v7';
 
 // ===== Supabase 云数据库 =====
 var SB_URL='https://isrxbtlcoslgbdgmcdcf.supabase.co';
@@ -1096,11 +1118,9 @@ function saveToCloud(){
 function ld(){
   var localOk=false;
   try{var r=localStorage.getItem(sk);if(r){var p=JSON.parse(r);BK=p.bk||[];WH=p.wh||[];WHL=p.whl||[];localOk=true;}}catch(e){}
-  if(!localOk||BK.length===0)initTc();
   loadFromCloud(function(ok){
     if(ok){
       try{localStorage.setItem(sk,JSON.stringify({bk:BK,wh:WH,whl:WHL}));}catch(e){}
-      if(!localOk)initTc();
       // 刷新界面
       if(typeof iPf==='function')iPf();
       if(typeof iZl==='function')iZl();
@@ -1124,33 +1144,6 @@ for(var i=0;i<B11.length;i++){var fl=B11[i];for(var j=0;j<fl.r.length;j++){var n
 for(var i=0;i<B12.length;i++){var fl=B12[i];for(var j=0;j<fl.r.length;j++){var n=fl.r[j];ALL.push({uid:120000+n,num:n,bld:12,flr:fl.f});}}
 var BK=[],WH=[],WHL=[];
 var whTabSt='dash';
-
-// 预置2026年培训班数据
-var TC_DATA=[{id:'tc_001',dep:'阅卷',co:'郑斌',ph:'',pu:'阅卷',mt:'二教',mf:true,vh:false,dl:'11号楼一层自助',dtm:'1月6日晚餐-1月11日午餐',rmk:'',pp:25,pa:0,pm:100,po:0,df:'2026-01-06',dt:'2026-01-11',rs:[],st:'y',at:'2026-01-06',tp:'single'},{id:'tc_002',dep:'纪检监察系统干部到消防救援队伍任职培训',co:'陶于萍',ph:'',pu:'纪检监察系统干部培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'具体时间待定',pp:40,pa:0,pm:0,po:0,df:'2026-03-01',dt:'2026-03-31',rs:[],st:'y',at:'2026-03-01',tp:'single'},{id:'tc_003',dep:'全国消防安全系列培训班（第1期）',co:'汪宇轩',ph:'',pu:'消防安全培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:500,pa:0,pm:0,po:0,df:'2026-03-10',dt:'2026-03-13',rs:[],st:'y',at:'2026-03-10',tp:'double'},{id:'tc_004',dep:'全国消防安全系列培训班（第2期）',co:'杨亚伟',ph:'',pu:'消防安全培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:500,pa:0,pm:0,po:0,df:'2026-03-17',dt:'2026-03-20',rs:[],st:'y',at:'2026-03-17',tp:'double'},{id:'tc_005',dep:'消防监管能力提升培训班',co:'陶于萍',ph:'',pu:'消防监管能力提升',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:140,pa:0,pm:0,po:0,df:'2026-04-08',dt:'2026-04-11',rs:[],st:'y',at:'2026-04-08',tp:'single'},{id:'tc_006',dep:'巡视组人员培训班（第1期）',co:'程亮',ph:'',pu:'巡视组人员培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:140,pa:0,pm:0,po:0,df:'2026-04-13',dt:'2026-04-17',rs:[],st:'y',at:'2026-04-13',tp:'single'},{id:'tc_007',dep:'中央和国家机关党员教育培训示范班',co:'陶于萍',ph:'',pu:'党员教育培训示范',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:200,pa:0,pm:0,po:0,df:'2026-04-19',dt:'2026-04-24',rs:[],st:'y',at:'2026-04-19',tp:'single'},{id:'tc_008',dep:'全国消防安全系列培训班（第3期）',co:'汪宇轩',ph:'',pu:'消防安全培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'原计划时间与中青班冲突，时间待定',pp:500,pa:0,pm:0,po:0,df:'2026-04-27',dt:'2026-04-30',rs:[],st:'c',at:'2026-04-27',tp:'double'},{id:'tc_009',dep:'中青年干部能力提升培训班',co:'汪宇轩',ph:'',pu:'中青年干部能力提升',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:160,pa:0,pm:0,po:0,df:'2026-05-07',dt:'2026-05-27',rs:[],st:'y',at:'2026-05-07',tp:'single'},{id:'tc_010',dep:'巡视组人员办公（第1期）',co:'程亮',ph:'',pu:'巡视组人员办公',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:50,pa:0,pm:0,po:0,df:'2026-06-01',dt:'2026-06-07',rs:[],st:'y',at:'2026-06-01',tp:'single'},{id:'tc_011',dep:'中央和国家机关党员教育培训示范班',co:'侯松涛',ph:'',pu:'党员教育培训示范',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:200,pa:0,pm:0,po:0,df:'2026-06-07',dt:'2026-06-12',rs:[],st:'y',at:'2026-06-07',tp:'single'},{id:'tc_012',dep:'全国消防安全系列培训班（第4期）',co:'杨亚伟',ph:'',pu:'消防安全培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:500,pa:0,pm:0,po:0,df:'2026-06-15',dt:'2026-06-18',rs:[],st:'y',at:'2026-06-15',tp:'double'},{id:'tc_013',dep:'中央和国家机关党小组长示范培训班',co:'陶于萍',ph:'',pu:'党小组长示范培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:200,pa:0,pm:0,po:0,df:'2026-06-28',dt:'2026-07-03',rs:[],st:'y',at:'2026-06-28',tp:'single'},{id:'tc_014',dep:'全国消防安全系列培训班（第5期）',co:'汪宇轩',ph:'',pu:'消防安全培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:500,pa:0,pm:0,po:0,df:'2026-07-07',dt:'2026-07-10',rs:[],st:'y',at:'2026-07-07',tp:'double'},{id:'tc_015',dep:'中央和国家机关党员教育培训示范班',co:'程亮',ph:'',pu:'党员教育培训示范',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:200,pa:0,pm:0,po:0,df:'2026-07-19',dt:'2026-07-24',rs:[],st:'y',at:'2026-07-19',tp:'single'},{id:'tc_016',dep:'巡视组人员培训班（第2期）',co:'朱雯',ph:'',pu:'巡视组人员培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:140,pa:0,pm:0,po:0,df:'2026-08-03',dt:'2026-08-07',rs:[],st:'y',at:'2026-08-03',tp:'single'},{id:'tc_017',dep:'全国火灾调查业务骨干和新闻发言人培训班',co:'苏挺',ph:'',pu:'火灾调查业务培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:130,pa:0,pm:0,po:0,df:'2026-08-10',dt:'2026-08-16',rs:[],st:'y',at:'2026-08-10',tp:'single'},{id:'tc_018',dep:'全国消防安全系列培训班（第6期）',co:'杨亚伟',ph:'',pu:'消防安全培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:500,pa:0,pm:0,po:0,df:'2026-09-08',dt:'2026-09-11',rs:[],st:'y',at:'2026-09-08',tp:'double'},{id:'tc_019',dep:'中央和国家机关党小组长示范培训班',co:'侯松涛',ph:'',pu:'党小组长示范培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:200,pa:0,pm:0,po:0,df:'2026-09-13',dt:'2026-09-18',rs:[],st:'y',at:'2026-09-13',tp:'single'},{id:'tc_020',dep:'巡视组人员办公（第2期）',co:'朱雯',ph:'',pu:'巡视组人员办公',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:50,pa:0,pm:0,po:0,df:'2026-09-18',dt:'2026-09-24',rs:[],st:'y',at:'2026-09-18',tp:'single'},{id:'tc_021',dep:'中央和国家机关所属局级事业单位支部书记培训班',co:'陶于萍',ph:'',pu:'支部书记培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:225,pa:0,pm:0,po:0,df:'2026-10-12',dt:'2026-10-16',rs:[],st:'y',at:'2026-10-12',tp:'single'},{id:'tc_022',dep:'全国消防安全系列培训班（第7期）',co:'汪宇轩',ph:'',pu:'消防安全培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:500,pa:0,pm:0,po:0,df:'2026-10-20',dt:'2026-10-23',rs:[],st:'y',at:'2026-10-20',tp:'double'},{id:'tc_023',dep:'全国消防安全系列培训班（第8期）',co:'杨亚伟',ph:'',pu:'消防安全培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:500,pa:0,pm:0,po:0,df:'2026-11-10',dt:'2026-11-13',rs:[],st:'y',at:'2026-11-10',tp:'double'},{id:'tc_024',dep:'中央和国家机关党员教育培训示范班',co:'陶于萍',ph:'',pu:'党员教育培训示范',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:200,pa:0,pm:0,po:0,df:'2026-11-29',dt:'2026-12-04',rs:[],st:'y',at:'2026-11-29',tp:'single'}];
-
-function initTc(){
-  var hasTc=false;
-  for(var i=0;i<BK.length;i++){if(BK[i].id&&BK[i].id.indexOf('tc_')===0){hasTc=true;break;}}
-  if(!hasTc){
-    for(var i=0;i<TC_DATA.length;i++){
-      var tc=TC_DATA[i];
-      var nRooms=Math.ceil(tc.pp/(tc.tp==='double'?2:1));
-      var rs=[];
-      // 分配虚拟房间（仅用于占位/日历显示，不绑定具体房间号）
-      for(var j=0;j<nRooms;j++){
-        // 使用 99900+ 的虚拟uid标记为培训班预置数据
-        var bld=11+(j%2); var vnum=900+j+1;
-        rs.push({u:bld*10000+vnum, na:''});
-      }
-      BK.push({
-        id:tc.id, dep:tc.dep, co:tc.co, ph:tc.ph, pu:tc.pu,
-        mt:tc.mt, mf:tc.mf, vh:tc.vh, dl:tc.dl, dtm:tc.dtm, rmk:tc.rmk,
-        pp:tc.pp, pa:tc.pa, pm:tc.pm, po:tc.po, tp:tc.tp,
-        df:tc.df, dt:tc.dt, rs:rs, st:tc.st, at:tc.at
-      });
-    }
-  }
-}
 
 // 分类体系 & 库房定位
 var WH_CATS = {
@@ -1936,13 +1929,7 @@ function impDo(){
 // ===== Demo =====
 function demo(){
   var t=new Date(),fm=function(d){return d.toISOString().slice(0,10);};
-  var d0=new Date(t);d0.setDate(d0.getDate()+1);
-  var d2=new Date(t);d2.setDate(d2.getDate()+2);
-  var d3=new Date(t);d3.setDate(d3.getDate()+3);
-  var d4=new Date(t);d4.setDate(d4.getDate()+4);
-  var d5=new Date(t);d5.setDate(d5.getDate()+5);
-  var d7=new Date(t);d7.setDate(d7.getDate()+7);
-  BK=[{id:'bk1',dep:'市场部',co:'李明',ph:'13800138001',pu:'Q2销售培训',pp:5,pa:120,pm:80,po:50,df:fm(d0),dt:fm(d2),rs:[{u:110101,na:'张伟'},{u:110102,na:'王强'},{u:110201,na:'李芳'},{u:120102,na:'赵丽'},{u:120103,na:'刘洋'}],st:'y',at:fm(t)},{id:'bk2',dep:'研发部',co:'张华',ph:'13900139002',pu:'新技术研讨会',pp:2,pa:200,pm:100,po:30,df:fm(d2),dt:fm(d4),rs:[{u:110301,na:'陈明'},{u:110302,na:'周华'}],st:'y',at:fm(t)},{id:'bk3',dep:'人力资源部',co:'王芳',pu:'新员工入职培训',pp:6,pa:120,pm:60,po:40,df:fm(d3),dt:fm(d5),rs:[{u:110202,na:'黄丽'},{u:110203,na:'吴强'},{u:120201,na:'郑敏'},{u:120202,na:'孙杰'},{u:120203,na:'钱伟'},{u:120204,na:'林芳'}],st:'y',at:fm(t)}];
+  BK=[];
   WH=[{id:'w1',code:'BC-001',name:'床单',cat1:'布草',cat2:'床单',unit:'条',qty:80,minStock:15,maxStock:120,loc:'112',shelf:'A-1',supplier:'华纺布草'},{id:'w2',code:'BC-002',name:'被套',cat1:'布草',cat2:'被套',unit:'条',qty:60,minStock:10,maxStock:100,loc:'112',shelf:'A-2',supplier:'华纺布草'},{id:'w3',code:'BC-003',name:'枕套',cat1:'布草',cat2:'枕套',unit:'个',qty:100,minStock:20,maxStock:150,loc:'112',shelf:'A-3',supplier:'华纺布草'},{id:'w4',code:'BC-004',name:'浴巾',cat1:'布草',cat2:'浴巾',unit:'条',qty:80,minStock:12,maxStock:120,loc:'112',shelf:'B-1'},{id:'w5',code:'BC-005',name:'毛巾',cat1:'布草',cat2:'毛巾',unit:'条',qty:120,minStock:20,maxStock:180,loc:'112',shelf:'B-2'},{id:'w6',code:'KF-001',name:'洗漱套装',cat1:'客房用品',cat2:'洗漱套装',unit:'套',qty:200,minStock:30,maxStock:300,loc:'112',shelf:'D-1',supplier:'明辉酒店用品'},{id:'w7',code:'KF-002',name:'拖鞋',cat1:'客房用品',cat2:'拖鞋',unit:'双',qty:300,minStock:50,maxStock:500,loc:'112',shelf:'D-2',supplier:'明辉酒店用品'},{id:'w8',code:'KF-003',name:'衣架',cat1:'客房用品',cat2:'衣架',unit:'个',qty:60,minStock:10,maxStock:100,loc:'112',shelf:'C-2'},{id:'w9',code:'CL-001',name:'清洁剂',cat1:'清洁用品',cat2:'清洁剂',unit:'桶',qty:12,minStock:3,maxStock:25,loc:'512',shelf:'A-1',supplier:'绿伞清洁'},{id:'w10',code:'CL-002',name:'消毒液',cat1:'清洁用品',cat2:'消毒液',unit:'桶',qty:8,minStock:2,maxStock:20,loc:'512',shelf:'A-2',supplier:'绿伞清洁'},{id:'w11',code:'CL-003',name:'垃圾袋',cat1:'清洁用品',cat2:'垃圾袋',unit:'卷',qty:30,minStock:5,maxStock:50,loc:'512',shelf:'B-1'},{id:'w12',code:'CL-004',name:'拖把',cat1:'清洁用品',cat2:'拖把',unit:'把',qty:4,minStock:2,maxStock:12,loc:'512',shelf:'B-2'},{id:'w13',code:'WX-001',name:'LED灯泡',cat1:'维修物料',cat2:'LED灯泡',unit:'个',qty:25,minStock:5,maxStock:60,loc:'512',shelf:'C-1',supplier:'佛山照明'},{id:'w14',code:'WX-002',name:'电工胶带',cat1:'维修物料',cat2:'电工胶带',unit:'卷',qty:10,minStock:3,maxStock:30,loc:'512',shelf:'C-2'},{id:'w15',code:'BG-001',name:'A4打印纸',cat1:'办公用品',cat2:'A4打印纸',unit:'包',qty:25,minStock:5,maxStock:60,loc:'515',shelf:'A-1',supplier:'得力办公'},{id:'w16',code:'BG-002',name:'签字笔',cat1:'办公用品',cat2:'签字笔',unit:'盒',qty:15,minStock:3,maxStock:30,loc:'515',shelf:'A-2',supplier:'得力办公'},{id:'w17',code:'GD-001',name:'对讲机',cat1:'固定资产',cat2:'对讲机',unit:'台',qty:8,minStock:2,maxStock:15,loc:'515',shelf:'B-1',supplier:'通讯设备'},{id:'w18',code:'GD-002',name:'手推车',cat1:'固定资产',cat2:'手推车',unit:'台',qty:3,minStock:1,maxStock:5,loc:'515',shelf:'B-1'}];
   WHL=[];for(var i=0;i<WH.length;i++)WHL.push({id:'wl'+i,itemId:WH[i].id,type:'in',qty:WH[i].qty,bf:0,af:WH[i].qty,op:'系统初始化',dt:fm(t),note:'初始盘入'});
   var od=new Date(t);od.setDate(od.getDate()-2);WHL.push({id:'wla',itemId:'w6',type:'out',qty:20,bf:200,af:180,op:'客房部-李华',dt:fm(od),note:'培训班客房补充'});
@@ -2043,7 +2030,9 @@ function renderCal(){
     var occ = dayMap[ds] ? Object.keys(dayMap[ds]).length : 0;
     var isToday = (date.getTime() === today.getTime());
     var isPast = date < today;
-    var cls = 'day' + (isToday ? ' today' : '') + (isPast ? ' past' : '') + (occ > 0 ? ' occ' : ' free');
+    var occRatio = totalRooms > 0 ? occ / totalRooms : 0;
+    var occCls = occ > 0 ? (occRatio < 0.3 ? ' occ-light' : occRatio < 0.6 ? ' occ-mid' : ' occ-heavy') : ' free';
+    var cls = 'day' + (isToday ? ' today' : '') + (isPast ? ' past' : '') + occCls;
     h += '<div class="'+cls+'" onclick="calDayClick(this,\''+ds+'\','+occ+','+(totalRooms-occ)+')" title="'+ds+'\n已占用 '+occ+' 间  ·  可安排 '+(totalRooms-occ)+' 间">'
         + '<span class="dn">'+d+'</span>'
         + '<span class="oc">'+(occ > 0 ? occ+'间' : '空')+'</span>'
