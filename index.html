@@ -392,6 +392,26 @@ function syncStatus(state){
   else el.innerHTML='<span style="color:#94a3b8;font-size:12px;">● 云端</span>';
 }
 
+
+// 定时轮询同步（每10秒检查云端数据变化）
+var _pollTimer=setInterval(function(){
+  fetch(SB_URL+'/rest/v1/app_data?id=eq.1&select=data',{headers:_h()})
+  .then(function(r){return r.json();})
+  .then(function(r){
+    if(r&&r.length>0&&r[0].data){
+      var p=r[0].data;
+      if(JSON.stringify(p)!==JSON.stringify({bk:BK,wh:WH,whl:WHL})){
+        BK=p.bk||[];WH=p.wh||[];WHL=p.whl||[];
+        try{localStorage.setItem(sk,JSON.stringify({bk:BK,wh:WH,whl:WHL}));}catch(e){}
+        if(typeof iPf==='function')iPf();
+        if(typeof iZl==='function')iZl();
+        if(typeof rWh==='function')rWh();
+        if(typeof renderDateOverview==='function')renderDateOverview();
+        syncStatus('ok');
+      }
+    }
+  }).catch(function(e){});
+},10000);
 // 从云端加载
 function loadFromCloud(cb){
   if(!_sb){if(cb)cb(false);return;}
@@ -568,7 +588,7 @@ function rZl(){
 }
 function _st(l,v){return '<div style="display:flex;align-items:center;gap:6px;padding:8px;background:var(--slate-50);border-radius:6px;"><div style="font-size:16px;font-weight:700;color:var(--slate-800);">'+v+'</div><div style="font-size:11px;color:var(--slate-500);">'+l+'</div></div>';}
 function db(id){var b=null;for(var i=0;i<BK.length;i++){if(BK[i].id===id){b=BK[i];break;}}if(!b)return;document.getElementById('mt').innerHTML='确认取消';var rns=rnListWithName(b.rs);document.getElementById('mb').innerHTML='<p style="font-size:14px;color:var(--slate-700);">确定取消 <strong>'+b.dep+'</strong> 于 '+b.df+'~'+b.dt+' 的排房？</p><p style="font-size:13px;color:var(--slate-400);margin-top:8px;">房间：'+rns.join('、')+'</p>';document.getElementById('mf').innerHTML='<button class="btn btn-secondary" onclick="cm()">返回</button><button class="btn btn-danger" onclick="cf(\''+id+'\')">确认取消</button>';document.getElementById('mo').classList.add('open');}
-function cf(id){for(var i=0;i<BK.length;i++)if(BK[i].id===id){BK[i].st='c';sv();break;}cm();iPf();rZl();renderDateOverview();t('已取消','i');}
+function cf(id){for(var i=0;i<BK.length;i++)if(BK[i].id===id){BK[i].st='c';break;}try{localStorage.setItem(sk,JSON.stringify({bk:BK,wh:WH,whl:WHL}));}catch(e){}var d={bk:BK,wh:WH,whl:WHL};fetch(SB_URL+'/rest/v1/app_data?id=eq.1',{method:'PATCH',headers:Object.assign(_h(),{'Prefer':'return=minimal'}),body:JSON.stringify({data:d,updated_at:new Date().toISOString()})}).then(function(r){if(!r.ok)console.error('取消保存失败',r.status);else{syncStatus('ok');}}).catch(function(e){console.error('取消保存异常',e);});cm();setTimeout(function(){iPf();rZl();renderDateOverview();},100);t('已取消','i');}
 function cm(){document.getElementById('mo').classList.remove('open');}
 function printBk(id){var b=null;for(var i=0;i<BK.length;i++)if(BK[i].id===id){b=BK[i];break;}if(!b)return;var w=window.open('','_blank','width=900,height=700'),h='<html><head><meta charset="utf-8"><title>培训签到表</title><style>body{font-family:"SimSun","宋体",serif;padding:30px;color:#333}h1{text-align:center;font-size:22px;margin-bottom:5px}.sub{text-align:center;color:#666;font-size:14px;margin-bottom:25px}.info{font-size:14px;margin-bottom:20px}.info td{padding:3px 10px}table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid #333;padding:8px 10px;text-align:center}th{background:#f0f0f0;font-weight:600}@media print{body{padding:20px}button{display:none}}</style></head><body><h1>培 训 签 到 表</h1><div class="sub">'+b.df+' ~ '+b.dt+'</div><table class="info"><tr><td><strong>培训部门：</strong>'+b.dep+'</td><td><strong>培训内容：</strong>'+(b.pu||'')+'</td></tr><tr><td><strong>联系人：</strong>'+b.co+(b.ph?' ('+b.ph+')':'')+'</td><td><strong>预计人数：</strong>'+(b.pp||'')+'人</td></tr></table><table><tr><th style="width:50px">序号</th><th style="width:100px">房间号</th><th style="width:120px">楼栋</th><th style="width:120px">入住人</th><th style="width:120px">签到</th><th style="width:120px">备注</th></tr>';for(var j=0;j<b.rs.length;j++){var uid=uVal(b.rs[j]),g=gu(uid),na=uNa(b.rs[j]);h+='<tr><td>'+(j+1)+'</td><td>'+(g?g.num:'')+'</td><td>'+(g&&g.bld===11?'11号楼':'12号楼')+'</td><td>'+(na||'')+'</td><td></td><td></td></tr>';}h+='</table><div class="footer" style="text-align:center;margin-top:30px;font-size:12px;color:#999">打印时间：'+new Date().toISOString().slice(0,10)+'</div><div style="text-align:center;margin-top:20px"><button onclick="window.print()" style="padding:8px 24px;font-size:14px;cursor:pointer">打 印</button> <button onclick="window.close()" style="padding:8px 24px;font-size:14px;cursor:pointer">关 闭</button></div></body></html>';w.document.write(h);w.document.close();}
 function printBill(id){var b=null;for(var i=0;i<BK.length;i++)if(BK[i].id===id){b=BK[i];break;}if(!b)return;var w=window.open('','_blank','width=800,height=650'),days=Math.max(1,Math.round((new Date(b.dt)-new Date(b.df))/86400000)+1),billNo=b.id.slice(0,12),h='<html><head><meta charset="utf-8"><title>前台结账单</title><style>body{font-family:"SimSun","宋体",serif;padding:20px 30px;color:#333}h1{text-align:center;font-size:22px;margin:10px 0 20px;letter-spacing:10px}.it{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:15px}.it td{padding:3px 6px}.it .lb{font-weight:600;width:70px}.it .rb{text-align:right;font-weight:600;width:80px}.dt{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:15px}.dt th{border:1px solid #333;padding:5px 4px;background:#eee;font-weight:600;text-align:center;font-size:12px}.dt td{border:1px solid #333;padding:4px;text-align:center;font-size:12px}.dt .a{text-align:right;padding-right:10px}.dt .s{text-align:right;padding-right:10px;font-weight:700;font-size:13px}.tr td{font-weight:700;font-size:13px}@media print{body{padding:15px}.bb{display:none}}</style></head><body><h1>前台结账单</h1><table class="it"><tr><td class="lb">姓名</td><td>'+b.co+'</td><td class="rb">NO</td><td>'+billNo+'</td></tr><tr><td class="lb">房号</td><td>'+(b.rs.length?'共 '+b.rs.length+'间':'')+'</td><td class="rb">到达日期</td><td>'+b.df+'</td></tr><tr><td class="lb">公司</td><td>'+b.dep+'</td><td class="rb">离开日期</td><td>'+b.dt+'</td></tr></table><div style="font-size:12px;margin-bottom:10px;color:#555">培训内容：'+(b.pu||'-')+'</div><table class="dt"><tr><th style="width:80px">日期</th><th>摘要</th><th>账单号</th><th>时间</th><th>消费</th><th>付款</th></tr>';var todayStr=new Date().toISOString().slice(0,10).replace(/-/g,'.'),pa=b.pa||0,pm=b.pm||0,po=b.po||0,pc=b.pp||0,at2=pa*pc*days,mt2=pm*pc*days,ot2=po*pc*days,gt=at2+mt2+ot2;h+='<tr><td>'+todayStr+'</td><td>住宿费 '+pa+'元/人/天 '+pc+'人*'+days+'天</td><td>'+billNo+'</td><td>'+days+'天</td><td class="a">'+at2.toFixed(2)+'</td><td></td></tr><tr><td>'+todayStr+'</td><td>餐费 '+pm+'元/人/天 '+pc+'人*'+days+'天</td><td>'+billNo+'</td><td>'+days+'天</td><td class="a">'+mt2.toFixed(2)+'</td><td></td></tr><tr><td>'+todayStr+'</td><td>其他费用 '+po+'元/人</td><td>'+billNo+'</td><td>'+days+'天</td><td class="a">'+ot2.toFixed(2)+'</td><td></td></tr><tr class="tr"><td colspan="4" style="text-align:right;padding-right:15px;">总额</td><td class="s">'+gt.toFixed(2)+'</td><td></td></tr><tr class="tr"><td colspan="4" style="text-align:right;padding-right:15px;">余额</td><td class="s">'+gt.toFixed(2)+'</td><td></td></tr></table><div style="font-size:11px;color:#555;margin-top:10px;"><strong>房间分配：</strong> ';for(var j=0;j<b.rs.length;j++){var uid=uVal(b.rs[j]),g=gu(uid),na=uNa(b.rs[j]);if(j>0)h+='、';h+=(g?g.num:'')+'('+(na||'')+')';}h+='</div><div style="font-size:11px;color:#666;margin-top:20px;line-height:1.8">收款员：001 &nbsp; TIME: '+new Date().toLocaleTimeString()+'<br>注：需补开发票者，请持原始账单一个月内办理，逾期不受理。<br>转账索引如转账无效，本人愿意承担账单最后所列尚未结清之欠款。</div><div style="font-size:12px;color:#999;margin-top:30px;text-align:right">签字：_________________</div><div class="bb" style="text-align:center;margin-top:20px"><button onclick="window.print()" style="padding:8px 28px;font-size:14px;cursor:pointer;margin:0 5px">打 印</button> <button onclick="window.close()" style="padding:8px 28px;font-size:14px;cursor:pointer;margin:0 5px">关 闭</button></div></body></html>';w.document.write(h);w.document.close();}
@@ -926,6 +946,7 @@ function renderDateOverview(){
   var listHtml = '';
   var nowCount = 0;
   sorted.forEach(function(bk){
+    if(bk.st==='c')return;
     var df = bk.df||'', dt = bk.dt||'';
     if(!df) return;
     var dFrom = new Date(df);
