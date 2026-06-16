@@ -372,8 +372,18 @@ input,select,textarea{font:inherit}
 @media(max-width:600px){.ov-kpi-row{grid-template-columns:repeat(2,1fr)}}
 
 /* 套间样式 */
-.rt-badge.rt-ste{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;border-color:#d97706;}
-.room-card.sel .rt-badge.rt-ste{background:linear-gradient(135deg,#fde68a,#f59e0b);color:#fff;border-color:#d97706;}
+.rt-badge.rt-ste-s{background:linear-gradient(135deg,#dbeafe,#93c5fd);color:#1e40af;border-color:#3b82f6;box-shadow:0 1px 3px rgba(59,130,246,0.2);}
+.rt-badge.rt-ste-m{background:linear-gradient(135deg,#d1fae5,#6ee7b7);color:#065f46;border-color:#10b981;box-shadow:0 1px 3px rgba(16,185,129,0.2);}
+.rt-badge.rt-ste-l{background:linear-gradient(135deg,#fce7f3,#f9a8d4);color:#9d174d;border-color:#ec4899;box-shadow:0 1px 3px rgba(236,72,153,0.2);}
+.room-card.avl .rt-badge.rt-ste-s{background:linear-gradient(135deg,#dbeafe,#93c5fd);color:#1e40af;border-color:#3b82f6;}
+.room-card.avl .rt-badge.rt-ste-m{background:linear-gradient(135deg,#d1fae5,#6ee7b7);color:#065f46;border-color:#10b981;}
+.room-card.avl .rt-badge.rt-ste-l{background:linear-gradient(135deg,#fce7f3,#f9a8d4);color:#9d174d;border-color:#ec4899;}
+.room-card.sel .rt-badge.rt-ste-s{background:var(--blue);color:#fff;border-color:var(--blue-dark);}
+.room-card.sel .rt-badge.rt-ste-m{background:var(--green-dark);color:#fff;border-color:var(--green);}
+.room-card.sel .rt-badge.rt-ste-l{background:#db2777;color:#fff;border-color:#9d174d;}
+.room-card.bkd .rt-badge.rt-ste-s{background:#bfdbfe;color:#1e40af;border-color:#3b82f6;}
+.room-card.bkd .rt-badge.rt-ste-m{background:#a7f3d0;color:#065f46;border-color:#10b981;}
+.room-card.bkd .rt-badge.rt-ste-l{background:#f9a8d4;color:#9d174d;border-color:#ec4899;}
 
 /* 响应式 */
 @media(max-width:768px){
@@ -585,6 +595,12 @@ ROOM_TYPES[201] = '小套'; ROOM_TYPES[203] = '小套';
 ROOM_TYPES[301] = '大套'; ROOM_TYPES[401] = '大套';
 ROOM_TYPES[303] = '中套'; ROOM_TYPES[403] = '中套';
 function getRoomSuite(num){return ROOM_TYPES[num]||'';}
+function suiteStyle(st){
+  if(st==='小套')return 'background:linear-gradient(135deg,#dbeafe,#93c5fd);color:#1e40af;border-color:#3b82f6;';
+  if(st==='中套')return 'background:linear-gradient(135deg,#d1fae5,#6ee7b7);color:#065f46;border-color:#10b981;';
+  if(st==='大套')return 'background:linear-gradient(135deg,#fce7f3,#f9a8d4);color:#9d174d;border-color:#ec4899;';
+  return '';
+}
 var ALL = [], sk = 'pf_v4';
 for(var i=0;i<B11.length;i++){var fl=B11[i];for(var j=0;j<fl.r.length;j++){var n=fl.r[j];ALL.push({uid:110000+n,num:n,bld:11,flr:fl.f});}}
 for(var i=0;i<B12.length;i++){var fl=B12[i];for(var j=0;j<fl.r.length;j++){var n=fl.r[j];ALL.push({uid:120000+n,num:n,bld:12,flr:fl.f});}}
@@ -767,7 +783,7 @@ function rPf(){
       var nhtml='',nm1='',nm2='';
       if(isS){
         var pCnt=selType==='double'?2:1;
-        var _st2=getRoomSuite(rm.num);var sb=_st2?'<span class="rt-badge rt-ste" style="font-size:9px;padding:2px 8px;margin:2px auto;">'+_st2+'</span>':(selType==='double'?'<span class="rt-badge rt-dbl" style="font-size:9px;padding:2px 8px;margin:2px auto;">标间</span>':'<span class="rt-badge rt-sgl" style="font-size:9px;padding:2px 8px;margin:2px auto;">单间</span>');
+        var _st2=getRoomSuite(rm.num);var sb=_st2?'<span class="rt-badge" style="font-size:9px;padding:2px 8px;margin:2px auto;" + suiteStyle(_st2) + ">'+_st2+'</span>':(selType==='double'?'<span class="rt-badge rt-dbl" style="font-size:9px;padding:2px 8px;margin:2px auto;">标间</span>':'<span class="rt-badge rt-sgl" style="font-size:9px;padding:2px 8px;margin:2px auto;">单间</span>');
         var tg=selType==='double'?'<button class="rc-toggle" onclick="event.stopPropagation();rtc(this,\''+rm.num+'\','+rm.bld+')">⇄单</button>':'<button class="rc-toggle" onclick="event.stopPropagation();rtc(this,\''+rm.num+'\','+rm.bld+')">⇄标</button>';
         var selNm=sel[si].nm||'',selNm2=sel[si].nm2||'';
         if(selType==='double'){
