@@ -1171,10 +1171,10 @@ function getRoomType(num){
   return 'single';
 }
 
-function gu(uid){for(var i=0;i<ALL.length;i++)if(ALL[i].uid===uid)return ALL[i];if(uid>=119000)return{uid:uid,num:uid%10000,bld:11,flr:0};if(uid>=129000)return{uid:uid,num:uid%10000,bld:12,flr:0};return null;}
+function gu(uid){for(var i=0;i<ALL.length;i++)if(ALL[i].uid===uid)return ALL[i];if(uid>=110900&&uid<120000)return{uid:uid,num:uid%10000,bld:11,flr:0};if(uid>=120900&&uid<130000)return{uid:uid,num:uid%10000,bld:12,flr:0};return null;}
 function gn(num){for(var i=0;i<ALL.length;i++)if(ALL[i].num===num)return ALL[i];return null;}
 function uVal(x){return typeof x==='object'?x.u:x;}
-function isVirtual(uid){return uid>=119000||uid>=129000;}
+function isVirtual(uid){return uid>=110900;}
 function uNa(x){return typeof x==='object'?(x.na||''):'';}
 function rnListWithName(rs){return rs.map(function(x){var n=uVal(x)%10000,na=uNa(x),nb=typeof x==='object'?(x.nb||''):'';return na?n+'('+na+(nb?'/'+nb:'')+')':''+n;});}
 function whFind(id){for(var i=0;i<WH.length;i++)if(WH[i].id===id)return WH[i];return null;}
