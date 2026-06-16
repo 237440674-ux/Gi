@@ -237,6 +237,213 @@ input,select,textarea{font:inherit}
 .alert-item .al-qty{color:var(--slate-600)}
 .alert-item .al-act{margin-left:auto}
 
+/* ===== 全局美化样式 ===== */
+
+/* 页面切换动画 */
+.page{
+  animation: fadeIn 0.3s ease-out;
+}
+@keyframes fadeIn{
+  from{
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to{
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 卡片悬浮效果 */
+.scard, .wh-card, .room-card{
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.scard:hover, .wh-card:hover{
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* 表格美化 */
+.st{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 12px;
+}
+.st th{
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--slate-500);
+  border-bottom: 2px solid var(--champagne);
+  letter-spacing: 0.3px;
+  background: var(--slate-50);
+}
+.st td{
+  padding: 10px 12px;
+  font-size: 13px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--slate-100);
+  transition: background 0.2s;
+}
+.st tr:hover td{
+  background: var(--champagne-light);
+}
+.st tr:last-child td{
+  border-bottom: none;
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar{
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track{
+  background: var(--slate-100);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb{
+  background: var(--slate-300);
+  border-radius: 3px;
+  transition: background 0.2s;
+}
+::-webkit-scrollbar-thumb:hover{
+  background: var(--slate-400);
+}
+
+/* 输入框聚焦动画 */
+.fi:focus{
+  transform: translateY(-1px);
+}
+
+/* 按钮点击动画 */
+.btn:active{
+  transform: translateY(0) scale(0.98);
+}
+
+/* 房间卡片美化 */
+.room-card{
+  border: 1.5px solid var(--slate-200);
+  border-radius: var(--radius-md);
+  padding: 10px 8px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.room-card::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--slate-200);
+  transition: background 0.3s;
+}
+.room-card:hover{
+  border-color: var(--blue);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.room-card:hover::before{
+  background: var(--blue);
+}
+.room-card.sel::before{
+  background: var(--blue);
+}
+
+/* 空状态美化 */
+.emp{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: var(--slate-400);
+  text-align: center;
+}
+.emp svg{
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+.emp p{
+  font-size: 14px;
+  color: var(--slate-500);
+}
+
+/* Toast通知美化 */
+.tt{
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  animation: slideIn 0.3s ease-out;
+  box-shadow: var(--shadow-md);
+}
+@keyframes slideIn{
+  from{
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to{
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* 模态框美化 */
+.modal{
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: modalIn 0.3s ease-out;
+}
+@keyframes modalIn{
+  from{
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to{
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+.mh{
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--slate-100);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.mh h3{
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+}
+.mc{
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--slate-100);
+  color: var(--slate-500);
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+.mc:hover{
+  background: var(--red);
+  color: #fff;
+}
+
 @media(max-width:768px){
   .header{padding:0 16px}.header-logo span{display:none}.header-tabs{gap:2px;margin-left:12px}.header-tab{padding:4px 10px;font-size:12px}
   .toolbar{padding:10px 16px}.stats-bar{overflow-x:auto;padding:0 16px}.stat-item{padding:8px 12px}.stat-value{font-size:15px}
@@ -354,6 +561,195 @@ input,select,textarea{font:inherit}
 .ni:focus{border-bottom-color:var(--champagne);border-bottom-style:solid}
 .ni2,.ni3{flex:1;padding:5px 8px;border:1px solid var(--slate-200);border-radius:4px;font-size:12px;outline:none;transition:all var(--transition);background:var(--slate-50)}
 .ni2:focus,.ni3:focus{border-color:var(--champagne);background:#fff;box-shadow:0 0 0 2px var(--champagne-glow)}
+
+/* 快速占用模式切换按钮 */
+.quick-mode-toggle{
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
+  border: 2px solid #facc15;
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 8px rgba(250, 204, 21, 0.15);
+  transition: all var(--transition);
+}
+.quick-mode-toggle:hover{
+  box-shadow: 0 4px 12px rgba(250, 204, 21, 0.25);
+  transform: translateY(-1px);
+}
+.toggle-label{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 14px;
+  color: var(--slate-700);
+}
+.toggle-label input[type="checkbox"]{
+  display: none;
+}
+.toggle-slider{
+  position: relative;
+  width: 48px;
+  height: 26px;
+  background: var(--slate-300);
+  border-radius: 13px;
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+.toggle-slider::before{
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  top: 3px;
+  left: 3px;
+  transition: all var(--transition);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle-label input[type="checkbox"]:checked + .toggle-slider{
+  background: linear-gradient(135deg, var(--champagne), var(--champagne-dark));
+}
+.toggle-label input[type="checkbox"]:checked + .toggle-slider::before{
+  transform: translateX(22px);
+}
+.toggle-text{
+  font-weight: 600;
+  color: var(--slate-700);
+  font-size: 13px;
+}
+.toggle-label input[type="checkbox"]:checked ~ .toggle-text{
+  color: var(--champagne-dark);
+}
+
+/* 必填标记美化 */
+.rq{
+  color: #ef4444;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+/* 表单字段美化 */
+.fg{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+.fl{
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--slate-600);
+  letter-spacing: 0.3px;
+}
+.fi{
+  padding: 9px 12px;
+  border: 1.5px solid var(--slate-200);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  outline: none;
+  transition: all var(--transition);
+  background: #fff;
+  color: var(--slate-800);
+}
+.fi:focus{
+  border-color: var(--champagne);
+  box-shadow: 0 0 0 3px var(--champagne-glow);
+  background: #fff;
+}
+.fi::placeholder{
+  color: var(--slate-400);
+  font-size: 12px;
+}
+.fr{
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+/* 按钮美化 */
+.btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  outline: none;
+  text-decoration: none;
+}
+.btn-success{
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+}
+.btn-success:hover{
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+  transform: translateY(-1px);
+}
+.btn-primary{
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(30, 64, 175, 0.3);
+}
+.btn-primary:hover{
+  background: linear-gradient(135deg, var(--blue-dark) 0%, #1e3a8a 100%);
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.4);
+  transform: translateY(-1px);
+}
+.btn-secondary{
+  background: var(--slate-100);
+  color: var(--slate-700);
+  border: 1px solid var(--slate-200);
+}
+.btn-secondary:hover{
+  background: var(--slate-200);
+  border-color: var(--slate-300);
+}
+.btn-danger{
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+.btn-danger:hover{
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+  transform: translateY(-1px);
+}
+.btn-sm{
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+/* 页面整体美化 */
+.bp{
+  background: #fff;
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--slate-100);
+  margin-bottom: 20px;
+}
+.bp h3{
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--champagne-light);
+}
 </style>
 </head><body>
 <header class="header">
@@ -414,9 +810,23 @@ input,select,textarea{font:inherit}
   </div>
   <div class="bp">
     <h3><i data-lucide="calendar-check"></i> 提交排房申请</h3>
-    <div class="fr"><div class="fg"><label class="fl">部门 <span class="rq">*</span></label><input class="fi" id="dep" placeholder="如：市场部"></div><div class="fg"><label class="fl">联系人 <span class="rq">*</span></label><input class="fi" id="con" placeholder="姓名"></div><div class="fg"><label class="fl">电话</label><input class="fi" id="ph" placeholder="手机号"></div></div>
-    <div class="fr"><div class="fg"><label class="fl">培训内容</label><input class="fi" id="pur" placeholder="如：新员工入职培训"></div><div class="fg"><label class="fl">入住人数</label><input class="fi" type="text" id="pp" readonly style="background:#f5f5f5;font-weight:600;color:var(--blue);" placeholder="选房后自动计算"></div><div class="fg"><label class="fl">住宿标准</label><input class="fi" type="number" id="pa" placeholder="元/人/天" min="0"></div><div class="fg"><label class="fl">餐费标准</label><input class="fi" type="number" id="pm" placeholder="元/人/天" min="0"></div><div class="fg"><label class="fl">其他费用</label><input class="fi" type="number" id="po" placeholder="元/人" min="0"></div></div>
-    <div class="fg"><label class="fl">已选房间 <span class="rq">*</span> <span style="font-weight:400;color:var(--slate-400);margin-left:6px;">点击下方房间卡片选择/取消</span></label><div class="srl" id="selR"><div class="sel-hint">请点击下方房间卡片选择</div></div></div>
+    <!-- 快速占用选项 -->
+    <div class="quick-mode-toggle">
+      <label class="toggle-label">
+        <input type="checkbox" id="quickMode" onchange="toggleQuickMode()">
+        <span class="toggle-slider"></span>
+        <span class="toggle-text">快速占用模式（直接输入人数，系统自动分配房间）</span>
+      </label>
+    </div>
+    <div class="fr"><div class="fg"><label class="fl">部门 <span class="rq">*</span></label><input class="fi" id="dep" placeholder="如：市场部"></div><div class="fg"><label class="fl">联系人 <span class="rq">*</span></label><input class="fi" id="con" placeholder="姓名"></div><div class="fg"><label class="fl">电话 <span class="rq">*</span></label><input class="fi" id="ph" placeholder="手机号"></div></div>
+    <div class="fr"><div class="fg"><label class="fl">培训内容</label><input class="fi" id="pur" placeholder="如：新员工入职培训"></div><div class="fg" id="ppField"><label class="fl">入住人数</label><input class="fi" type="text" id="pp" readonly style="background:#f5f5f5;font-weight:600;color:var(--blue);" placeholder="选房后自动计算"></div><div class="fg" id="roomCountField" style="display:none;"><label class="fl">占用房间数 <span class="rq">*</span></label><input class="fi" type="number" id="roomCount" placeholder="输入房间数" min="1" onchange="updateQuickRoomCount()"></div><div class="fg"><label class="fl">住宿标准</label><input class="fi" type="number" id="pa" placeholder="元/人/天" min="0"></div><div class="fg"><label class="fl">餐费标准</label><input class="fi" type="number" id="pm" placeholder="元/人/天" min="0"></div><div class="fg"><label class="fl">其他费用</label><input class="fi" type="number" id="po" placeholder="元/人" min="0"></div></div>
+    <div class="fg" id="selRoomField">
+      <label class="fl">已选房间 <span class="rq">*</span> <span style="font-weight:400;color:var(--slate-400);margin-left:6px;">点击下方房间卡片选择/取消</span></label>
+      <div class="srl" id="selR"><div class="sel-hint">请点击下方房间卡片选择</div></div>
+    </div>
+    <div id="quickRoomList" style="display:none;margin-top:12px;">
+      <div class="fg"><label class="fl">自动分配的房间</label><div class="srl" id="quickRms"></div></div>
+    </div>
     <div style="display:flex;justify-content:flex-end;margin-top:16px;"><button class="btn btn-success" onclick="sub()" style="padding:10px 32px;font-size:14px;border-radius:var(--radius-sm);"><i data-lucide="send"></i> 确认提交</button></div>
   </div>
   <div id="rc"><div class="emp"><i data-lucide="building-2"></i><p>请选择楼栋、楼层和日期</p></div></div>
@@ -615,6 +1025,69 @@ function t(msg,ty){
   el.appendChild(d);setTimeout(function(){d.style.opacity='0';d.style.transition='opacity 300ms';setTimeout(function(){d.remove();},300);},3000);
 }
 
+// ========== 快速占用模式 ==========
+function toggleQuickMode(){
+  var isQuick = document.getElementById('quickMode').checked;
+  document.getElementById('ppField').style.display = isQuick ? 'none' : '';
+  document.getElementById('roomCountField').style.display = isQuick ? '' : 'none';
+  document.getElementById('selRoomField').style.display = isQuick ? 'none' : '';
+  document.getElementById('quickRoomList').style.display = isQuick ? '' : 'none';
+  
+  if(!isQuick){
+    document.getElementById('quickRms').innerHTML = '';
+    document.getElementById('roomCount').value = '';
+  }
+}
+
+function updateQuickRoomCount(){
+  var roomCount = parseInt(document.getElementById('roomCount').value);
+  if(!roomCount || roomCount <= 0){
+    document.getElementById('quickRms').innerHTML = '<div class="sel-hint">请输入有效的房间数</div>';
+    return;
+  }
+  
+  var fd = document.getElementById('df').value;
+  var td = document.getElementById('dt').value;
+  if(!fd || !td){
+    document.getElementById('quickRms').innerHTML = '<div class="sel-hint">请先选择入住和退房日期</div>';
+    return;
+  }
+  
+  // 获取可用房间
+  var availableRooms = getAvailableRooms(fd, td, roomCount);
+  
+  if(availableRooms.length === 0){
+    document.getElementById('quickRms').innerHTML = '<div class="sel-hint" style="color:var(--red);">选定日期范围内没有可用房间</div>';
+    return;
+  }
+  
+  if(availableRooms.length < roomCount){
+    document.getElementById('quickRms').innerHTML = '<div class="sel-hint" style="color:var(--orange);">警告：可用房间只有 ' + availableRooms.length + ' 间，少于请求的 ' + roomCount + ' 间</div>';
+  }
+  
+  // 显示自动分配的房间
+  var html = '<div style="display:flex;flex-wrap:wrap;gap:6px;padding:8px 0;">';
+  for(var i = 0; i < Math.min(availableRooms.length, roomCount); i++){
+    var room = availableRooms[i];
+    var bldName = room.bld === 11 ? '11号楼' : '12号楼';
+    html += '<span class="srt2" style="background:var(--green-light);color:var(--green-dark);border:1px solid rgba(34,197,94,0.3);">' + room.num + ' (' + bldName + ')</span>';
+  }
+  html += '</div>';
+  document.getElementById('quickRms').innerHTML = html;
+}
+
+function getAvailableRooms(fd, td, limit){
+  var available = [];
+  for(var i = 0; i < ALL.length; i++){
+    var room = ALL[i];
+    if(!isBkd(room.num, fd, td)){
+      available.push(room);
+      if(limit && available.length >= limit) break;
+    }
+  }
+  return available;
+}
+
 function rb(bld,flr){var r=[];for(var i=0;i<ALL.length;i++){if(ALL[i].bld===bld&&(!flr||flr==='a'||ALL[i].flr==flr))r.push(ALL[i]);}return r;}
 function isBkd(num,fd,td){
   if(!fd||!td)return false;var d=new Date(fd),end=new Date(td);
@@ -668,7 +1141,109 @@ function tgRt(tr){var rt=tr.getAttribute('d-t');var newRt=(rt==='double'?'single
 function rRm(el){el.closest('tr').remove();var tbody=document.querySelector('#selR tbody');if(!tbody||tbody.children.length===0){document.getElementById('selR').innerHTML='<div class="sel-hint">请点击下方房间卡片选择</div>';document.getElementById('selR').style.padding='';}rPf();updatePP();}
 function updatePP(){var cnt=0,tbody=document.querySelector('#selR tbody');if(tbody){Array.from(tbody.querySelectorAll('tr')).forEach(function(tr){var tp=tr.getAttribute('d-t')||'single';cnt+=(tp==='double'?2:1);});}var el=document.getElementById('pp');if(el)el.value=cnt||'';}
 function updS(){var fd=document.getElementById('df').value,td=document.getElementById('dt').value;if(!fd||!td){document.getElementById('sAvl').textContent='-';document.getElementById('sBkd').textContent='-';return;}var cnt=0,d=new Date(fd),end=new Date(td);while(d<=end){var ds=d.toISOString().slice(0,10);for(var i=0;i<BK.length;i++){var b=BK[i];if(b.st!=='c'&&ds>=b.df&&ds<=b.dt)cnt+=b.rs.length;}d.setDate(d.getDate()+1);}var days=Math.max(1,Math.round((end-new Date(fd))/86400000)+1);document.getElementById('sAvl').textContent=ALL.length-Math.round(cnt/days);document.getElementById('sBkd').textContent=Math.round(cnt/days);}
-function sub(){var dep=document.getElementById('dep').value.trim(),co=document.getElementById('con').value.trim(),ph=document.getElementById('ph').value.trim(),pu=document.getElementById('pur').value.trim(),fd=document.getElementById('df').value,td=document.getElementById('dt').value,sel=gS();if(!dep){t('请填写部门','e');return;}if(!co){t('请填写联系人','e');return;}if(!fd||!td){t('请选择入住和退房日期','e');return;}if(sel.length===0){t('请至少选择一个房间','e');return;}for(var i=0;i<sel.length;i++){if(isBkd(sel[i].n,fd,td)){t('房间 '+sel[i].n+' 在选定时间范围内已被预约','e');return;}}var rs=[];for(var i=0;i<sel.length;i++){var o={u:sel[i].b*10000+sel[i].n,na:sel[i].nm||''};if(sel[i].tp==='double'&&sel[i].nm2)o.nb=sel[i].nm2;rs.push(o);}var pa=parseFloat(document.getElementById('pa').value)||0,pm=parseFloat(document.getElementById('pm').value)||0,po=parseFloat(document.getElementById('po').value)||0,pp=0;for(var i=0;i<sel.length;i++)pp+=(sel[i].tp==='double'?2:1);BK.push({id:'b'+Date.now()+Math.random().toString(36).slice(2,6),dep:dep,co:co,ph:ph,pu:pu||'培训',pp:pp,pa:pa,pm:pm,po:po,df:fd,dt:td,rs:rs,st:'y',at:new Date().toISOString().slice(0,10)});sv();document.getElementById('dep').value='';document.getElementById('con').value='';document.getElementById('ph').value='';document.getElementById('pur').value='';document.getElementById('pp').value='';document.getElementById('pa').value='';document.getElementById('pm').value='';document.getElementById('po').value='';document.getElementById('selR').innerHTML='<div class="sel-hint">请点击下方房间卡片选择</div>';rPf();t(dep+' 于 '+fd+'~'+td+' 使用 '+sel.length+' 间房 申请已提交','s');}
+function sub(){
+  var dep = document.getElementById('dep').value.trim(),
+      co = document.getElementById('con').value.trim(),
+      ph = document.getElementById('ph').value.trim(),
+      pur = document.getElementById('pur').value.trim(),
+      fd = document.getElementById('df').value,
+      td = document.getElementById('dt').value,
+      isQuick = document.getElementById('quickMode').checked,
+      sel = gS();
+  
+  // 必填验证
+  if(!dep){t('请填写部门','e');return;}
+  if(!co){t('请填写联系人','e');return;}
+  if(!ph){t('请填写电话','e');return;}
+  if(!fd || !td){t('请选择入住和退房日期','e');return;}
+  
+  if(isQuick){
+    // 快速占用模式
+    var roomCount = parseInt(document.getElementById('roomCount').value);
+    if(!roomCount || roomCount <= 0){t('请填写占用房间数','e');return;}
+    
+    // 获取可用房间
+    var availableRooms = getAvailableRooms(fd, td, roomCount);
+    if(availableRooms.length === 0){
+      t('选定日期范围内没有可用房间','e');
+      return;
+    }
+    
+    if(availableRooms.length < roomCount){
+      t('可用房间不足，当前只有 ' + availableRooms.length + ' 间可用','e');
+      return;
+    }
+    
+    // 使用自动分配的房间
+    sel = availableRooms.slice(0, roomCount).map(function(room){
+      return {n: room.num, b: room.bld, tp: 'single', nm: '', nm2: ''};
+    });
+    
+    t('系统已自动分配 ' + roomCount + ' 间房间','i');
+  } else {
+    // 正常模式
+    if(sel.length === 0){t('请至少选择一个房间','e');return;}
+    for(var i = 0; i < sel.length; i++){
+      if(isBkd(sel[i].n, fd, td)){
+        t('房间 '+sel[i].n+' 在选定时间范围内已被预约','e');
+        return;
+      }
+    }
+  }
+  
+  // 构建房间列表
+  var rs = [];
+  for(var i = 0; i < sel.length; i++){
+    var o = {u: sel[i].b * 10000 + sel[i].n, na: sel[i].nm || ''};
+    if(sel[i].tp === 'double' && sel[i].nm2) o.nb = sel[i].nm2;
+    rs.push(o);
+  }
+  
+  // 计算总人数
+  var pa = parseFloat(document.getElementById('pa').value) || 0,
+      pm = parseFloat(document.getElementById('pm').value) || 0,
+      po = parseFloat(document.getElementById('po').value) || 0,
+      pp = 0;
+  for(var i = 0; i < sel.length; i++){
+    pp += (sel[i].tp === 'double' ? 2 : 1);
+  }
+  
+  // 保存到数据库
+  BK.push({
+    id: 'b' + Date.now() + Math.random().toString(36).slice(2, 6),
+    dep: dep,
+    co: co,
+    ph: ph,
+    pu: pur || '培训',
+    pp: pp,
+    pa: pa,
+    pm: pm,
+    po: po,
+    df: fd,
+    dt: td,
+    rs: rs,
+    st: 'y',
+    at: new Date().toISOString().slice(0, 10)
+  });
+  
+  sv();
+  
+  // 清空表单
+  document.getElementById('dep').value = '';
+  document.getElementById('con').value = '';
+  document.getElementById('ph').value = '';
+  document.getElementById('pur').value = '';
+  document.getElementById('pp').value = '';
+  document.getElementById('pa').value = '';
+  document.getElementById('pm').value = '';
+  document.getElementById('po').value = '';
+  document.getElementById('roomCount').value = '';
+  document.getElementById('quickRms').innerHTML = '';
+  document.getElementById('selR').innerHTML = '<div class="sel-hint">请点击下方房间卡片选择</div>';
+  
+  rPf();
+  t(dep + ' 于 ' + fd + '~' + td + ' 使用 ' + sel.length + ' 间房 申请已提交', 's');
+}
 
 // ========== 总览 ==========
 function iZl(){var t=new Date(),w=new Date(t);w.setDate(w.getDate()+7);document.getElementById('zdf').value=t.toISOString().slice(0,10);document.getElementById('zdt').value=w.toISOString().slice(0,10);rZl();}
