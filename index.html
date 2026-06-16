@@ -1105,6 +1105,7 @@ function ld(){
       if(typeof iPf==='function')iPf();
       if(typeof iZl==='function')iZl();
       if(typeof rWh==='function')rWh();
+      if(typeof rTc==='function')rTc();
       if(typeof rPf==='function')rPf();
       if(typeof renderDateOverview==='function')renderDateOverview();
     }
@@ -1114,7 +1115,7 @@ function ld(){
 
 // 重写sv():本地+云端
 function sv(){
-  try{localStorage.setItem(sk,JSON.stringify({bk:BK,wh:WH,whl:WHL}));renderDateOverview();rZl();
+  try{localStorage.setItem(sk,JSON.stringify({bk:BK,wh:WH,whl:WHL}));renderDateOverview();rZl();rTc();
 }catch(e){}
   saveToCloud();
 }
