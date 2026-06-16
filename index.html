@@ -999,14 +999,15 @@ function init(){
 function rdy(){if(typeof lucide!=='undefined'){init();lucide.createIcons();return;}var n=0,ch=setInterval(function(){if(typeof lucide!=='undefined'){clearInterval(ch);init();lucide.createIcons();}if(++n>50){clearInterval(ch);init();}},100);}
 rdy();
 
-// ========== 日期占用总览 ==========
 // ========== 月份日历占用视图 ==========
 var calYear, calMonth;
 
 function initCal(){
-  var now = new Date();
-  calYear = now.getFullYear();
-  calMonth = now.getMonth() + 1; // 1-12
+  if(typeof calYear==='undefined'||typeof calMonth==='undefined'){
+    var now = new Date();
+    calYear = now.getFullYear();
+    calMonth = now.getMonth() + 1;
+  }
   renderCal();
 }
 
@@ -1100,6 +1101,9 @@ function renderCal(){
     countEl.textContent = bks.length+' 条记录';
   }
 }
+
+// 兼容旧调用
+function renderDateOverview(){ initCal(); }
 
 
 // ========== 导出/导入数据 ==========
