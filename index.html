@@ -1203,7 +1203,7 @@ function sw(p){
   document.querySelectorAll('.header-tab')[p-1].classList.add('act');
   document.getElementById('sb-pf').style.display=(p===3)?'none':'flex';
   document.getElementById('sb-wh').style.display=(p===3)?'flex':'none';
-  if(p===1)rPf();if(p===2)rZl();if(p===3)rWh();
+  if(p===1){rPf();renderDateOverview();}if(p===2)rZl();if(p===3)rWh();
 }
 
 // ========== 排房 ==========
