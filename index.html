@@ -1,102 +1,113 @@
 <!DOCTYPE html><html lang="zh-CN"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>培训班排房系统</title>
+<title>排房管理系统</title>
 <script src="https://unpkg.com/lucide@latest"></script>
 <script src="https://unpkg.com/mammoth@1.6.0/mammoth.browser.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --navy:#0a1628;--slate-50:#f8fafc;--slate-100:#f1f5f9;--slate-200:#e2e8f0;--slate-300:#cbd5e1;--slate-400:#94a3b8;--slate-500:#64748b;--slate-600:#475569;--slate-700:#334155;--slate-800:#1e293b;
-  --blue:#2563eb;--blue-dark:#1d4ed8;--blue-light:#eff6ff;
-  --green:#16a34a;--green-light:#f0fdf4;--green-dark:#15803d;
-  --red:#dc2626;--red-light:#fef2f2;
+  --navy:#0a1628;--navy-light:#1a2d4d;
+  --slate-50:#fafbfc;--slate-100:#f3f5f7;--slate-200:#e5e9ed;--slate-300:#d0d6dd;--slate-400:#94a3b8;--slate-500:#64748b;--slate-600:#475569;--slate-700:#334155;--slate-800:#1e293b;
+  --blue:#1e40af;--blue-dark:#1e3a8a;--blue-light:#eef4ff;
+  --green:#059669;--green-light:#ecfdf5;--green-dark:#047857;
+  --red:#b91c1c;--red-light:#fef2f2;
+  --champagne:#c9a96e;--champagne-light:#faf5eb;--champagne-dark:#a68a4b;--champagne-glow:rgba(201,169,110,0.25);
   --gold:#b8860b;--gold-light:#fef3c7;--gold-dark:#92600a;
-  --amber:#f59e0b;--amber-light:#fffbeb;
-  --indigo:#6366f1;--indigo-light:#eef2ff;
-  --radius:10px;--radius-sm:6px;--shadow:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);--shadow-md:0 4px 6px rgba(0,0,0,0.07),0 2px 4px rgba(0,0,0,0.06);--shadow-lg:0 10px 25px rgba(0,0,0,0.1),0 4px 10px rgba(0,0,0,0.06);--transition:200ms cubic-bezier(0.4,0,0.2,1);
+  --amber:#d97706;--amber-light:#fffbeb;
+  --indigo:#4f46e5;--indigo-light:#eef2ff;
+  --radius:10px;--radius-sm:6px;--radius-lg:14px;
+  --shadow:0 1px 3px rgba(10,22,40,0.05),0 1px 2px rgba(10,22,40,0.03);
+  --shadow-md:0 4px 12px rgba(10,22,40,0.08),0 2px 4px rgba(10,22,40,0.04);
+  --shadow-lg:0 10px 30px rgba(10,22,40,0.12),0 4px 10px rgba(10,22,40,0.06);
+  --shadow-gold:0 4px 16px rgba(201,169,110,0.2);
+  --transition:200ms cubic-bezier(0.4,0,0.2,1);
 }
 html{font-size:14px}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--slate-50);color:var(--slate-700);line-height:1.5}
 button{cursor:pointer;font:inherit;color:inherit;border:none;background:none}
 input,select,textarea{font:inherit}
-.header{background:linear-gradient(135deg,var(--navy) 0%,#1a2a4a 100%);color:#fff;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
-.header-left{display:flex;align-items:center;gap:12px}
-.header-logo{font-size:17px;font-weight:700;display:flex;align-items:center;gap:8px;letter-spacing:0.5px}
-.header-logo svg{width:20px;height:20px}
-.header-tabs{display:flex;gap:4px;margin-left:24px}
-.header-tab{padding:6px 16px;border-radius:8px;font-size:13px;font-weight:500;color:var(--slate-300);transition:all var(--transition)}
-.header-tab:hover{background:rgba(255,255,255,0.1);color:#fff}
-.header-tab.act{background:rgba(255,255,255,0.18);color:#fff;box-shadow:0 0 12px rgba(255,255,255,0.08)}
-.toolbar{background:#fff;border-bottom:1px solid var(--slate-200);padding:14px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:var(--shadow)}
+.header{background:linear-gradient(135deg,var(--navy) 0%,#162240 60%,var(--navy-light) 100%);color:#fff;padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(10,22,40,0.25);border-bottom:2px solid var(--champagne)}
+.header-left{display:flex;align-items:center;gap:14px}
+.header-logo{font-size:18px;font-weight:700;display:flex;align-items:center;gap:10px;letter-spacing:1px;color:#fff}
+.header-logo svg{width:22px;height:22px;color:var(--champagne)}
+.header-logo span{background:linear-gradient(90deg,#fff,var(--champagne-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header-tabs{display:flex;gap:4px;margin-left:28px}
+.header-tab{padding:7px 20px;border-radius:8px;font-size:13px;font-weight:500;color:rgba(255,255,255,0.65);transition:all var(--transition);position:relative}
+.header-tab:hover{background:rgba(255,255,255,0.08);color:#fff}
+.header-tab.act{background:linear-gradient(135deg,rgba(201,169,110,0.2),rgba(201,169,110,0.1));color:var(--champagne-light);font-weight:600;box-shadow:inset 0 0 0 1px rgba(201,169,110,0.3)}
+.toolbar{background:#fff;border-bottom:1px solid var(--slate-200);padding:14px 28px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:var(--shadow)}
 .toolbar-group{display:flex;align-items:center;gap:6px}
-.toolbar-label{font-size:12px;font-weight:600;color:var(--slate-500);white-space:nowrap}
-.toolbar-select{padding:6px 12px;border:1px solid var(--slate-300);border-radius:var(--radius-sm);font-size:13px;color:var(--slate-700);background:#fff;outline:none;cursor:pointer;transition:border var(--transition)}.toolbar-select:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(37,99,235,0.15)}
-.toolbar-date{padding:6px 12px;border:1px solid var(--slate-300);border-radius:var(--radius-sm);font-size:13px;color:var(--slate-700);background:#fff;outline:none;transition:border var(--transition)}.toolbar-date:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(37,99,235,0.15)}
+.toolbar-label{font-size:12px;font-weight:600;color:var(--slate-500);white-space:nowrap;letter-spacing:0.3px}
+.toolbar-select{padding:6px 14px;border:1px solid var(--slate-200);border-radius:var(--radius-sm);font-size:13px;color:var(--slate-700);background:#fff;outline:none;cursor:pointer;transition:all var(--transition)}.toolbar-select:focus{border-color:var(--champagne);box-shadow:0 0 0 2px var(--champagne-glow)}
+.toolbar-date{padding:6px 14px;border:1px solid var(--slate-200);border-radius:var(--radius-sm);font-size:13px;color:var(--slate-700);background:#fff;outline:none;transition:all var(--transition)}.toolbar-date:focus{border-color:var(--champagne);box-shadow:0 0 0 2px var(--champagne-glow)}
 .toolbar-divider{width:1px;height:24px;background:var(--slate-200)}
-.stats-bar{display:flex;background:#fff;border-bottom:1px solid var(--slate-200);padding:0 24px;overflow-x:auto;box-shadow:var(--shadow)}
-.stat-item{display:flex;align-items:center;gap:10px;padding:12px 20px;border-right:1px solid var(--slate-100)}
+.stats-bar{display:flex;background:#fff;border-bottom:1px solid var(--slate-200);padding:0 28px;overflow-x:auto;box-shadow:var(--shadow)}
+.stat-item{display:flex;align-items:center;gap:10px;padding:14px 24px;border-right:1px solid var(--slate-100)}
 .stat-item:last-child{border-right:none}
-.stat-icon{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center}
-.stat-icon svg{width:16px;height:16px}
-.stat-value{font-size:18px;font-weight:800;color:var(--slate-800)}
-.stat-label{font-size:11px;color:var(--slate-500);font-weight:500}
+.stat-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.stat-icon svg{width:18px;height:18px}
+.stat-value{font-size:20px;font-weight:800;color:var(--slate-800)}
+.stat-label{font-size:11px;color:var(--slate-500);font-weight:500;letter-spacing:0.3px}
 .stat-icon.b11{background:var(--blue-light);color:var(--blue)}
 .stat-icon.b12{background:var(--indigo-light);color:var(--indigo)}
 .stat-icon.avl{background:var(--green-light);color:var(--green-dark)}
 .stat-icon.bkd{background:var(--red-light);color:var(--red)}
 .stat-icon.wh{background:var(--amber-light);color:var(--amber)}
-.main{padding:20px 24px 40px;max-width:1400px;margin:0 auto}
+.main{padding:24px 28px 40px;max-width:1440px;margin:0 auto}
 .page{display:none}
 .page.act{display:block}
-.floor-section{margin-bottom:28px}
-.floor-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.floor-header h3{font-size:15px;font-weight:700;color:var(--slate-800)}
-.floor-header .fb{background:var(--navy);color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;box-shadow:var(--shadow)}
+.floor-section{margin-bottom:32px}
+.floor-header{display:flex;align-items:center;gap:14px;margin-bottom:14px;padding:4px 0}
+.floor-header h3{font-size:16px;font-weight:700;color:var(--navy);letter-spacing:0.3px}
+.floor-header .fb{background:linear-gradient(135deg,var(--navy),var(--navy-light));color:#fff;font-size:10px;font-weight:700;padding:4px 12px;border-radius:10px;box-shadow:var(--shadow);letter-spacing:0.5px}
 .floor-header .fc{font-size:11px;color:var(--slate-400);margin-left:auto}
-.floor-header .fc span{font-weight:600;color:var(--slate-600)}
-.room-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:7px}
-.room-card{background:#fff;border-radius:8px;border:1px solid var(--slate-200);padding:10px 8px;cursor:pointer;text-align:center;user-select:none;position:relative;transition:all 250ms cubic-bezier(0.4,0,0.2,1);overflow:hidden}
-.room-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-3px);border-color:var(--slate-300)}
-.room-card .rn{font-size:15px;font-weight:800;color:var(--slate-800);letter-spacing:0.3px}
-.room-card .rt{font-size:10px;color:var(--slate-400)}
+.floor-header .fc span{font-weight:600;color:var(--champagne-dark)}
+.room-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.room-card{background:#fff;border-radius:var(--radius-sm);border:1px solid var(--slate-200);padding:10px 6px;cursor:pointer;text-align:center;user-select:none;position:relative;transition:all 250ms cubic-bezier(0.4,0,0.2,1);overflow:hidden}
+.room-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);border-color:var(--slate-300)}
+.room-card .rn{font-size:16px;font-weight:800;color:var(--navy);letter-spacing:0.5px}
+.room-card .rt{font-size:10px;color:var(--slate-400);letter-spacing:0.3px}
 .room-card .rd{display:inline-block;width:8px;height:8px;border-radius:50%;margin-top:3px}
 .room-card .rnm{font-size:9px;color:var(--slate-500);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.room-card.avl{border-left:3px solid var(--green)}
+.room-card.avl{border-left:3px solid var(--green);background:linear-gradient(180deg,#fff 0%,var(--slate-50) 100%)}
 .room-card.avl .rd{background:var(--green)}
-.room-card.bkd{border-left:3px solid var(--red);background:var(--red-light);cursor:default;opacity:0.85}
+.room-card.bkd{border-left:3px solid var(--red);background:var(--red-light);cursor:default;opacity:0.8}
 .room-card.bkd .rd{background:var(--red)}
 .room-card.bkd .rnm{color:var(--red);font-weight:500}
-.room-card.sel{border-left:3px solid var(--blue);background:var(--blue-light);box-shadow:0 0 0 1px var(--blue),0 2px 8px rgba(37,99,235,0.15)}
-.room-card.sel .rd{background:var(--blue)}
-.room-card.sel .rnm{color:var(--blue)}
+.room-card.sel{border-left:3px solid var(--champagne);background:var(--champagne-light);box-shadow:0 0 0 1.5px var(--champagne),0 3px 10px var(--champagne-glow)}
+.room-card.sel .rd{background:var(--champagne)}
+.room-card.sel .rnm{color:var(--champagne-dark)}
 .room-card .rst{font-size:9px;margin-top:1px}.room-card .rbb{font-size:9px;color:var(--red);margin-top:3px}
 .floor-tabs{display:flex;gap:4px;flex-wrap:wrap}
-.floor-tab{padding:4px 12px;border-radius:14px;font-size:12px;font-weight:500;color:var(--slate-600);background:var(--slate-100)}
+.floor-tab{padding:5px 14px;border-radius:14px;font-size:12px;font-weight:500;color:var(--slate-600);background:var(--slate-100);transition:all var(--transition)}
 .floor-tab:hover{background:var(--slate-200)}
-.floor-tab.act{background:var(--navy);color:#fff}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;white-space:nowrap;transition:all var(--transition)}
+.floor-tab.act{background:var(--navy);color:#fff;box-shadow:var(--shadow)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;white-space:nowrap;transition:all var(--transition)}
 .btn svg{width:14px;height:14px}
-.btn-primary{background:var(--blue);color:#fff;box-shadow:0 2px 4px rgba(37,99,235,0.3)}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 2px 4px rgba(30,64,175,0.3)}
 .btn-primary:hover{background:var(--blue-dark)}
 .btn-secondary{background:var(--slate-100);color:var(--slate-700)}
-.btn-success{background:var(--green);color:#fff;box-shadow:0 2px 4px rgba(22,163,74,0.3)}
-.btn-success:hover{background:var(--green-dark)}
-.btn-danger{background:var(--red);color:#fff;box-shadow:0 2px 4px rgba(220,38,38,0.3)}
+.btn-success{background:linear-gradient(135deg,var(--champagne),var(--champagne-dark));color:#fff;box-shadow:var(--shadow-gold);font-weight:600;letter-spacing:0.5px}
+.btn-success:hover{box-shadow:var(--shadow-lg);transform:translateY(-1px)}
+.btn-danger{background:var(--red);color:#fff;box-shadow:0 2px 4px rgba(185,28,28,0.3)}
 .btn-sm{padding:4px 10px;font-size:12px}
-.bp{background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius);padding:24px;margin-bottom:20px;box-shadow:var(--shadow)}
-.bp h3{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:2px solid var(--gold-light)}
+.bp{background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius-lg);padding:28px;margin-bottom:24px;box-shadow:var(--shadow-md);position:relative;overflow:hidden}
+.bp::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--champagne),var(--champagne-dark),var(--champagne))}
+.bp h3{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:18px;display:flex;align-items:center;gap:8px;padding-bottom:14px;border-bottom:1px solid var(--slate-200);letter-spacing:0.5px}
+.bp h3 svg{color:var(--champagne)}
 .bp .fr{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
 .fg{margin-bottom:0}
-.fl{display:block;font-size:12px;font-weight:600;color:var(--slate-700);margin-bottom:5px}
+.fl{display:block;font-size:12px;font-weight:600;color:var(--slate-700);margin-bottom:5px;letter-spacing:0.3px}
 .fl .rq{color:var(--red)}
-.fi{width:100%;padding:8px 12px;border:1px solid var(--slate-300);border-radius:var(--radius-sm);font-size:13px;color:var(--slate-800);background:#fff;transition:border var(--transition)}.fi:hover{border-color:var(--slate-400)}
-.fi:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,0.15)}
-.srl{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;min-height:36px;padding:10px;border:1.5px dashed var(--slate-300);border-radius:var(--radius-sm);background:var(--slate-50);transition:border var(--transition)}.srl:focus-within{border-color:var(--blue)}
-.rtag{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;background:var(--blue-light);color:var(--blue);border:1px solid rgba(37,99,235,0.15);transition:all var(--transition)}.rtag:hover{background:var(--blue);color:#fff}
+.fi{width:100%;padding:8px 12px;border:1px solid var(--slate-200);border-radius:var(--radius-sm);font-size:13px;color:var(--slate-800);background:#fff;transition:all var(--transition)}.fi:hover{border-color:var(--slate-300)}
+.fi:focus{outline:none;border-color:var(--champagne);box-shadow:0 0 0 3px var(--champagne-glow)}
+.srl{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;min-height:36px;padding:10px;border:1.5px dashed var(--slate-300);border-radius:var(--radius-sm);background:var(--slate-50);transition:border var(--transition)}.srl:focus-within{border-color:var(--champagne);box-shadow:0 0 0 2px var(--champagne-glow)}
+.rtag{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;background:var(--blue-light);color:var(--blue);border:1px solid rgba(30,64,175,0.15);transition:all var(--transition)}.rtag:hover{background:var(--blue);color:#fff}
 .rtag .rdel{width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:var(--blue);color:#fff;font-size:9px;cursor:pointer}
 .sc-list{display:flex;flex-direction:column;gap:12px}
-.sc-card{background:#fff;border:1px solid var(--slate-200);border-radius:8px;padding:14px 18px}
+.sc-card{background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius-sm);padding:14px 18px;box-shadow:var(--shadow);transition:box-shadow var(--transition)}
+.sc-card:hover{box-shadow:var(--shadow-md)}
 .sc-card .sch{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .sc-card .scd{font-size:14px;font-weight:600;color:var(--slate-800);display:flex;align-items:center;gap:6px}
 .sc-card .sdd{font-size:12px;color:var(--slate-500)}
@@ -104,8 +115,9 @@ input,select,textarea{font:inherit}
 .sc-card .srt2{padding:2px 8px;background:var(--slate-100);border-radius:4px;font-size:12px;color:var(--slate-700);font-weight:500}
 .sc-card .sci{font-size:12px;color:var(--slate-500);margin-top:6px;display:flex;gap:16px;flex-wrap:wrap}
 .sc-card .sca{margin-top:8px;display:flex;gap:6px}
-.scard{background:#fff;border:1px solid var(--slate-200);border-radius:10px;padding:16px 20px;margin-bottom:16px}
-.scard h3{font-size:14px;font-weight:600;color:var(--slate-800);margin-bottom:10px}
+.scard{background:#fff;border:1px solid var(--slate-200);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:16px;box-shadow:var(--shadow)}
+.scard h3{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.scard h3 svg{color:var(--champagne)}
 .st{width:100%;border-collapse:collapse;font-size:13px}
 .st th{text-align:left;padding:6px 8px;color:var(--slate-400);font-weight:500;border-bottom:1px solid var(--slate-200);font-size:12px}
 .st td{padding:6px 8px;border-bottom:1px solid var(--slate-100);color:var(--slate-700)}
@@ -133,12 +145,12 @@ input,select,textarea{font:inherit}
 ::-webkit-scrollbar-thumb{background:var(--slate-300);border-radius:3px}
 
 .bill-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px}
-.bill-table th,.bill-table td{border:1px solid #ccc;padding:5px 6px;text-align:center;font-size:12px}
-.bill-table th{background:#f3f4f6;font-weight:600;color:var(--slate-700);font-size:11px}
-.bill-table .ni2{width:60px;border:1px solid var(--slate-200);border-radius:4px;background:var(--slate-50);font-size:12px;padding:4px 6px;outline:none;text-align:center;transition:all var(--transition)}
-.bill-table .ni2:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 2px rgba(37,99,235,0.1)}
-.bill-table .ni3{width:60px;border:1px solid var(--slate-200);border-radius:4px;background:var(--slate-50);font-size:12px;padding:4px 6px;outline:none;text-align:center;transition:all var(--transition)}
-.bill-table .ni3:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 2px rgba(37,99,235,0.1)}
+.bill-table th,.bill-table td{border:1px solid var(--slate-200);padding:6px 8px;text-align:center;font-size:12px}
+.bill-table th{background:var(--slate-50);font-weight:600;color:var(--slate-600);font-size:11px;letter-spacing:0.3px}
+.bill-table .ni2{width:64px;border:1px solid var(--slate-200);border-radius:4px;background:var(--slate-50);font-size:12px;padding:5px 8px;outline:none;text-align:center;transition:all var(--transition)}
+.bill-table .ni2:focus{border-color:var(--champagne);background:#fff;box-shadow:0 0 0 2px var(--champagne-glow)}
+.bill-table .ni3{width:64px;border:1px solid var(--slate-200);border-radius:4px;background:var(--slate-50);font-size:12px;padding:5px 8px;outline:none;text-align:center;transition:all var(--transition)}
+.bill-table .ni3:focus{border-color:var(--champagne);background:#fff;box-shadow:0 0 0 2px var(--champagne-glow)}
 .bill-table .rdel2{color:var(--red);cursor:pointer;font-size:16px;font-weight:700;transition:color var(--transition)}
 .bill-table .rdel2:hover{color:#991b1b}
 .bill-table .room-num{font-weight:700;font-size:14px}
@@ -229,8 +241,8 @@ input,select,textarea{font:inherit}
   .kpi-row{grid-template-columns:1fr 1fr}.row2{grid-template-columns:1fr}.wh-grid{grid-template-columns:1fr}
 }
 
-.date-overview{border:1px solid var(--slate-200);border-radius:var(--radius);margin:16px 24px 20px;background:#fff;overflow:hidden;box-shadow:var(--shadow);}
-.date-ov-header{display:flex;align-items:center;gap:8px;padding:12px 18px;cursor:pointer;font-size:14px;font-weight:700;color:var(--navy);background:linear-gradient(to right,var(--slate-50),#fff);border-bottom:1px solid var(--slate-200);transition:background var(--transition);}
+.date-overview{border:1px solid var(--slate-200);border-radius:var(--radius-lg);margin:18px 28px 22px;background:#fff;overflow:hidden;box-shadow:var(--shadow)}
+.date-ov-header{display:flex;align-items:center;gap:8px;padding:14px 20px;cursor:pointer;font-size:14px;font-weight:700;color:var(--navy);background:linear-gradient(to right,var(--slate-50),#fff);border-bottom:1px solid var(--slate-200);transition:background var(--transition);letter-spacing:0.3px}
 .date-ov-header:hover{background:var(--slate-100);}
 .date-ov-header i.rotated{transform:rotate(-90deg);}
 .date-ov-body{padding:14px 18px;}
@@ -255,38 +267,38 @@ input,select,textarea{font:inherit}
 .ov-cal-cell.occ-many{background:var(--red-light);color:var(--red);font-weight:500;}
 .ov-cal-month{font-size:11px;font-weight:600;color:var(--navy);margin:6px 0 4px;}
 #dateOvBody.hide{display:none;}
-.ni2{width:100%;padding:4px 6px;border:1px solid var(--slate-200);border-radius:3px;font-size:12px;outline:none;}.ni2:focus{border-color:var(--blue);}.ni3{width:100%;padding:4px 6px;border:1px solid var(--slate-200);border-radius:3px;font-size:12px;outline:none;}.ni3:focus{border-color:var(--blue);}.bill-table{width:100%;border-collapse:collapse;}.bill-table th{padding:6px 8px;text-align:left;font-size:11px;font-weight:600;color:var(--slate-500);border-bottom:1px solid var(--slate-200);}.bill-table td{padding:6px 8px;font-size:13px;vertical-align:middle;}.rdel2{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--slate-200);color:var(--slate-600);font-size:12px;cursor:pointer;}.rdel2:hover{background:var(--red);color:#fff;}
+.ni2{width:100%;padding:5px 8px;border:1px solid var(--slate-200);border-radius:4px;font-size:12px;outline:none;transition:all var(--transition);background:var(--slate-50)}.ni2:focus{border-color:var(--champagne);background:#fff;box-shadow:0 0 0 2px var(--champagne-glow)}.ni3{width:100%;padding:5px 8px;border:1px solid var(--slate-200);border-radius:4px;font-size:12px;outline:none;transition:all var(--transition);background:var(--slate-50)}.ni3:focus{border-color:var(--champagne);background:#fff;box-shadow:0 0 0 2px var(--champagne-glow)}.bill-table{width:100%;border-collapse:collapse;}.bill-table th{padding:7px 8px;text-align:left;font-size:11px;font-weight:600;color:var(--slate-500);border-bottom:2px solid var(--champagne);letter-spacing:0.3px}.bill-table td{padding:7px 8px;font-size:13px;vertical-align:middle;border-bottom:1px solid var(--slate-100)}.rdel2{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--slate-100);color:var(--slate-500);font-size:12px;cursor:pointer;transition:all var(--transition)}.rdel2:hover{background:var(--red);color:#fff}
 
-/* 房间类型徽章 - 精致胶囊风格 */
-.rt-badge{display:inline-flex;align-items:center;gap:2px;padding:2px 9px;border-radius:10px;font-size:9px;font-weight:700;letter-spacing:0.5px;line-height:1.5;white-space:nowrap;transition:all var(--transition)}
-.rt-badge.rt-sgl{background:linear-gradient(135deg,#dbeafe 0%,#eff6ff 100%);color:#1d4ed8;border:1px solid rgba(37,99,235,0.25);box-shadow:0 1px 3px rgba(37,99,235,0.1)}
-.rt-badge.rt-dbl{background:linear-gradient(135deg,#fef3c7 0%,#fffbeb 100%);color:#92600a;border:1px solid rgba(184,134,11,0.3);box-shadow:0 1px 3px rgba(184,134,11,0.12)}
-.rt-badge.rt-sgl-sm{background:linear-gradient(135deg,#dbeafe 0%,#eff6ff 100%);color:#1d4ed8;font-size:10px;padding:3px 10px;border-radius:10px;border:1px solid rgba(37,99,235,0.2);box-shadow:0 1px 2px rgba(37,99,235,0.06)}
-.rt-badge.rt-dbl-sm{background:linear-gradient(135deg,#fef3c7 0%,#fffbeb 100%);color:#92600a;font-size:10px;padding:3px 10px;border-radius:10px;border:1px solid rgba(184,134,11,0.25);box-shadow:0 1px 2px rgba(184,134,11,0.08)}
+/* 房间类型徽章 - 酒店房卡风格 */
+.rt-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 10px;border-radius:10px;font-size:9px;font-weight:700;letter-spacing:0.5px;line-height:1.6;white-space:nowrap;transition:all var(--transition)}
+.rt-badge.rt-sgl{background:linear-gradient(135deg,#eef4ff 0%,#dbeafe 100%);color:var(--blue);border:1px solid rgba(30,64,175,0.2);box-shadow:0 1px 2px rgba(30,64,175,0.08)}
+.rt-badge.rt-dbl{background:linear-gradient(135deg,var(--champagne-light) 0%,#f5e6c8 100%);color:var(--champagne-dark);border:1px solid rgba(201,169,110,0.35);box-shadow:0 1px 2px rgba(201,169,110,0.12)}
+.rt-badge.rt-sgl-sm{background:linear-gradient(135deg,#eef4ff 0%,#dbeafe 100%);color:var(--blue);font-size:10px;padding:3px 11px;border-radius:10px;border:1px solid rgba(30,64,175,0.18);box-shadow:0 1px 2px rgba(30,64,175,0.06)}
+.rt-badge.rt-dbl-sm{background:linear-gradient(135deg,var(--champagne-light) 0%,#f5e6c8 100%);color:var(--champagne-dark);font-size:10px;padding:3px 11px;border-radius:10px;border:1px solid rgba(201,169,110,0.3);box-shadow:0 1px 2px rgba(201,169,110,0.08)}
 /* 已选房间类型标记 */
 .room-card .rt-badge{margin:1px auto 3px}
-/* 空闲标间底部金色细线 */
-.room-card.avl[data-type="double"]{border-bottom:2px solid rgba(184,134,11,0.5)}
-/* 选中态 - 单间(默认) */
-.room-card.sel[data-type="single"]{border-left:3px solid var(--blue) !important;background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%) !important;box-shadow:0 0 0 1.5px var(--blue),0 4px 14px rgba(37,99,235,0.2) !important}
+/* 空闲标间右侧金色细标 */
+.room-card.avl[data-type="double"]{border-right:3px solid var(--champagne);border-left-color:var(--green)}
+/* 选中态 - 单间(默认，蓝色典雅) */
+.room-card.sel[data-type="single"]{border-left:3px solid var(--blue) !important;background:linear-gradient(135deg,#eef4ff 0%,#dbeafe 100%) !important;box-shadow:0 0 0 1.5px var(--blue),0 4px 14px rgba(30,64,175,0.18) !important}
 .room-card.sel[data-type="single"] .rn{color:var(--blue-dark) !important}
 .room-card.sel[data-type="single"] .rnm{color:var(--blue) !important}
 .room-card.sel[data-type="single"] .rd{background:var(--blue) !important}
-/* 选中态 - 标间 */
-.room-card.sel[data-type="double"]{border-left:3px solid var(--gold) !important;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%) !important;box-shadow:0 0 0 1.5px var(--gold),0 4px 14px rgba(184,134,11,0.22) !important}
-.room-card.sel[data-type="double"] .rn{color:var(--gold-dark) !important}
-.room-card.sel[data-type="double"] .rnm{color:var(--gold-dark) !important}
-.room-card.sel[data-type="double"] .rd{background:var(--gold) !important}
+/* 选中态 - 标间(金色尊享) */
+.room-card.sel[data-type="double"]{border-left:3px solid var(--champagne) !important;background:linear-gradient(135deg,var(--champagne-light) 0%,#f5e6c8 100%) !important;box-shadow:0 0 0 1.5px var(--champagne),0 4px 14px var(--champagne-glow) !important}
+.room-card.sel[data-type="double"] .rn{color:var(--champagne-dark) !important}
+.room-card.sel[data-type="double"] .rnm{color:var(--champagne-dark) !important}
+.room-card.sel[data-type="double"] .rd{background:var(--champagne) !important}
 /* 输入框统一风格 */
 .ni{width:100%;border:none;border-bottom:1.5px dashed var(--slate-300);background:transparent;font-size:12px;padding:2px 4px;outline:none;transition:border var(--transition)}
-.ni:focus{border-bottom-color:var(--blue);border-bottom-style:solid}
+.ni:focus{border-bottom-color:var(--champagne);border-bottom-style:solid}
 .ni2,.ni3{flex:1;padding:5px 8px;border:1px solid var(--slate-200);border-radius:4px;font-size:12px;outline:none;transition:all var(--transition);background:var(--slate-50)}
-.ni2:focus,.ni3:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 2px rgba(37,99,235,0.1)}
+.ni2:focus,.ni3:focus{border-color:var(--champagne);background:#fff;box-shadow:0 0 0 2px var(--champagne-glow)}
 </style>
 </head><body>
 <header class="header">
   <div class="header-left">
-    <div class="header-logo"><i data-lucide="building"></i><span>培训班排房系统</span></div>
+    <div class="header-logo"><i data-lucide="building"></i><span>排房管理系统</span></div>
     <div class="header-tabs">
       <button class="header-tab act" onclick="sw(1)">排房</button>
       <button class="header-tab" onclick="sw(2)">总览</button>
@@ -337,7 +349,7 @@ input,select,textarea{font:inherit}
     <div class="fr"><div class="fg"><label class="fl">部门 <span class="rq">*</span></label><input class="fi" id="dep" placeholder="如：市场部"></div><div class="fg"><label class="fl">联系人 <span class="rq">*</span></label><input class="fi" id="con" placeholder="姓名"></div><div class="fg"><label class="fl">电话</label><input class="fi" id="ph" placeholder="手机号"></div></div>
     <div class="fr"><div class="fg"><label class="fl">培训内容</label><input class="fi" id="pur" placeholder="如：新员工入职培训"></div><div class="fg"><label class="fl">入住人数</label><input class="fi" type="text" id="pp" readonly style="background:#f5f5f5;font-weight:600;color:var(--blue);" placeholder="选房后自动计算"></div><div class="fg"><label class="fl">住宿标准</label><input class="fi" type="number" id="pa" placeholder="元/人/天" min="0"></div><div class="fg"><label class="fl">餐费标准</label><input class="fi" type="number" id="pm" placeholder="元/人/天" min="0"></div><div class="fg"><label class="fl">其他费用</label><input class="fi" type="number" id="po" placeholder="元/人" min="0"></div></div>
     <div class="fg"><label class="fl">已选房间 <span class="rq">*</span> <span style="font-weight:400;color:var(--slate-400);margin-left:6px;">点击下方房间卡片选择/取消</span></label><div class="srl" id="selR"><div class="sel-hint">请点击下方房间卡片选择</div></div></div>
-    <div style="display:flex;justify-content:flex-end;margin-top:12px;"><button class="btn btn-success" onclick="sub()"><i data-lucide="send"></i> 提交申请</button></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:16px;"><button class="btn btn-success" onclick="sub()" style="padding:10px 32px;font-size:14px;border-radius:var(--radius-sm);"><i data-lucide="send"></i> 确认提交</button></div>
   </div>
   <div id="rc"><div class="emp"><i data-lucide="building-2"></i><p>请选择楼栋、楼层和日期</p></div></div>
 </div>
@@ -584,7 +596,7 @@ function rPf(){
     h+='</div></div>';}
   c.innerHTML=h;updS();
 }
-function cr(num){var fd=document.getElementById('df').value,td=document.getElementById('dt').value,b=parseInt(document.getElementById('bld').value);if(!fd||!td){t('请先选择入住和退房日期','e');return;}if(isBkd(num,fd,td)){t('该房间在选定时间范围内已被预约','e');return;}var el=document.getElementById('selR'),tbody=el.querySelector('tbody');var rt=getRoomType(num);var isDbl=(rt==='double');if(!tbody){el.innerHTML='';el.style.padding='0';tbody=document.createElement('tbody');var tbl=document.createElement('table');tbl.className='bill-table';tbl.innerHTML='<thead><tr><th style="width:60px">房号</th><th style="width:70px">类型</th><th style="width:50px">人数</th><th style="width:50px">楼栋</th><th>入住人</th><th style="width:40px"></th></tr></thead>';tbl.appendChild(tbody);el.appendChild(tbl);}var existing=null;Array.from(tbody.querySelectorAll('tr')).forEach(function(r){if(parseInt(r.getAttribute('d-n'))===num&&parseInt(r.getAttribute('d-b'))===b)existing=r;});if(existing){existing.remove();}else{var tr=document.createElement('tr');tr.setAttribute('d-n',num);tr.setAttribute('d-b',b);tr.setAttribute('d-t',rt);var typeLabel=isDbl?'<span class="rt-badge rt-dbl-sm">👥 标间</span>':'<span class="rt-badge rt-sgl-sm">👤 单间</span>';var pCnt=isDbl?2:1;var nameHtml=isDbl?'<div style="display:flex;gap:4px;"><input class="ni2" placeholder="入住人1" maxlength="8"><input class="ni3" placeholder="入住人2" maxlength="8"></div>':'<input class="ni2" placeholder="姓名" maxlength="8">';tr.innerHTML='<td class="room-num">'+num+'</td><td>'+typeLabel+'</td><td style="font-weight:700;color:'+(isDbl?'var(--gold-dark)':'var(--blue)')+';">'+pCnt+'人</td><td>'+(b===11?'11号楼':'12号楼')+'</td><td style="display:flex;gap:4px;">'+nameHtml+'</td><td><span class="rdel2" onclick="rRm(this)">&times;</span></td>';tbody.appendChild(tr);}rPf();updatePP();}
+function cr(num){var fd=document.getElementById('df').value,td=document.getElementById('dt').value,b=parseInt(document.getElementById('bld').value);if(!fd||!td){t('请先选择入住和退房日期','e');return;}if(isBkd(num,fd,td)){t('该房间在选定时间范围内已被预约','e');return;}var el=document.getElementById('selR'),tbody=el.querySelector('tbody');var rt=getRoomType(num);var isDbl=(rt==='double');if(!tbody){el.innerHTML='';el.style.padding='0';tbody=document.createElement('tbody');var tbl=document.createElement('table');tbl.className='bill-table';tbl.innerHTML='<thead><tr><th style="width:60px">房号</th><th style="width:75px">房型</th><th style="width:50px">人数</th><th style="width:55px">楼栋</th><th>入住人</th><th style="width:36px"></th></tr></thead>';tbl.appendChild(tbody);el.appendChild(tbl);}var existing=null;Array.from(tbody.querySelectorAll('tr')).forEach(function(r){if(parseInt(r.getAttribute('d-n'))===num&&parseInt(r.getAttribute('d-b'))===b)existing=r;});if(existing){existing.remove();}else{var tr=document.createElement('tr');tr.setAttribute('d-n',num);tr.setAttribute('d-b',b);tr.setAttribute('d-t',rt);var typeLabel=isDbl?'<span class="rt-badge rt-dbl-sm">👥 标间</span>':'<span class="rt-badge rt-sgl-sm">👤 单间</span>';var pCnt=isDbl?2:1;var nameHtml=isDbl?'<div style="display:flex;gap:4px;"><input class="ni2" placeholder="入住人1" maxlength="8"><input class="ni3" placeholder="入住人2" maxlength="8"></div>':'<input class="ni2" placeholder="姓名" maxlength="8">';tr.innerHTML='<td class="room-num">'+num+'</td><td>'+typeLabel+'</td><td style="font-weight:700;color:'+(isDbl?'var(--gold-dark)':'var(--blue)')+';">'+pCnt+'人</td><td>'+(b===11?'11号楼':'12号楼')+'</td><td style="display:flex;gap:4px;">'+nameHtml+'</td><td><span class="rdel2" onclick="rRm(this)">&times;</span></td>';tbody.appendChild(tr);}rPf();updatePP();}
 function rRm(el){el.closest('tr').remove();var tbody=document.querySelector('#selR tbody');if(!tbody||tbody.children.length===0){document.getElementById('selR').innerHTML='<div class="sel-hint">请点击下方房间卡片选择</div>';document.getElementById('selR').style.padding='';}rPf();updatePP();}
 function updatePP(){var cnt=0,tbody=document.querySelector('#selR tbody');if(tbody){Array.from(tbody.querySelectorAll('tr')).forEach(function(tr){var tp=tr.getAttribute('d-t')||'single';cnt+=(tp==='double'?2:1);});}var el=document.getElementById('pp');if(el)el.value=cnt||'';}
 function updS(){var fd=document.getElementById('df').value,td=document.getElementById('dt').value;if(!fd||!td){document.getElementById('sAvl').textContent='-';document.getElementById('sBkd').textContent='-';return;}var cnt=0,d=new Date(fd),end=new Date(td);while(d<=end){var ds=d.toISOString().slice(0,10);for(var i=0;i<BK.length;i++){var b=BK[i];if(b.st!=='c'&&ds>=b.df&&ds<=b.dt)cnt+=b.rs.length;}d.setDate(d.getDate()+1);}var days=Math.max(1,Math.round((end-new Date(fd))/86400000)+1);document.getElementById('sAvl').textContent=ALL.length-Math.round(cnt/days);document.getElementById('sBkd').textContent=Math.round(cnt/days);}
