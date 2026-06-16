@@ -64,7 +64,8 @@ input,select,textarea{font:inherit}
 .floor-header .fc{font-size:11px;color:var(--slate-400);margin-left:auto}
 .floor-header .fc span{font-weight:600;color:var(--champagne-dark)}
 .room-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
-.room-card{background:#fff;border-radius:var(--radius-sm);border:1px solid var(--slate-200);padding:10px 6px;cursor:pointer;text-align:center;user-select:none;position:relative;transition:all 250ms cubic-bezier(0.4,0,0.2,1);overflow:hidden}
+#rc{position:relative;user-select:none}
+.room-card{background:#fff;border-radius:var(--radius-sm);border:1.5px solid var(--slate-200);padding:10px 6px;cursor:pointer;text-align:center;user-select:none;position:relative;transition:all 250ms cubic-bezier(0.4,0,0.2,1);overflow:hidden}
 .room-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);border-color:var(--slate-300)}
 .room-card .rn{font-size:16px;font-weight:800;color:var(--navy);letter-spacing:0.5px}
 .room-card .rt{font-size:10px;color:var(--slate-400);letter-spacing:0.3px}
@@ -74,15 +75,21 @@ input,select,textarea{font:inherit}
 .room-card.avl::after{content:'';position:absolute;top:0;right:0;width:16px;height:16px;background:var(--green);border-radius:0 0 0 14px;opacity:0.08;transition:opacity var(--transition)}
 .room-card.avl:hover::after{opacity:0.15}
 .room-card.avl .rd{background:var(--green)}
-.room-card.bkd{border-left:3px solid var(--red);background:var(--red-light);cursor:default;opacity:0.8}
+.room-card.bkd{border-left:3px solid var(--red);background:var(--red-light);cursor:default;opacity:0.7}
 .room-card.bkd .rd{background:var(--red)}
 .room-card.bkd .rnm{color:var(--red);font-weight:500}
-.room-card.sel{border-left:3px solid var(--champagne);background:var(--champagne-light);box-shadow:0 0 0 1.5px var(--champagne),0 3px 10px var(--champagne-glow)}
+.room-card.sel{border:2px solid var(--champagne);background:linear-gradient(180deg,var(--champagne-light) 0%,#fff 100%);box-shadow:0 0 0 2px var(--champagne-glow),0 3px 12px rgba(201,169,110,0.2)}
 .room-card.sel .rd{background:var(--champagne)}
 .room-card.sel .rnm{color:var(--champagne-dark)}
 .room-card.sel:hover{transform:translateY(-1px)}
 @keyframes pulse-glow{0%,100%{box-shadow:0 0 0 1.5px var(--champagne),0 3px 10px var(--champagne-glow)}50%{box-shadow:0 0 0 2px var(--champagne),0 4px 16px rgba(201,169,110,0.35)}}
 .room-card .rst{font-size:9px;margin-top:1px}.room-card .rbb{font-size:9px;color:var(--red);margin-top:3px}
+/* 拖动选择框 */
+.sel-box{position:absolute;border:2px dashed var(--blue);background:rgba(30,64,175,0.08);pointer-events:none;z-index:50;display:none;border-radius:4px;}
+/* 房间卡片拖动选择状态 */
+.room-card.dragging{border-color:var(--blue);box-shadow:0 0 0 2px rgba(30,64,175,0.3);}
+.room-card.just-selected{animation:selectPulse 0.3s ease-out;}
+@keyframes selectPulse{0%{transform:scale(1);}50%{transform:scale(1.05);}100%{transform:scale(1);}}
 .floor-tabs{display:flex;gap:4px;flex-wrap:wrap}
 .floor-tab{padding:5px 14px;border-radius:14px;font-size:12px;font-weight:500;color:var(--slate-600);background:var(--slate-100);transition:all var(--transition)}
 .floor-tab:hover{background:var(--slate-200)}
@@ -583,7 +590,7 @@ input,select,textarea{font:inherit}
 }
 .rt-toggle-group{
   display: flex;
-  gap: 8px;
+  gap: 10px;
 }
 .rt-toggle-btn{
   flex: 1;
@@ -596,6 +603,7 @@ input,select,textarea{font:inherit}
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   color: var(--slate-600);
+  text-align: center;
 }
 .rt-toggle-btn:hover{
   border-color: var(--blue);
@@ -613,6 +621,80 @@ input,select,textarea{font:inherit}
   background: linear-gradient(135deg, var(--champagne-light) 0%, #f5e6c8 100%);
   color: var(--champagne-dark);
   box-shadow: 0 0 0 3px var(--champagne-glow);
+}
+.rt-icon{font-size:20px;display:block;margin-bottom:2px;}
+.rt-label{font-size:14px;font-weight:700;display:block;}
+.rt-sub{font-size:10px;color:var(--slate-400);display:block;margin-top:1px;}
+.rt-toggle-btn.active .rt-sub{color:inherit;opacity:0.7;}
+
+/* 表单分步样式 */
+.form-section{
+  background: var(--slate-50);
+  border: 1px solid var(--slate-100);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  margin-bottom: 16px;
+}
+.form-section-title{
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.3px;
+}
+.step-num{
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--champagne), var(--champagne-dark));
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.form-row-main{
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.form-row-main .rt-toggle-group{
+  flex: 1;
+  min-width: 240px;
+}
+.btn-auto{
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+  color: #fff;
+  padding: 9px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(30,64,175,0.25);
+  transition: all var(--transition);
+}
+.btn-auto:hover{
+  box-shadow: 0 4px 12px rgba(30,64,175,0.35);
+  transform: translateY(-1px);
+}
+.fi-accent{
+  border-color: var(--champagne) !important;
+  background: var(--champagne-light) !important;
+  font-weight: 600;
+  font-size: 15px;
+  text-align: center;
+}
+.fi-accent:focus{
+  box-shadow: 0 0 0 3px var(--champagne-glow) !important;
 }
 
 /* 表单字段美化 */
@@ -794,53 +876,69 @@ input,select,textarea{font:inherit}
   </div>
   <div class="bp">
     <h3><i data-lucide="calendar-check"></i> 提交排房申请</h3>
-    
-    <!-- 房间类型选择 -->
-    <div class="room-type-selector">
-      <label class="fl">房间类型</label>
-      <div class="rt-toggle-group">
-        <button class="rt-toggle-btn active" data-type="single" onclick="selectRoomType('single')">👤 单间</button>
-        <button class="rt-toggle-btn" data-type="double" onclick="selectRoomType('double')">👥 标间</button>
+
+    <!-- 步骤1：房间类型 + 入住人数 -->
+    <div class="form-section">
+      <div class="form-section-title"><span class="step-num">1</span> 选择房型与人数</div>
+      <div class="form-row-main">
+        <div class="rt-toggle-group">
+          <button class="rt-toggle-btn active" data-type="single" onclick="selectRoomType('single')">
+            <span class="rt-icon">👤</span>
+            <span class="rt-label">单间</span>
+            <span class="rt-sub">1人/间</span>
+          </button>
+          <button class="rt-toggle-btn" data-type="double" onclick="selectRoomType('double')">
+            <span class="rt-icon">👥</span>
+            <span class="rt-label">标间</span>
+            <span class="rt-sub">2人/间</span>
+          </button>
+        </div>
+        <div class="fg" style="max-width:180px;">
+          <label class="fl">入住人数 <span class="rq">*</span></label>
+          <input class="fi fi-accent" type="number" id="pp" placeholder="输入人数" min="1" onchange="autoAssignRooms()">
+        </div>
+        <button class="btn btn-auto" onclick="autoAssignRooms()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18m0-18l-4 4m4-4l4 4"/><circle cx="12" cy="12" r="10" opacity="0.3"/></svg>
+          自动排房
+        </button>
       </div>
     </div>
-    
-    <div class="fr">
-      <div class="fg"><label class="fl">部门 <span class="rq">*</span></label><input class="fi" id="dep" placeholder="如：市场部"></div>
-      <div class="fg"><label class="fl">联系人 <span class="rq">*</span></label><input class="fi" id="con" placeholder="姓名"></div>
-      <div class="fg"><label class="fl">电话 <span class="rq">*</span></label><input class="fi" id="ph" placeholder="手机号"></div>
-    </div>
-    
-    <div class="fr">
-      <div class="fg"><label class="fl">培训内容</label><input class="fi" id="pur" placeholder="如：新员工入职培训"></div>
-      <div class="fg">
-        <label class="fl">入住人数 <span class="rq">*</span></label>
-        <input class="fi" type="number" id="pp" placeholder="输入人数" min="1" onchange="autoAssignRooms()">
+
+    <!-- 步骤2：基本信息 -->
+    <div class="form-section">
+      <div class="form-section-title"><span class="step-num">2</span> 基本信息</div>
+      <div class="fr">
+        <div class="fg"><label class="fl">部门 <span class="rq">*</span></label><input class="fi" id="dep" placeholder="如：市场部"></div>
+        <div class="fg"><label class="fl">联系人 <span class="rq">*</span></label><input class="fi" id="con" placeholder="姓名"></div>
+        <div class="fg"><label class="fl">电话 <span class="rq">*</span></label><input class="fi" id="ph" placeholder="手机号"></div>
       </div>
-      <div class="fg"><label class="fl">住宿标准</label><input class="fi" type="number" id="pa" placeholder="元/人/天" min="0"></div>
-      <div class="fg"><label class="fl">餐费标准</label><input class="fi" type="number" id="pm" placeholder="元/人/天" min="0"></div>
-      <div class="fg"><label class="fl">其他费用</label><input class="fi" type="number" id="po" placeholder="元/人" min="0"></div>
+      <div class="fr">
+        <div class="fg"><label class="fl">培训内容</label><input class="fi" id="pur" placeholder="如：新员工入职培训"></div>
+        <div class="fg"><label class="fl">住宿标准</label><input class="fi" type="number" id="pa" placeholder="元/人/天" min="0"></div>
+        <div class="fg"><label class="fl">餐费标准</label><input class="fi" type="number" id="pm" placeholder="元/人/天" min="0"></div>
+        <div class="fg"><label class="fl">其他费用</label><input class="fi" type="number" id="po" placeholder="元/人" min="0"></div>
+      </div>
     </div>
-    
-    <!-- 自动排房按钮 -->
-    <div style="margin: 12px 0;">
-      <button class="btn btn-primary" onclick="autoAssignRooms()" style="padding: 8px 20px;font-size: 13px;">
-        <i data-lucide="sparkles"></i> 自动排房
+
+    <!-- 步骤3：已选房间 -->
+    <div class="form-section">
+      <div class="form-section-title"><span class="step-num">3</span> 已选房间 <span class="rq">*</span> <span style="font-weight:400;color:var(--slate-400);font-size:12px;margin-left:4px;">拖动下方房间卡片批量选择</span></div>
+      <div class="srl" id="selR"><div class="sel-hint">请拖动或点击下方房间卡片选择</div></div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;margin-top:20px;gap:10px;">
+      <button class="btn btn-secondary" onclick="clearSel()" style="padding:10px 20px;font-size:13px;">
+        <i data-lucide="x"></i> 清空选择
       </button>
-      <span style="font-size: 12px;color: var(--slate-500);margin-left: 12px;">根据入住人数和房间类型自动分配可用房间</span>
-    </div>
-    
-    <div class="fg">
-      <label class="fl">已选房间 <span class="rq">*</span> <span style="font-weight:400;color:var(--slate-400);margin-left:6px;">点击下方房间卡片选择/取消，或点击"自动排房"</span></label>
-      <div class="srl" id="selR"><div class="sel-hint">请选择房间或点击"自动排房"</div></div>
-    </div>
-    
-    <div style="display:flex;justify-content:flex-end;margin-top:16px;">
       <button class="btn btn-success" onclick="sub()" style="padding:10px 32px;font-size:14px;border-radius:var(--radius-sm);">
         <i data-lucide="send"></i> 确认提交
       </button>
     </div>
   </div>
-  <div id="rc"><div class="emp"><i data-lucide="building-2"></i><p>请选择楼栋、楼层和日期</p></div></div>
+  <div id="rc"><div class="emp"><i data-lucide="building-2"></i><p>请选择楼栋、楼层和日期</p></div>
+  <!-- 拖动选择框 -->
+  <div class="sel-box" id="selBox"></div>
+  </div>
 </div>
 <div class="page" id="p2">
   <div class="toolbar">
@@ -1064,24 +1162,108 @@ function iPf(){ftT(parseInt(document.getElementById('bld').value));var n=new Dat
 function ftT(b){var c=document.getElementById('ft'),f=b===11?5:6,h='<button class="floor-tab act" data-f="a">全部</button>';for(var i=1;i<=f;i++)h+='<button class="floor-tab" data-f="'+i+'">'+i+'F</button>';c.innerHTML=h;Array.from(c.children).forEach(function(t){t.onclick=function(){c.querySelectorAll('.floor-tab').forEach(function(x){x.classList.remove('act');});this.classList.add('act');rPf();};});}
 function gF(){var a=document.querySelector('#ft .floor-tab.act');return a?a.getAttribute('data-f'):'a';}
 function gS(){var tbody=document.querySelector('#selR tbody');if(!tbody)return[];var r=[];Array.from(tbody.querySelectorAll('tr')).forEach(function(tr){var v=parseInt(tr.getAttribute('d-n')),bl=parseInt(tr.getAttribute('d-b')),tp=tr.getAttribute('d-t')||'single',inp=tr.querySelector('.ni2'),nm=inp?inp.value.trim():'',inp2=tr.querySelector('.ni3'),nm2=inp2?inp2.value.trim():'';if(v&&bl)r.push({n:v,b:bl,tp:tp,nm:nm,nm2:nm2});});return r;}
+
+// ===== 拖动选择逻辑 =====
+var _drag = {active: false, startX: 0, startY: 0, mode: 'add', processed: {}, inited: false};
+
+function initDragSelect(){
+  if(_drag.inited) return; // 避免重复绑定
+  _drag.inited = true;
+  var rc = document.getElementById('rc');
+  if(!rc) return;
+  rc.addEventListener('mousedown', function(e){
+    var card = e.target.closest('.room-card');
+    if(!card || card.classList.contains('bkd')) return;
+    if(e.target.tagName === 'INPUT') return; // 不拦截输入框
+    e.preventDefault();
+    _drag.active = true;
+    _drag.mode = card.classList.contains('sel') ? 'remove' : 'add';
+    _drag.processed = {};
+    var num = parseInt(card.getAttribute('data-num'));
+    var bld = parseInt(card.getAttribute('data-bld'));
+    _drag.processed[num + '_' + bld] = true;
+    cr(num);
+    var box = document.getElementById('selBox');
+    var rect = rc.getBoundingClientRect();
+    _drag.startX = e.clientX - rect.left + rc.scrollLeft;
+    _drag.startY = e.clientY - rect.top + rc.scrollTop;
+    box.style.left = _drag.startX + 'px';
+    box.style.top = _drag.startY + 'px';
+    box.style.width = '0px';
+    box.style.height = '0px';
+    box.style.display = 'block';
+  });
+  rc.addEventListener('mousemove', function(e){
+    if(!_drag.active) return;
+    var box = document.getElementById('selBox');
+    var rect = rc.getBoundingClientRect();
+    var curX = e.clientX - rect.left + rc.scrollLeft;
+    var curY = e.clientY - rect.top + rc.scrollTop;
+    var x = Math.min(_drag.startX, curX);
+    var y = Math.min(_drag.startY, curY);
+    var w = Math.abs(curX - _drag.startX);
+    var h = Math.abs(curY - _drag.startY);
+    box.style.left = x + 'px';
+    box.style.top = y + 'px';
+    box.style.width = w + 'px';
+    box.style.height = h + 'px';
+    var boxRect = {left: x, top: y, right: x + w, bottom: y + h};
+    var cards = rc.querySelectorAll('.room-card:not(.bkd)');
+    for(var i = 0; i < cards.length; i++){
+      var cr2 = cards[i].getBoundingClientRect();
+      var crRel = {
+        left: cr2.left - rect.left + rc.scrollLeft,
+        top: cr2.top - rect.top + rc.scrollTop,
+        right: cr2.right - rect.left + rc.scrollLeft,
+        bottom: cr2.bottom - rect.top + rc.scrollTop
+      };
+      var overlaps = !(crRel.right < boxRect.left || crRel.left > boxRect.right || crRel.bottom < boxRect.top || crRel.top > boxRect.bottom);
+      var num = parseInt(cards[i].getAttribute('data-num'));
+      var bld = parseInt(cards[i].getAttribute('data-bld'));
+      var key = num + '_' + bld;
+      if(overlaps && !_drag.processed[key]){
+        _drag.processed[key] = true;
+        var isSel = cards[i].classList.contains('sel');
+        if(_drag.mode === 'add' && !isSel){
+          cr(num);
+        } else if(_drag.mode === 'remove' && isSel){
+          cr(num);
+        }
+      }
+    }
+  });
+  document.addEventListener('mouseup', function(){
+    if(!_drag.active) return;
+    _drag.active = false;
+    var box = document.getElementById('selBox');
+    box.style.display = 'none';
+    box.style.width = '0px';
+    box.style.height = '0px';
+  });
+}
+
 function rPf(){
   var b=parseInt(document.getElementById('bld').value),fl=gF(),fd=document.getElementById('df').value,td=document.getElementById('dt').value;
   var c=document.getElementById('rc'),sel=gS(),rooms=rb(b,fl),nm=b===11?'11号楼':'12号楼';
   var fm={};for(var i=0;i<rooms.length;i++){var rm=rooms[i];if(!fm[rm.flr])fm[rm.flr]=[];fm[rm.flr].push(rm);}
   var fk=Object.keys(fm).sort(function(a,b){return parseInt(a)-parseInt(b);});
   if(fk.length===0){c.innerHTML='<div class="emp"><i data-lucide="search-x"></i><p>没有找到房间</p></div>';return;}
-  var h='';
+  var h='<div style="background:var(--blue-light);border:1px solid rgba(30,64,175,0.12);border-radius:8px;padding:8px 14px;margin-bottom:16px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--blue-dark);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 9l4-4 4 4"/><path d="M5 15l4 4 4-4"/><rect x="3" y="3" width="18" height="18" rx="2" opacity="0.3"/></svg> 💡 拖动鼠标可批量选择房间，点击可逐个选择/取消</div>';
   for(var fi=0;fi<fk.length;fi++){var flr=fk[fi],rms=fm[flr],total=rms.length,bkd=rms.filter(function(r){return fd&&td&&isBkd(r.num,fd,td);}).length;
     h+='<div class="floor-section"><div class="floor-header"><h3>'+nm+' '+flr+'F</h3><span class="fb">共 '+total+' 间</span><span class="fc">空闲 <span>'+(total-bkd)+'</span> / 已排 <span>'+bkd+'</span> / 共 <span>'+total+'</span> 间</span></div><div class="room-grid">';
     for(var ri=0;ri<rms.length;ri++){var rm=rms[ri],isS=false,selType='single';for(var si=0;si<sel.length;si++){if(sel[si].n===rm.num&&sel[si].b===rm.bld){isS=true;selType=sel[si].tp||'single';break;}}
       var isB=fd&&td&&isBkd(rm.num,fd,td),bi=isB?getBk(rm.num,fd):null,names=isB?getBkNames(rm.num,fd,td):[];
       var cls='room-card avl';if(isS)cls='room-card sel';else if(isB)cls='room-card bkd';
-      var nhtml='';if(isS){var pCnt=selType==='double'?2:1;var sb=selType==='double'?'<span class="rt-badge rt-dbl">👥 标间</span>':'<span class="rt-badge rt-sgl">👤 单间</span>';nhtml=sb+'<div class="rnm" style="font-weight:500;">已选 · '+pCnt+'人</div>'+(selType==='double'?'<div class="rnm"><input class="ni" placeholder="入住人1" maxlength="4"><input class="ni" placeholder="入住人2" maxlength="4" style="margin-top:1px;"></div>':'<div class="rnm"><input class="ni" placeholder="姓名" maxlength="6"></div>');}
+      var nhtml='';if(isS){var pCnt=selType==='double'?2:1;var sb=selType==='double'?'<span class="rt-badge rt-dbl">👥 标间</span>':'<span class="rt-badge rt-sgl">👤 单间</span>';nhtml=sb+'<div class="rnm" style="font-weight:500;">已选 · '+pCnt+'人</div>';}
       else if(isB){nhtml='<div class="rnm" style="color:var(--red);font-weight:500;">占用</div>'+(names.length>0?'<div class="rnm">'+names.slice(0,2).join(',')+'</div>':'')}
-      else{var ab='<span class="rt-badge rt-sgl-sm">👤 单间</span>';nhtml=ab+'<div class="rnm" style="color:var(--green-dark);">空闲</div>';}
-      h+='<div class="'+cls+'" data-type="'+(isS?selType:'single')+'" onclick="cr('+rm.num+')"><div class="rn">'+rm.num+'</div><div class="rt">客房 '+flr+'F</div><div class="rd"></div>'+nhtml+(isB&&bi?'<div class="rbb">'+bi.dep+'</div>':'')+'</div>';}
+      else{nhtml='<div class="rnm" style="color:var(--green-dark);">空闲</div>';}
+      h+='<div class="'+cls+'" data-num="'+rm.num+'" data-bld="'+rm.bld+'" data-type="'+(isS?selType:'single')+'"><div class="rn">'+rm.num+'</div><div class="rt">客房 '+flr+'F</div><div class="rd"></div>'+nhtml+(isB&&bi?'<div class="rbb">'+bi.dep+'</div>':'')+'</div>';}
     h+='</div></div>';}
-  c.innerHTML=h;updS();
+  // 保留选择框元素
+  var selBox = document.getElementById('selBox');
+  c.innerHTML = h;
+  if(selBox) c.appendChild(selBox);
+  updS();initDragSelect();
 }
 
 // ========== 房间类型选择与自动排房 ==========
@@ -1162,11 +1344,45 @@ function autoAssignRooms(){
   t('已自动分配 ' + roomsToAssign + ' 间' + (roomTypePref==='single'?'单间':'标间'), 's');
 }
 
-function cr(num){var fd=document.getElementById('df').value,td=document.getElementById('dt').value,b=parseInt(document.getElementById('bld').value);if(!fd||!td){t('请先选择入住和退房日期','e');return;}if(isBkd(num,fd,td)){t('该房间在选定时间范围内已被预约','e');return;}var el=document.getElementById('selR'),tbody=el.querySelector('tbody');if(!tbody){el.innerHTML='';el.style.padding='0';tbody=document.createElement('tbody');var tbl=document.createElement('table');tbl.className='bill-table';tbl.innerHTML='<thead><tr><th style="width:60px">房号</th><th style="width:75px">房型</th><th style="width:50px">人数</th><th style="width:55px">楼栋</th><th>入住人</th><th style="width:36px"></th></tr></thead>';tbl.appendChild(tbody);el.appendChild(tbl);}var existing=null;Array.from(tbody.querySelectorAll('tr')).forEach(function(r){if(parseInt(r.getAttribute('d-n'))===num&&parseInt(r.getAttribute('d-b'))===b)existing=r;});if(existing){existing.remove();}else{var tr=document.createElement('tr');tr.setAttribute('d-n',num);tr.setAttribute('d-b',b);tr.setAttribute('d-t',roomTypePref);var rt=roomTypePref;buildRow(tr,rt,b);tbody.appendChild(tr);}rPf();updatePP();}
+function cr(num){
+  var fd=document.getElementById('df').value,td=document.getElementById('dt').value,b=parseInt(document.getElementById('bld').value);
+  if(!fd||!td){t('请先选择入住和退房日期','e');return;}
+  if(isBkd(num,fd,td)){return;} // 已占用房间静默跳过
+  var el=document.getElementById('selR'),tbody=el.querySelector('tbody');
+  if(!tbody){
+    el.innerHTML='';el.style.padding='0';
+    tbody=document.createElement('tbody');
+    var tbl=document.createElement('table');tbl.className='bill-table';
+    tbl.innerHTML='<thead><tr><th style="width:60px">房号</th><th style="width:75px">房型</th><th style="width:50px">人数</th><th style="width:55px">楼栋</th><th>入住人</th><th style="width:36px"></th></tr></thead>';
+    tbl.appendChild(tbody);el.appendChild(tbl);
+  }
+  var existing=null;
+  Array.from(tbody.querySelectorAll('tr')).forEach(function(r){
+    if(parseInt(r.getAttribute('d-n'))===num&&parseInt(r.getAttribute('d-b'))===b)existing=r;
+  });
+  if(existing){existing.remove();}
+  else{
+    var tr=document.createElement('tr');tr.setAttribute('d-n',num);tr.setAttribute('d-b',b);tr.setAttribute('d-t',roomTypePref);
+    buildRow(tr,roomTypePref,b);tbody.appendChild(tr);
+  }
+  // 局部更新房间卡片样式（避免全量rPf拖动时闪烁）
+  var card=document.querySelector('.room-card[data-num="'+num+'"][data-bld="'+b+'"]');
+  if(card){
+    if(existing){card.classList.remove('sel');card.classList.add('avl');}
+    else{card.classList.remove('avl');card.classList.add('sel');card.classList.add('just-selected');setTimeout(function(){card.classList.remove('just-selected');},300);}
+  }
+  // 检查已选列表是否为空
+  var tbody2=document.querySelector('#selR tbody');
+  if(!tbody2||tbody2.children.length===0){
+    document.getElementById('selR').innerHTML='<div class="sel-hint">请选择房间或点击"自动排房"</div>';document.getElementById('selR').style.padding='';
+  }
+  updatePP();
+}
 function buildRow(tr,rt,b){var num=parseInt(tr.getAttribute('d-n'));var isDbl=(rt==='double');var typeLabel=isDbl?'<span class="rt-badge rt-dbl-sm">👥 标间</span>':'<span class="rt-badge rt-sgl-sm">👤 单间</span>';var pCnt=isDbl?2:1;var toggleBtn=isDbl?'<button class="rt-toggle" onclick="tgRt(this.parentElement.parentElement)" title="切换为单间">⇄ 切单间</button>':'<button class="rt-toggle" onclick="tgRt(this.parentElement.parentElement)" title="切换为标间">⇄ 切标间</button>';var nameHtml=isDbl?'<div style="display:flex;gap:4px;align-items:center;"><input class="ni2" placeholder="入住人1" maxlength="8"><input class="ni3" placeholder="入住人2" maxlength="8"></div>':'<input class="ni2" placeholder="姓名" maxlength="8">';tr.innerHTML='<td class="room-num">'+num+'</td><td>'+typeLabel+' '+toggleBtn+'</td><td style="font-weight:700;color:'+(isDbl?'var(--champagne-dark)':'var(--blue)')+';">'+pCnt+'人</td><td>'+(b===11?'11号楼':'12号楼')+'</td><td style="display:flex;gap:4px;align-items:center;">'+nameHtml+'</td><td><span class="rdel2" onclick="rRm(this)">&times;</span></td>';}
 function tgRt(tr){var rt=tr.getAttribute('d-t');var newRt=(rt==='double'?'single':'double');tr.setAttribute('d-t',newRt);var b=parseInt(tr.getAttribute('d-b'));buildRow(tr,newRt,b);updatePP();rPf();}
-function rRm(el){el.closest('tr').remove();var tbody=document.querySelector('#selR tbody');if(!tbody||tbody.children.length===0){document.getElementById('selR').innerHTML='<div class="sel-hint">请点击下方房间卡片选择</div>';document.getElementById('selR').style.padding='';}rPf();updatePP();}
+function rRm(el){el.closest('tr').remove();var tbody=document.querySelector('#selR tbody');if(!tbody||tbody.children.length===0){document.getElementById('selR').innerHTML='<div class="sel-hint">请拖动或点击下方房间卡片选择</div>';document.getElementById('selR').style.padding='';}rPf();updatePP();}
 function updatePP(){var cnt=0,tbody=document.querySelector('#selR tbody');if(tbody){Array.from(tbody.querySelectorAll('tr')).forEach(function(tr){var tp=tr.getAttribute('d-t')||'single';cnt+=(tp==='double'?2:1);});}var el=document.getElementById('pp');if(el)el.value=cnt||'';}
+function clearSel(){document.getElementById('selR').innerHTML='<div class="sel-hint">请拖动或点击下方房间卡片选择</div>';document.getElementById('selR').style.padding='';rPf();updatePP();t('已清空选择','i');}
 function updS(){var fd=document.getElementById('df').value,td=document.getElementById('dt').value;if(!fd||!td){document.getElementById('sAvl').textContent='-';document.getElementById('sBkd').textContent='-';return;}var cnt=0,d=new Date(fd),end=new Date(td);while(d<=end){var ds=d.toISOString().slice(0,10);for(var i=0;i<BK.length;i++){var b=BK[i];if(b.st!=='c'&&ds>=b.df&&ds<=b.dt)cnt+=b.rs.length;}d.setDate(d.getDate()+1);}var days=Math.max(1,Math.round((end-new Date(fd))/86400000)+1);document.getElementById('sAvl').textContent=ALL.length-Math.round(cnt/days);document.getElementById('sBkd').textContent=Math.round(cnt/days);}
 function sub(){
   var dep = document.getElementById('dep').value.trim(),
@@ -1240,7 +1456,7 @@ function sub(){
   document.getElementById('pa').value = '';
   document.getElementById('pm').value = '';
   document.getElementById('po').value = '';
-  document.getElementById('selR').innerHTML = '<div class="sel-hint">请选择房间或点击"自动排房"</div>';
+  document.getElementById('selR').innerHTML = '<div class="sel-hint">请拖动或点击下方房间卡片选择</div>';
   
   rPf();
   t(dep + ' 于 ' + fd + '~' + td + ' 使用 ' + sel.length + ' 间房 申请已提交', 's');
