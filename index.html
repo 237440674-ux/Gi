@@ -122,6 +122,7 @@ input,select,textarea{font:inherit}
 .rc-names .ni{width:100%;border:1px solid var(--slate-200);border-radius:3px;background:rgba(255,255,255,0.7);font-size:9px;padding:3px 4px;outline:none;text-align:center;transition:all var(--transition);height:20px;max-width:72px;margin:0 auto}
 .rc-names .ni:focus{border-color:var(--champagne);background:#fff;box-shadow:0 0 0 2px var(--champagne-glow)}
 .rc-toggle{display:inline-flex;align-items:center;gap:1px;padding:1px 5px;border-radius:4px;font-size:8px;font-weight:600;cursor:pointer;background:rgba(255,255,255,0.7);color:var(--slate-500);border:1px solid var(--slate-200);transition:all var(--transition);white-space:nowrap;margin-top:3px}.rc-toggle:hover{background:var(--champagne-light);color:var(--champagne-dark);border-color:var(--champagne)}
+.tg-lbl{font-size:13px;color:var(--slate-600);cursor:pointer;display:flex;align-items:center;gap:4px;user-select:none}
 .rtag{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;background:var(--blue-light);color:var(--blue);border:1px solid rgba(30,64,175,0.15);transition:all var(--transition)}.rtag:hover{background:var(--blue);color:#fff}
 .rtag .rdel{width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:var(--blue);color:#fff;font-size:9px;cursor:pointer}
 .sc-list{display:flex;flex-direction:column;gap:12px}
@@ -832,6 +833,7 @@ input,select,textarea{font:inherit}
       <button class="header-tab act" onclick="sw(1)">排房</button>
       <button class="header-tab" onclick="sw(2)">总览</button>
       <button class="header-tab" onclick="sw(3)">库房</button>
+      <button class="header-tab" onclick="sw(4)">培训班</button>
     </div>
   </div>
   <div class="header-right"><span id="cd"></span><span id="sync-st" style="margin-left:12px;font-size:12px;"></span><button class="header-btn" onclick="expData()" title="导出数据">📤 导出</button><button class="header-btn" onclick="impData()" title="导入数据">📥 导入</button><input type="file" id="impFile" accept=".json" style="display:none" onchange="handleImp(event)"></div>
@@ -921,9 +923,25 @@ input,select,textarea{font:inherit}
       </div>
       <div class="fr">
         <div class="fg"><label class="fl">培训内容</label><input class="fi" id="pur" placeholder="如：新员工入职培训"></div>
+        <div class="fg"><label class="fl">会议场地</label><input class="fi" id="mt" placeholder="如：二教"></div>
+        <div class="fg"><label class="fl">用餐地点</label><input class="fi" id="dl" placeholder="如：11号楼一层自助"></div>
+      </div>
+      <div class="fr">
         <div class="fg"><label class="fl">住宿标准</label><input class="fi" type="number" id="pa" placeholder="元/人/天" min="0"></div>
         <div class="fg"><label class="fl">餐费标准</label><input class="fi" type="number" id="pm" placeholder="元/人/天" min="0"></div>
         <div class="fg"><label class="fl">其他费用</label><input class="fi" type="number" id="po" placeholder="元/人" min="0"></div>
+        <div class="fg"><label class="fl">用餐时间</label><input class="fi" id="dtm" placeholder="如：1月6日晚餐-1月11日午餐"></div>
+      </div>
+      <div class="fr">
+        <div class="fg" style="display:flex;align-items:center;gap:14px;padding-top:4px">
+          <label class="fl" style="margin-bottom:0">会务保障</label>
+          <label class="tg-lbl"><input type="checkbox" id="mf" style="accent-color:var(--champagne);"> 需要</label>
+        </div>
+        <div class="fg" style="display:flex;align-items:center;gap:14px;padding-top:4px">
+          <label class="fl" style="margin-bottom:0">车辆接送</label>
+          <label class="tg-lbl"><input type="checkbox" id="vh" style="accent-color:var(--champagne);"> 需要</label>
+        </div>
+        <div class="fg" style="flex:2"><label class="fl">备注</label><input class="fi" id="rmk" placeholder="特殊需求或说明"></div>
       </div>
   </div>
   <div id="rc"><div class="emp"><i data-lucide="building-2"></i><p>请选择楼栋、楼层和日期</p></div>
@@ -964,6 +982,9 @@ input,select,textarea{font:inherit}
   <div class="kpi-row" id="whKpi"></div>
   <!-- 内容 -->
   <div id="whc"><div class="emp"><i data-lucide="package"></i><p>暂无库存记录</p></div></div>
+</div>
+<div class="page" id="p4">
+  <div id="tc_overview"><div class="emp"><i data-lucide="book-open"></i><p>暂无培训班数据</p></div></div>
 </div>
 </main>
 <div class="mod" id="mo" onclick="if(event.target===event.currentTarget)cm()">
@@ -1075,10 +1096,11 @@ function saveToCloud(){
 function ld(){
   var localOk=false;
   try{var r=localStorage.getItem(sk);if(r){var p=JSON.parse(r);BK=p.bk||[];WH=p.wh||[];WHL=p.whl||[];localOk=true;}}catch(e){}
+  if(!localOk||BK.length===0)initTc();
   loadFromCloud(function(ok){
     if(ok){
-      // 云端成功，更新本地
       try{localStorage.setItem(sk,JSON.stringify({bk:BK,wh:WH,whl:WHL}));}catch(e){}
+      if(!localOk)initTc();
       // 刷新界面
       if(typeof iPf==='function')iPf();
       if(typeof iZl==='function')iZl();
@@ -1103,6 +1125,33 @@ for(var i=0;i<B12.length;i++){var fl=B12[i];for(var j=0;j<fl.r.length;j++){var n
 var BK=[],WH=[],WHL=[];
 var whTabSt='dash';
 
+// 预置2026年培训班数据
+var TC_DATA=[{id:'tc_001',dep:'阅卷',co:'郑斌',ph:'',pu:'阅卷',mt:'二教',mf:true,vh:false,dl:'11号楼一层自助',dtm:'1月6日晚餐-1月11日午餐',rmk:'',pp:25,pa:0,pm:100,po:0,df:'2026-01-06',dt:'2026-01-11',rs:[],st:'y',at:'2026-01-06',tp:'single'},{id:'tc_002',dep:'纪检监察系统干部到消防救援队伍任职培训',co:'陶于萍',ph:'',pu:'纪检监察系统干部培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'具体时间待定',pp:40,pa:0,pm:0,po:0,df:'2026-03-01',dt:'2026-03-31',rs:[],st:'y',at:'2026-03-01',tp:'single'},{id:'tc_003',dep:'全国消防安全系列培训班（第1期）',co:'汪宇轩',ph:'',pu:'消防安全培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:500,pa:0,pm:0,po:0,df:'2026-03-10',dt:'2026-03-13',rs:[],st:'y',at:'2026-03-10',tp:'double'},{id:'tc_004',dep:'全国消防安全系列培训班（第2期）',co:'杨亚伟',ph:'',pu:'消防安全培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:500,pa:0,pm:0,po:0,df:'2026-03-17',dt:'2026-03-20',rs:[],st:'y',at:'2026-03-17',tp:'double'},{id:'tc_005',dep:'消防监管能力提升培训班',co:'陶于萍',ph:'',pu:'消防监管能力提升',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:140,pa:0,pm:0,po:0,df:'2026-04-08',dt:'2026-04-11',rs:[],st:'y',at:'2026-04-08',tp:'single'},{id:'tc_006',dep:'巡视组人员培训班（第1期）',co:'程亮',ph:'',pu:'巡视组人员培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:140,pa:0,pm:0,po:0,df:'2026-04-13',dt:'2026-04-17',rs:[],st:'y',at:'2026-04-13',tp:'single'},{id:'tc_007',dep:'中央和国家机关党员教育培训示范班',co:'陶于萍',ph:'',pu:'党员教育培训示范',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:200,pa:0,pm:0,po:0,df:'2026-04-19',dt:'2026-04-24',rs:[],st:'y',at:'2026-04-19',tp:'single'},{id:'tc_008',dep:'全国消防安全系列培训班（第3期）',co:'汪宇轩',ph:'',pu:'消防安全培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'原计划时间与中青班冲突，时间待定',pp:500,pa:0,pm:0,po:0,df:'2026-04-27',dt:'2026-04-30',rs:[],st:'c',at:'2026-04-27',tp:'double'},{id:'tc_009',dep:'中青年干部能力提升培训班',co:'汪宇轩',ph:'',pu:'中青年干部能力提升',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:160,pa:0,pm:0,po:0,df:'2026-05-07',dt:'2026-05-27',rs:[],st:'y',at:'2026-05-07',tp:'single'},{id:'tc_010',dep:'巡视组人员办公（第1期）',co:'程亮',ph:'',pu:'巡视组人员办公',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:50,pa:0,pm:0,po:0,df:'2026-06-01',dt:'2026-06-07',rs:[],st:'y',at:'2026-06-01',tp:'single'},{id:'tc_011',dep:'中央和国家机关党员教育培训示范班',co:'侯松涛',ph:'',pu:'党员教育培训示范',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:200,pa:0,pm:0,po:0,df:'2026-06-07',dt:'2026-06-12',rs:[],st:'y',at:'2026-06-07',tp:'single'},{id:'tc_012',dep:'全国消防安全系列培训班（第4期）',co:'杨亚伟',ph:'',pu:'消防安全培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:500,pa:0,pm:0,po:0,df:'2026-06-15',dt:'2026-06-18',rs:[],st:'y',at:'2026-06-15',tp:'double'},{id:'tc_013',dep:'中央和国家机关党小组长示范培训班',co:'陶于萍',ph:'',pu:'党小组长示范培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:200,pa:0,pm:0,po:0,df:'2026-06-28',dt:'2026-07-03',rs:[],st:'y',at:'2026-06-28',tp:'single'},{id:'tc_014',dep:'全国消防安全系列培训班（第5期）',co:'汪宇轩',ph:'',pu:'消防安全培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:500,pa:0,pm:0,po:0,df:'2026-07-07',dt:'2026-07-10',rs:[],st:'y',at:'2026-07-07',tp:'double'},{id:'tc_015',dep:'中央和国家机关党员教育培训示范班',co:'程亮',ph:'',pu:'党员教育培训示范',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:200,pa:0,pm:0,po:0,df:'2026-07-19',dt:'2026-07-24',rs:[],st:'y',at:'2026-07-19',tp:'single'},{id:'tc_016',dep:'巡视组人员培训班（第2期）',co:'朱雯',ph:'',pu:'巡视组人员培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:140,pa:0,pm:0,po:0,df:'2026-08-03',dt:'2026-08-07',rs:[],st:'y',at:'2026-08-03',tp:'single'},{id:'tc_017',dep:'全国火灾调查业务骨干和新闻发言人培训班',co:'苏挺',ph:'',pu:'火灾调查业务培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:130,pa:0,pm:0,po:0,df:'2026-08-10',dt:'2026-08-16',rs:[],st:'y',at:'2026-08-10',tp:'single'},{id:'tc_018',dep:'全国消防安全系列培训班（第6期）',co:'杨亚伟',ph:'',pu:'消防安全培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:500,pa:0,pm:0,po:0,df:'2026-09-08',dt:'2026-09-11',rs:[],st:'y',at:'2026-09-08',tp:'double'},{id:'tc_019',dep:'中央和国家机关党小组长示范培训班',co:'侯松涛',ph:'',pu:'党小组长示范培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:200,pa:0,pm:0,po:0,df:'2026-09-13',dt:'2026-09-18',rs:[],st:'y',at:'2026-09-13',tp:'single'},{id:'tc_020',dep:'巡视组人员办公（第2期）',co:'朱雯',ph:'',pu:'巡视组人员办公',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:50,pa:0,pm:0,po:0,df:'2026-09-18',dt:'2026-09-24',rs:[],st:'y',at:'2026-09-18',tp:'single'},{id:'tc_021',dep:'中央和国家机关所属局级事业单位支部书记培训班',co:'陶于萍',ph:'',pu:'支部书记培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:225,pa:0,pm:0,po:0,df:'2026-10-12',dt:'2026-10-16',rs:[],st:'y',at:'2026-10-12',tp:'single'},{id:'tc_022',dep:'全国消防安全系列培训班（第7期）',co:'汪宇轩',ph:'',pu:'消防安全培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:500,pa:0,pm:0,po:0,df:'2026-10-20',dt:'2026-10-23',rs:[],st:'y',at:'2026-10-20',tp:'double'},{id:'tc_023',dep:'全国消防安全系列培训班（第8期）',co:'杨亚伟',ph:'',pu:'消防安全培训',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:500,pa:0,pm:0,po:0,df:'2026-11-10',dt:'2026-11-13',rs:[],st:'y',at:'2026-11-10',tp:'double'},{id:'tc_024',dep:'中央和国家机关党员教育培训示范班',co:'陶于萍',ph:'',pu:'党员教育培训示范',mt:'',mf:false,vh:false,dl:'',dtm:'',rmk:'',pp:200,pa:0,pm:0,po:0,df:'2026-11-29',dt:'2026-12-04',rs:[],st:'y',at:'2026-11-29',tp:'single'}];
+
+function initTc(){
+  var hasTc=false;
+  for(var i=0;i<BK.length;i++){if(BK[i].id&&BK[i].id.indexOf('tc_')===0){hasTc=true;break;}}
+  if(!hasTc){
+    for(var i=0;i<TC_DATA.length;i++){
+      var tc=TC_DATA[i];
+      var nRooms=Math.ceil(tc.pp/(tc.tp==='double'?2:1));
+      var rs=[];
+      // 分配虚拟房间（仅用于占位/日历显示，不绑定具体房间号）
+      for(var j=0;j<nRooms;j++){
+        // 使用 99900+ 的虚拟uid标记为培训班预置数据
+        var bld=11+(j%2); var vnum=900+j+1;
+        rs.push({u:bld*10000+vnum, na:''});
+      }
+      BK.push({
+        id:tc.id, dep:tc.dep, co:tc.co, ph:tc.ph, pu:tc.pu,
+        mt:tc.mt, mf:tc.mf, vh:tc.vh, dl:tc.dl, dtm:tc.dtm, rmk:tc.rmk,
+        pp:tc.pp, pa:tc.pa, pm:tc.pm, po:tc.po,
+        df:tc.df, dt:tc.dt, rs:rs, st:tc.st, at:tc.at
+      });
+    }
+  }
+}
+
 // 分类体系 & 库房定位
 var WH_CATS = {
   '布草':{sub:['床单','被套','枕套','毛巾','浴巾','毛毯','床垫保护垫','枕芯','被芯'],color:'bc'},
@@ -1122,9 +1171,10 @@ function getRoomType(num){
   return 'single';
 }
 
-function gu(uid){for(var i=0;i<ALL.length;i++)if(ALL[i].uid===uid)return ALL[i];return null;}
+function gu(uid){for(var i=0;i<ALL.length;i++)if(ALL[i].uid===uid)return ALL[i];if(uid>=119000)return{uid:uid,num:uid%10000,bld:11,flr:0};if(uid>=129000)return{uid:uid,num:uid%10000,bld:12,flr:0};return null;}
 function gn(num){for(var i=0;i<ALL.length;i++)if(ALL[i].num===num)return ALL[i];return null;}
 function uVal(x){return typeof x==='object'?x.u:x;}
+function isVirtual(uid){return uid>=119000||uid>=129000;}
 function uNa(x){return typeof x==='object'?(x.na||''):'';}
 function rnListWithName(rs){return rs.map(function(x){var n=uVal(x)%10000,na=uNa(x),nb=typeof x==='object'?(x.nb||''):'';return na?n+'('+na+(nb?'/'+nb:'')+')':''+n;});}
 function whFind(id){for(var i=0;i<WH.length;i++)if(WH[i].id===id)return WH[i];return null;}
@@ -1153,7 +1203,7 @@ function sw(p){
   document.querySelectorAll('.header-tab')[p-1].classList.add('act');
   document.getElementById('sb-pf').style.display=(p===3)?'none':'flex';
   document.getElementById('sb-wh').style.display=(p===3)?'flex':'none';
-  if(p===1)rPf();if(p===2)rZl();if(p===3)rWh();
+  if(p===1)rPf();if(p===2)rZl();if(p===3)rWh();if(p===4)rTc();
 }
 
 // ========== 排房 ==========
@@ -1400,12 +1450,18 @@ function clearSel(){
   updSelBar();
   t('已清空选择','i');
 }
-function updS(){var fd=document.getElementById('df').value,td=document.getElementById('dt').value;if(!fd||!td){document.getElementById('sAvl').textContent='-';document.getElementById('sBkd').textContent='-';return;}var cnt=0,d=new Date(fd),end=new Date(td);while(d<=end){var ds=d.toISOString().slice(0,10);for(var i=0;i<BK.length;i++){var b=BK[i];if(b.st!=='c'&&ds>=b.df&&ds<=b.dt)cnt+=b.rs.length;}d.setDate(d.getDate()+1);}var days=Math.max(1,Math.round((end-new Date(fd))/86400000)+1);document.getElementById('sAvl').textContent=ALL.length-Math.round(cnt/days);document.getElementById('sBkd').textContent=Math.round(cnt/days);}
+function updS(){var fd=document.getElementById('df').value,td=document.getElementById('dt').value;if(!fd||!td){document.getElementById('sAvl').textContent='-';document.getElementById('sBkd').textContent='-';return;}var cnt=0,d=new Date(fd),end=new Date(td);while(d<=end){var ds=d.toISOString().slice(0,10);for(var i=0;i<BK.length;i++){var b=BK[i];if(b.st!=='c'&&ds>=b.df&&ds<=b.dt){for(var j=0;j<b.rs.length;j++){var uid=uVal(b.rs[j]);if(!isVirtual(uid))cnt++;}}}d.setDate(d.getDate()+1);}var days=Math.max(1,Math.round((end-new Date(fd))/86400000)+1);document.getElementById('sAvl').textContent=ALL.length-Math.round(cnt/days);document.getElementById('sBkd').textContent=Math.round(cnt/days);}
 function sub(){
   var dep = document.getElementById('dep').value.trim(),
       co = document.getElementById('con').value.trim(),
       ph = document.getElementById('ph').value.trim(),
       pur = document.getElementById('pur').value.trim(),
+      mt = document.getElementById('mt').value.trim(),
+      mf = document.getElementById('mf').checked,
+      vh = document.getElementById('vh').checked,
+      dl = document.getElementById('dl').value.trim(),
+      dtm = document.getElementById('dtm').value.trim(),
+      rmk = document.getElementById('rmk').value.trim(),
       fd = document.getElementById('df').value,
       td = document.getElementById('dt').value,
       pp = parseInt(document.getElementById('pp').value),
@@ -1451,6 +1507,12 @@ function sub(){
     co: co,
     ph: ph,
     pu: pur || '培训',
+    mt: mt,
+    mf: mf,
+    vh: vh,
+    dl: dl,
+    dtm: dtm,
+    rmk: rmk,
     pp: totalPP,
     pa: pa,
     pm: pm,
@@ -1473,6 +1535,12 @@ function sub(){
   document.getElementById('pa').value = '';
   document.getElementById('pm').value = '';
   document.getElementById('po').value = '';
+  document.getElementById('mt').value = '';
+  document.getElementById('mf').checked = false;
+  document.getElementById('vh').checked = false;
+  document.getElementById('dl').value = '';
+  document.getElementById('dtm').value = '';
+  document.getElementById('rmk').value = '';
   
   // 清除所有房间选择
   document.querySelectorAll('.room-card.sel').forEach(function(card){
@@ -1500,9 +1568,10 @@ function rZl(){
   var ar=tc>0?(tr/tc).toFixed(1):0,uc=0;for(var k in ur)uc++;var dc=0;for(var k in dd)dc++;
   h+=_st('总班数',tc)+_st('占用房间',tr)+_st('不同房间',uc)+_st('总人次',tp)+_st('涉及部门',dc)+_st('平均间数',ar);
   h+='</div><div style="margin-top:6px;font-size:12px;color:var(--slate-500);">11号楼 '+b11+' 间 &middot; 12号楼 '+b12+' 间 &middot; 平均 '+ar+' 间/班</div></div>';
-  h+='<div class="scard"><h3><i data-lucide="clipboard-list" style="width:16px;height:16px;vertical-align:middle;"></i> 排房明细</h3><table class="st"><tr><th>入住~退房</th><th>部门</th><th>联系人</th><th>内容</th><th>人数</th><th>房间数</th><th>房间（入住人）</th><th>住宿标准</th><th>餐费标准</th><th>其他费用</th><th>费用</th><th>操作</th></tr>';
+  h+='<div class="scard"><h3><i data-lucide="clipboard-list" style="width:16px;height:16px;vertical-align:middle;"></i> 排房明细</h3><table class="st"><tr><th>入住~退房</th><th>部门</th><th>联系人</th><th>内容</th><th>人数</th><th>房间数</th><th>房间（入住人）</th><th>会议场地</th><th>保障</th><th>住宿</th><th>餐费</th><th>其他</th><th>费用</th><th>操作</th></tr>';
   for(var i=0;i<bks.length;i++){var b=bks[i],rns=rnListWithName(b.rs),rnStr=rns.join('、');
-    h+='<tr><td>'+b.df+'~'+b.dt+'</td><td><strong>'+b.dep+'</strong></td><td>'+b.co+'</td><td>'+(b.pu||'-')+'</td><td>'+(b.pp||'-')+'</td><td style="text-align:center;font-weight:600;">'+b.rs.length+'</td><td><span class="rl">'+rnStr+'</span></td><td style="text-align:center;">'+(b.pa?b.pa:'-')+'</td><td style="text-align:center;">'+(b.pm?b.pm:'-')+'</td><td style="text-align:center;">'+(b.po?b.po:'-')+'</td><td style="text-align:center;font-weight:600;color:var(--red);">'+((b.pa||0)+(b.pm||0)+(b.po||0)&&b.pp?((b.pa||0)+(b.pm||0)+(b.po||0))*b.pp:'-')+'</td><td><button class="btn btn-sm btn-primary" onclick="printBk(\''+b.id+'\')" style="margin-right:4px;">签到表</button><button class="btn btn-sm btn-primary" onclick="printBill(\''+b.id+'\')" style="margin-right:4px;">水单</button><button class="btn btn-sm btn-danger" onclick="db(\''+b.id+'\')">取消</button></td></tr>';}
+    var bzTag='';if(b.mf||b.vh){bzTag='';if(b.mf)bzTag+='<span style="background:var(--blue-light);color:var(--blue);padding:1px 4px;border-radius:3px;font-size:9px;margin-right:2px;">会务</span>';if(b.vh)bzTag+='<span style="background:var(--champagne-light);color:var(--champagne-dark);padding:1px 4px;border-radius:3px;font-size:9px;">车辆</span>';}
+    h+='<tr><td>'+b.df+'~'+b.dt+'</td><td><strong>'+b.dep+'</strong></td><td>'+b.co+'</td><td>'+(b.pu||'-')+'</td><td>'+(b.pp||'-')+'</td><td style="text-align:center;font-weight:600;">'+b.rs.length+'</td><td><span class="rl">'+rnStr+'</span></td><td style="font-size:11px;">'+(b.mt||'-')+'</td><td>'+(bzTag||'-')+'</td><td style="text-align:center;">'+(b.pa?b.pa:'-')+'</td><td style="text-align:center;">'+(b.pm?b.pm:'-')+'</td><td style="text-align:center;">'+(b.po?b.po:'-')+'</td><td style="text-align:center;font-weight:600;color:var(--red);">'+((b.pa||0)+(b.pm||0)+(b.po||0)&&b.pp?((b.pa||0)+(b.pm||0)+(b.po||0))*b.pp:'-')+'</td><td><button class="btn btn-sm btn-primary" onclick="printBk(\''+b.id+'\')" style="margin-right:4px;">签到表</button><button class="btn btn-sm btn-primary" onclick="printBill(\''+b.id+'\')" style="margin-right:4px;">水单</button><button class="btn btn-sm btn-danger" onclick="db(\''+b.id+'\')">取消</button></td></tr>';}
   h+='</table></div>';
   var dm={};for(var i=0;i<bks.length;i++){var d=bks[i].df;if(!dm[d])dm[d]=[];dm[d].push(bks[i]);}
   var ds=Object.keys(dm).sort();h+='<div class="sc-list">';
@@ -1511,7 +1580,9 @@ function rZl(){
     h+='<div class="sc-card"><div class="sch"><span class="scd"><i data-lucide="calendar" style="width:14px;height:14px;"></i> '+d+' &nbsp;'+items.length+'个班 &nbsp;共 '+ar.length+' 间 (11号'+dbb[11]+'/12号'+dbb[12]+')</span></div>';
     for(var i=0;i<items.length;i++){var b=items[i],br={11:[],12:[]};for(var j=0;j<b.rs.length;j++){var uid=uVal(b.rs[j]),g=gu(uid);if(g)br[g.bld].push({num:g.num,na:uNa(b.rs[j])});}
       h+='<div style="margin-top:8px;padding:8px 0;border-top:1px solid var(--slate-100);"><div class="sdd"><strong>'+b.dep+'</strong> &middot; '+b.co+(b.ph?' &middot; '+b.ph:'')+'</div>';
-      if(b.pu||b.pp)h+='<div class="sci">'+(b.pu?'<span>'+b.pu+'</span>':'')+(b.pp?'<span>'+b.pp+'人</span>':'')+(b.pa?'<span>住宿'+b.pa+'元</span>':'')+(b.pm?'<span>餐费'+b.pm+'元</span>':'')+(b.po?'<span>其他'+b.po+'元</span>':'')+((b.pa||0)+(b.pm||0)+(b.po||0)&&b.pp?'<span style="color:var(--red);font-weight:600;">合计'+((b.pa||0)+(b.pm||0)+(b.po||0))*b.pp+'元</span>':'')+'</div>';
+      if(b.pu||b.pp)h+='<div class="sci">'+(b.pu?'<span>'+b.pu+'</span>':'')+(b.pp?'<span>'+b.pp+'人</span>':'')+(b.mt?'<span>📍'+b.mt+'</span>':'')+(b.dl?'<span>🍽'+b.dl+'</span>':'')+(b.pa?'<span>住宿'+b.pa+'元</span>':'')+(b.pm?'<span>餐费'+b.pm+'元</span>':'')+(b.po?'<span>其他'+b.po+'元</span>':'')+((b.pa||0)+(b.pm||0)+(b.po||0)&&b.pp?'<span style="color:var(--red);font-weight:600;">合计'+((b.pa||0)+(b.pm||0)+(b.po||0))*b.pp+'元</span>':'')+(b.rmk?'<span style="color:var(--slate-400);">📝'+b.rmk+'</span>':'')+'</div>';
+      var bzTag='';if(b.mf||b.vh){if(b.mf)bzTag+='会务 ';if(b.vh)bzTag+='车辆 ';}
+      if(bzTag)h+='<div class="sci"><span style="background:var(--amber-light);color:var(--amber);padding:1px 6px;border-radius:4px;font-size:10px;">🔧 '+bzTag+'</span></div>';
       h+='<div class="scr">';
       if(br[11].length>0){h+='<span style="font-size:11px;color:var(--slate-400);">11号楼:</span>';br[11].sort(function(a,b){return a.num-b.num;}).forEach(function(r){h+='<span class="srt2" style="background:var(--blue-light);color:var(--blue);">'+r.num+(r.na?'('+r.na+')':'')+'</span>';});}
       if(br[12].length>0){h+='<span style="font-size:11px;color:var(--slate-400);margin-left:4px;">12号楼:</span>';br[12].sort(function(a,b){return a.num-b.num;}).forEach(function(r){h+='<span class="srt2" style="background:var(--indigo-light);color:var(--indigo);">'+r.num+(r.na?'('+r.na+')':'')+'</span>';});}
@@ -1520,13 +1591,35 @@ function rZl(){
   h+='</div>';c.innerHTML=h;
 }
 function _st(l,v){return '<div style="display:flex;align-items:center;gap:6px;padding:8px;background:var(--slate-50);border-radius:6px;"><div style="font-size:16px;font-weight:700;color:var(--slate-800);">'+v+'</div><div style="font-size:11px;color:var(--slate-500);">'+l+'</div></div>';}
-function db(id){var b=null;for(var i=0;i<BK.length;i++){if(BK[i].id===id){b=BK[i];break;}}if(!b)return;document.getElementById('mt').innerHTML='确认取消';var rns=rnListWithName(b.rs);document.getElementById('mb').innerHTML='<p style="font-size:14px;color:var(--slate-700);">确定取消 <strong>'+b.dep+'</strong> 于 '+b.df+'~'+b.dt+' 的排房？</p><p style="font-size:13px;color:var(--slate-400);margin-top:8px;">房间：'+rns.join('、')+'</p>';document.getElementById('mf').innerHTML='<button class="btn btn-secondary" onclick="cm()">返回</button><button class="btn btn-danger" onclick="cf(\''+id+'\')">确认取消</button>';document.getElementById('mo').classList.add('open');}
-function cf(id){for(var i=0;i<BK.length;i++)if(BK[i].id===id){BK[i].st='c';break;}try{localStorage.setItem(sk,JSON.stringify({bk:BK,wh:WH,whl:WHL}));}catch(e){}var d={bk:BK,wh:WH,whl:WHL};fetch(SB_URL+'/rest/v1/app_data?id=eq.1',{method:'PATCH',headers:Object.assign(_h(),{'Prefer':'return=minimal'}),body:JSON.stringify({data:d,updated_at:new Date().toISOString()})}).then(function(r){if(!r.ok)console.error('取消保存失败',r.status);else{syncStatus('ok');}}).catch(function(e){console.error('取消保存异常',e);});cm();rZl();iPf();renderDateOverview();t('已取消','i');}
+function db(id){var b=null;for(var i=0;i<BK.length;i++){if(BK[i].id===id){b=BK[i];break;}}if(!b)return;document.getElementById('mt').innerHTML='确认取消';var isTc=b.id&&b.id.indexOf('tc_')===0;var rnStr=isTc?'预置 '+b.rs.length+' 间':rnListWithName(b.rs).join('、');document.getElementById('mb').innerHTML='<p style="font-size:14px;color:var(--slate-700);">确定取消 <strong>'+b.dep+'</strong> 于 '+b.df.slice(0,10)+'~'+b.dt.slice(0,10)+' 的排房？</p><p style="font-size:13px;color:var(--slate-400);margin-top:8px;">房间：'+rnStr+'</p>';document.getElementById('mf').innerHTML='<button class="btn btn-secondary" onclick="cm()">返回</button><button class="btn btn-danger" onclick="cf(\''+id+'\')">确认取消</button>';document.getElementById('mo').classList.add('open');}
+function cf(id){for(var i=0;i<BK.length;i++)if(BK[i].id===id){BK[i].st='c';break;}try{localStorage.setItem(sk,JSON.stringify({bk:BK,wh:WH,whl:WHL}));}catch(e){}var d={bk:BK,wh:WH,whl:WHL};fetch(SB_URL+'/rest/v1/app_data?id=eq.1',{method:'PATCH',headers:Object.assign(_h(),{'Prefer':'return=minimal'}),body:JSON.stringify({data:d,updated_at:new Date().toISOString()})}).then(function(r){if(!r.ok)console.error('取消保存失败',r.status);else{syncStatus('ok');}}).catch(function(e){console.error('取消保存异常',e);});cm();rZl();rTc();iPf();renderDateOverview();t('已取消','i');}
 function cm(){document.getElementById('mo').classList.remove('open');}
 function printBk(id){var b=null;for(var i=0;i<BK.length;i++)if(BK[i].id===id){b=BK[i];break;}if(!b)return;var w=window.open('','_blank','width=900,height=700'),h='<html><head><meta charset="utf-8"><title>培训签到表</title><style>body{font-family:"SimSun","宋体",serif;padding:30px;color:#333}h1{text-align:center;font-size:22px;margin-bottom:5px}.sub{text-align:center;color:#666;font-size:14px;margin-bottom:25px}.info{font-size:14px;margin-bottom:20px}.info td{padding:3px 10px}table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid #333;padding:8px 10px;text-align:center}th{background:#f0f0f0;font-weight:600}@media print{body{padding:20px}button{display:none}}</style></head><body><h1>培 训 签 到 表</h1><div class="sub">'+b.df+' ~ '+b.dt+'</div><table class="info"><tr><td><strong>培训部门：</strong>'+b.dep+'</td><td><strong>培训内容：</strong>'+(b.pu||'')+'</td></tr><tr><td><strong>联系人：</strong>'+b.co+(b.ph?' ('+b.ph+')':'')+'</td><td><strong>预计人数：</strong>'+(b.pp||'')+'人</td></tr></table><table><tr><th style="width:50px">序号</th><th style="width:100px">房间号</th><th style="width:120px">楼栋</th><th style="width:120px">入住人</th><th style="width:120px">签到</th><th style="width:120px">备注</th></tr>';for(var j=0;j<b.rs.length;j++){var uid=uVal(b.rs[j]),g=gu(uid),na=uNa(b.rs[j]);h+='<tr><td>'+(j+1)+'</td><td>'+(g?g.num:'')+'</td><td>'+(g&&g.bld===11?'11号楼':'12号楼')+'</td><td>'+(na||'')+'</td><td></td><td></td></tr>';}h+='</table><div class="footer" style="text-align:center;margin-top:30px;font-size:12px;color:#999">打印时间：'+new Date().toISOString().slice(0,10)+'</div><div style="text-align:center;margin-top:20px"><button onclick="window.print()" style="padding:8px 24px;font-size:14px;cursor:pointer">打 印</button> <button onclick="window.close()" style="padding:8px 24px;font-size:14px;cursor:pointer">关 闭</button></div></body></html>';w.document.write(h);w.document.close();}
 function printBill(id){var b=null;for(var i=0;i<BK.length;i++)if(BK[i].id===id){b=BK[i];break;}if(!b)return;var w=window.open('','_blank','width=800,height=650'),days=Math.max(1,Math.round((new Date(b.dt)-new Date(b.df))/86400000)+1),billNo=b.id.slice(0,12),h='<html><head><meta charset="utf-8"><title>前台结账单</title><style>body{font-family:"SimSun","宋体",serif;padding:20px 30px;color:#333}h1{text-align:center;font-size:22px;margin:10px 0 20px;letter-spacing:10px}.it{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:15px}.it td{padding:3px 6px}.it .lb{font-weight:600;width:70px}.it .rb{text-align:right;font-weight:600;width:80px}.dt{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:15px}.dt th{border:1px solid #333;padding:5px 4px;background:#eee;font-weight:600;text-align:center;font-size:12px}.dt td{border:1px solid #333;padding:4px;text-align:center;font-size:12px}.dt .a{text-align:right;padding-right:10px}.dt .s{text-align:right;padding-right:10px;font-weight:700;font-size:13px}.tr td{font-weight:700;font-size:13px}@media print{body{padding:15px}.bb{display:none}}</style></head><body><h1>前台结账单</h1><table class="it"><tr><td class="lb">姓名</td><td>'+b.co+'</td><td class="rb">NO</td><td>'+billNo+'</td></tr><tr><td class="lb">房号</td><td>'+(b.rs.length?'共 '+b.rs.length+'间':'')+'</td><td class="rb">到达日期</td><td>'+b.df+'</td></tr><tr><td class="lb">公司</td><td>'+b.dep+'</td><td class="rb">离开日期</td><td>'+b.dt+'</td></tr></table><div style="font-size:12px;margin-bottom:10px;color:#555">培训内容：'+(b.pu||'-')+'</div><table class="dt"><tr><th style="width:80px">日期</th><th>摘要</th><th>账单号</th><th>时间</th><th>消费</th><th>付款</th></tr>';var todayStr=new Date().toISOString().slice(0,10).replace(/-/g,'.'),pa=b.pa||0,pm=b.pm||0,po=b.po||0,pc=b.pp||0,at2=pa*pc*days,mt2=pm*pc*days,ot2=po*pc*days,gt=at2+mt2+ot2;h+='<tr><td>'+todayStr+'</td><td>住宿费 '+pa+'元/人/天 '+pc+'人*'+days+'天</td><td>'+billNo+'</td><td>'+days+'天</td><td class="a">'+at2.toFixed(2)+'</td><td></td></tr><tr><td>'+todayStr+'</td><td>餐费 '+pm+'元/人/天 '+pc+'人*'+days+'天</td><td>'+billNo+'</td><td>'+days+'天</td><td class="a">'+mt2.toFixed(2)+'</td><td></td></tr><tr><td>'+todayStr+'</td><td>其他费用 '+po+'元/人</td><td>'+billNo+'</td><td>'+days+'天</td><td class="a">'+ot2.toFixed(2)+'</td><td></td></tr><tr class="tr"><td colspan="4" style="text-align:right;padding-right:15px;">总额</td><td class="s">'+gt.toFixed(2)+'</td><td></td></tr><tr class="tr"><td colspan="4" style="text-align:right;padding-right:15px;">余额</td><td class="s">'+gt.toFixed(2)+'</td><td></td></tr></table><div style="font-size:11px;color:#555;margin-top:10px;"><strong>房间分配：</strong> ';for(var j=0;j<b.rs.length;j++){var uid=uVal(b.rs[j]),g=gu(uid),na=uNa(b.rs[j]);if(j>0)h+='、';h+=(g?g.num:'')+'('+(na||'')+')';}h+='</div><div style="font-size:11px;color:#666;margin-top:20px;line-height:1.8">收款员：001 &nbsp; TIME: '+new Date().toLocaleTimeString()+'<br>注：需补开发票者，请持原始账单一个月内办理，逾期不受理。<br>转账索引如转账无效，本人愿意承担账单最后所列尚未结清之欠款。</div><div style="font-size:12px;color:#999;margin-top:30px;text-align:right">签字：_________________</div><div class="bb" style="text-align:center;margin-top:20px"><button onclick="window.print()" style="padding:8px 28px;font-size:14px;cursor:pointer;margin:0 5px">打 印</button> <button onclick="window.close()" style="padding:8px 28px;font-size:14px;cursor:pointer;margin:0 5px">关 闭</button></div></body></html>';w.document.write(h);w.document.close();}
 
-// ==================== 库房管理系统 ====================
+// ========== 培训班总表 ==========
+function rTc(){
+  var c=document.getElementById('tc_overview');
+  var tcs=BK.filter(function(b){return b.id&&b.id.indexOf('tc_')===0&&b.st!=='c';});
+  if(tcs.length===0){c.innerHTML='<div class="emp"><i data-lucide="book-open"></i><p>暂无培训班数据</p></div>';return;}
+  tcs.sort(function(a,b){return a.df.localeCompare(b.df);});
+  var h='<div class="scard"><h3><i data-lucide="book-open" style="width:16px;height:16px;"></i> 2026年培训班总表</h3>';
+  h+='<table class="st"><tr><th style="width:36px">序号</th><th style="width:120px">日期</th><th>培训班名称</th><th style="width:56px">对接人</th><th style="width:44px">人数</th><th style="width:36px">天数</th><th style="width:44px">房数</th><th style="width:56px">户型</th><th>会议场地</th><th style="width:60px">保障</th><th>用餐地点</th><th style="width:60px">状态</th></tr>';
+  var mon='';
+  for(var i=0;i<tcs.length;i++){
+    var b=tcs[i];
+    var m=b.df.slice(5,7);
+    if(m!==mon){mon=m;h+='<tr style="background:var(--slate-50)"><td colspan="12" style="text-align:left;font-weight:700;color:var(--navy);font-size:13px;padding:8px;">'+parseInt(m)+'月</td></tr>';}
+    var days=Math.ceil((new Date(b.dt)-new Date(b.df))/86400000)+1;
+    var bz='';if(b.mf)bz+='<span style="background:var(--blue-light);color:var(--blue);padding:1px 4px;border-radius:3px;font-size:9px;margin-right:2px;">会务</span>';if(b.vh)bz+='<span style="background:var(--champagne-light);color:var(--champagne-dark);padding:1px 4px;border-radius:3px;font-size:9px;">车辆</span>';
+    var rn=b.rs.length;
+    var tp=b.tp||(b.rs.length>0&&b.rs[0].nb?'double':'single');tp=tp==='double'?'👥 标间':'👤 单间';
+    var stTag=b.st==='y'?'<span style="color:var(--green);font-weight:600;">✓ 正常</span>':'<span style="color:var(--red);">已取消</span>';
+    h+='<tr><td>'+(i+1)+'</td><td style="font-size:11px;">'+b.df.slice(5).replace('-','/')+'~'+b.dt.slice(5).replace('-','/')+'</td><td><strong>'+b.dep+'</strong></td><td>'+b.co+'</td><td>'+b.pp+'</td><td>'+days+'</td><td>'+rn+'</td><td style="font-size:11px;">'+tp+'</td><td style="font-size:11px;">'+(b.mt||'-')+'</td><td>'+(bz||'-')+'</td><td style="font-size:10px;">'+(b.dl||'-')+'</td><td>'+stTag+'</td></tr>';
+  }
+  h+='</table></div>';
+  c.innerHTML=h;
+}
 function whTab(t){whTabSt=t;document.querySelectorAll('.wh-tab').forEach(function(x){x.classList.remove('act');});var ts=document.querySelectorAll('.wh-tab'),idx=t==='dash'?0:t==='list'?1:t==='log'?2:3;ts[idx].classList.add('act');rWh();}
 
 function rWh(){
