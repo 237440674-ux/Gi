@@ -806,12 +806,12 @@ function rPf(){
         var _st2=getRoomSuite(rm.num);var sb=_st2?'<span class="rt-badge" style="font-size:10px;padding:3px 12px;margin:2px auto;" + suiteStyle(_st2) + ">'+suiteIcon(_st2)+' '+_st2+'</span>':(selType==='double'?'<span class="rt-badge rt-dbl" style="font-size:9px;padding:2px 8px;margin:2px auto;">标间</span>':'<span class="rt-badge rt-sgl" style="font-size:9px;padding:2px 8px;margin:2px auto;">单间</span>');
         var tg=selType==='double'?'<button class="rc-toggle" onclick="event.stopPropagation();rtc(this,\''+rm.num+'\','+rm.bld+')">⇄单</button>':'<button class="rc-toggle" onclick="event.stopPropagation();rtc(this,\''+rm.num+'\','+rm.bld+')">⇄标</button>';
         var selNm=sel[si].nm||'',selNm2=sel[si].nm2||'';
-        if(selType==='double'){
+        if(_st2){nhtml=sb+'<div class="rc-names"><input class="ni" placeholder="姓名" value="'+s(selNm)+'" maxlength="8" onchange="ucn('+rm.num+','+rm.bld+',1,this.value)" onclick="event.stopPropagation()"></div>';}else if(selType==='double'){
           nhtml=sb+tg+'<div class="rc-names"><input class="ni" placeholder="人1" value="'+s(selNm)+'" maxlength="8" onchange="ucn('+rm.num+','+rm.bld+',1,this.value)" onclick="event.stopPropagation()"><input class="ni" placeholder="人2" value="'+s(selNm2)+'" maxlength="8" onchange="ucn('+rm.num+','+rm.bld+',2,this.value)" onclick="event.stopPropagation()"></div>';
         }else{
           nhtml=sb+tg+'<div class="rc-names"><input class="ni" placeholder="姓名" value="'+s(selNm)+'" maxlength="8" onchange="ucn('+rm.num+','+rm.bld+',1,this.value)" onclick="event.stopPropagation()"></div>';
         }
-        nhtml+='<div class="rnm" style="font-weight:500;">'+pCnt+'人</div>';
+        if(!_st2)nhtml+='<div class="rnm" style="font-weight:500;">'+pCnt+'人</div>';
       }
       else if(isB){var _st4=getRoomSuite(rm.num);nhtml=(_st4?'<div class="rnm" style="color:var(--red);font-weight:600;">'+suiteIcon(_st4)+' '+_st4+'</div>':'<div class="rnm" style="color:var(--red);font-weight:500;">占用</div>')+(names.length>0?'<div class="rnm">'+names.slice(0,2).join(',')+'</div>':'')}
       else{var _st3=getRoomSuite(rm.num);nhtml=_st3?'<div class="rnm" style="font-weight:600;">'+suiteIcon(_st3)+' '+_st3+'</div>':'<div class="rnm" style="color:var(--green-dark);">空闲</div>';}
