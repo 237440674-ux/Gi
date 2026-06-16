@@ -106,7 +106,7 @@ input,select,textarea{font:inherit}
 .btn-success:hover{box-shadow:var(--shadow-lg);transform:translateY(-1px)}
 .btn-danger{background:var(--red);color:#fff;box-shadow:0 2px 4px rgba(185,28,28,0.3)}
 .btn-sm{padding:4px 10px;font-size:12px}
-.bp{background:#fff;border:1px solid var(--slate-100);border-radius:var(--radius-lg);padding:28px;margin-bottom:24px;box-shadow:0 2px 8px rgba(10,22,40,0.05);position:relative;overflow:hidden}
+.bp{background:#fff;border:1px solid var(--slate-100);border-radius:var(--radius-lg);padding:28px;margin-bottom:24px;box-shadow:0 2px 8px rgba(10,22,40,0.05);position:relative}
 .bp::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--champagne),var(--champagne-dark),var(--champagne))}
 .bp h3{font-size:17px;font-weight:700;color:var(--navy);margin-bottom:20px;display:flex;align-items:center;gap:10px;padding-bottom:16px;border-bottom:2px solid var(--champagne-light);letter-spacing:0.5px}
 .bp h3 svg{color:var(--champagne)}
@@ -257,213 +257,7 @@ input,select,textarea{font:inherit}
 .alert-item .al-qty{color:var(--slate-600)}
 .alert-item .al-act{margin-left:auto}
 
-/* ===== 全局美化样式 ===== */
-
-/* 页面切换动画 */
-.page{
-  animation: fadeIn 0.3s ease-out;
-}
-@keyframes fadeIn{
-  from{
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to{
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* 卡片悬浮效果 */
-.scard, .wh-card, .room-card{
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.scard:hover, .wh-card:hover{
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-/* 表格美化 */
-.st{
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-  margin-top: 12px;
-}
-.st th{
-  padding: 10px 12px;
-  text-align: left;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--slate-500);
-  border-bottom: 2px solid var(--champagne);
-  letter-spacing: 0.3px;
-  background: var(--slate-50);
-}
-.st td{
-  padding: 10px 12px;
-  font-size: 13px;
-  vertical-align: middle;
-  border-bottom: 1px solid var(--slate-100);
-  transition: background 0.2s;
-}
-.st tr:hover td{
-  background: var(--champagne-light);
-}
-.st tr:last-child td{
-  border-bottom: none;
-}
-
-/* 滚动条美化 */
-::-webkit-scrollbar{
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track{
-  background: var(--slate-100);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb{
-  background: var(--slate-300);
-  border-radius: 3px;
-  transition: background 0.2s;
-}
-::-webkit-scrollbar-thumb:hover{
-  background: var(--slate-400);
-}
-
-/* 输入框聚焦动画 */
-.fi:focus{
-  transform: translateY(-1px);
-}
-
-/* 按钮点击动画 */
-.btn:active{
-  transform: translateY(0) scale(0.98);
-}
-
-/* 房间卡片美化 */
-.room-card{
-  border: 1.5px solid var(--slate-200);
-  border-radius: var(--radius-md);
-  padding: 10px 8px 8px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: #fff;
-  position: relative;
-  overflow: hidden;
-}
-.room-card::before{
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--slate-200);
-  transition: background 0.3s;
-}
-.room-card:hover{
-  border-color: var(--blue);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-.room-card:hover::before{
-  background: var(--blue);
-}
-.room-card.sel::before{
-  background: var(--blue);
-}
-
-/* 空状态美化 */
-.emp{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  color: var(--slate-400);
-  text-align: center;
-}
-.emp svg{
-  width: 48px;
-  height: 48px;
-  margin-bottom: 16px;
-  opacity: 0.5;
-}
-.emp p{
-  font-size: 14px;
-  color: var(--slate-500);
-}
-
-/* Toast通知美化 */
-.tt{
-  padding: 10px 20px;
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-  font-weight: 500;
-  animation: slideIn 0.3s ease-out;
-  box-shadow: var(--shadow-md);
-}
-@keyframes slideIn{
-  from{
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  to{
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* 模态框美化 */
-.modal{
-  background: #fff;
-  border-radius: var(--radius-lg);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  animation: modalIn 0.3s ease-out;
-}
-@keyframes modalIn{
-  from{
-    opacity: 0;
-    transform: scale(0.9) translateY(20px);
-  }
-  to{
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-.mh{
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--slate-100);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.mh h3{
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--navy);
-}
-.mc{
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: var(--slate-100);
-  color: var(--slate-500);
-  cursor: pointer;
-  transition: all 0.2s;
-  border: none;
-}
-.mc:hover{
-  background: var(--red);
-  color: #fff;
-}
-
+/* ===== 响应式 ===== */
 @media(max-width:768px){
   .header{padding:0 16px}.header-logo span{display:none}.header-tabs{gap:2px;margin-left:12px}.header-tab{padding:4px 10px;font-size:12px}
   .toolbar{padding:10px 16px}.stats-bar{overflow-x:auto;padding:0 16px}.stat-item{padding:8px 12px}.stat-value{font-size:15px}
@@ -727,125 +521,7 @@ input,select,textarea{font:inherit}
   box-shadow: 0 0 0 3px var(--champagne-glow) !important;
 }
 
-/* 表单字段美化 */
-.fg{
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  flex: 1;
-  min-width: 0;
-}
-.fl{
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--slate-600);
-  letter-spacing: 0.3px;
-}
-.fi{
-  padding: 9px 12px;
-  border: 1.5px solid var(--slate-200);
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-  outline: none;
-  transition: all var(--transition);
-  background: #fff;
-  color: var(--slate-800);
-}
-.fi:focus{
-  border-color: var(--champagne);
-  box-shadow: 0 0 0 3px var(--champagne-glow);
-  background: #fff;
-}
-.fi::placeholder{
-  color: var(--slate-400);
-  font-size: 12px;
-}
-.fr{
-  display: flex;
-  gap: 12px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-}
 
-/* 按钮美化 */
-.btn{
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition);
-  outline: none;
-  text-decoration: none;
-}
-.btn-success{
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
-}
-.btn-success:hover{
-  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
-  transform: translateY(-1px);
-}
-.btn-primary{
-  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(30, 64, 175, 0.3);
-}
-.btn-primary:hover{
-  background: linear-gradient(135deg, var(--blue-dark) 0%, #1e3a8a 100%);
-  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.4);
-  transform: translateY(-1px);
-}
-.btn-secondary{
-  background: var(--slate-100);
-  color: var(--slate-700);
-  border: 1px solid var(--slate-200);
-}
-.btn-secondary:hover{
-  background: var(--slate-200);
-  border-color: var(--slate-300);
-}
-.btn-danger{
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
-}
-.btn-danger:hover{
-  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-  transform: translateY(-1px);
-}
-.btn-sm{
-  padding: 6px 12px;
-  font-size: 12px;
-}
-
-/* 页面整体美化 */
-.bp{
-  background: #fff;
-  border-radius: var(--radius-md);
-  padding: 24px;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--slate-100);
-  margin-bottom: 20px;
-}
-.bp h3{
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--navy);
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid var(--champagne-light);
-}
 </style>
 </head><body>
 <header class="header">
@@ -969,6 +645,12 @@ input,select,textarea{font:inherit}
         <div class="fg" style="flex:2"><label class="fl">备注</label><input class="fi" id="rmk" placeholder="特殊需求或说明"></div>
       </div>
   </div>
+
+    <!-- 步骤3：选择房间并提交 -->
+    <div class="form-section">
+      <div class="form-section-title"><span class="step-num">3</span> 选择房间并提交</div>
+      <div style="font-size:12px;color:var(--slate-500);margin-bottom:12px;">在下方平面图中点击房间进行选择，选好后点击"确认提交"按钮</div>
+  </div>
   <div id="rc"><div class="emp"><i data-lucide="building-2"></i><p>请选择楼栋、楼层和日期</p></div>
   <!-- 拖动选择框 -->
   <div class="sel-box" id="selBox"></div>
@@ -978,8 +660,13 @@ input,select,textarea{font:inherit}
     <span class="sel-bar-info">已选 <strong id="selBarNum">0</strong> 间</span>
     <div class="sel-bar-acts">
       <button class="btn btn-sm btn-secondary" onclick="clearSel()"><i data-lucide="x"></i> 清空</button>
-      <button class="btn btn-success" onclick="sub()"><i data-lucide="send"></i> 确认提交</button>
+      <button class="btn btn-success" onclick="sub()" style="padding:10px 28px;font-size:15px;font-weight:700;letter-spacing:1px;"><i data-lucide="send"></i> 确认提交</button>
     </div>
+  </div>
+  <!-- 固定提交按钮（始终可见） -->
+  <div style="margin-top:20px;display:flex;justify-content:flex-end;gap:12px;padding:16px 0;border-top:1px solid var(--slate-200);">
+    <button class="btn btn-secondary" onclick="clearSel()">清空选择</button>
+    <button class="btn btn-success" onclick="sub()" style="padding:10px 32px;font-size:15px;font-weight:700;letter-spacing:1px;">📤 确认提交排房</button>
   </div>
 </div>
 <div class="page" id="p2">
@@ -1553,6 +1240,8 @@ function sub(){
   rPf();
   updSelBar();
   t(dep + ' 于 ' + fd + '~' + td + ' 使用 ' + sel.length + ' 间房 申请已提交', 's');
+  // 提交成功后自动跳转到总览页面
+  setTimeout(function(){ sw(2); }, 800);
 }
 
 // ========== 总览 ==========
