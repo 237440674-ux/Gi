@@ -864,15 +864,12 @@ function updS(){var fd=document.getElementById('df').value,td=document.getElemen
   var e5=document.getElementById('stSteL');if(e5)e5.textContent=stL;
   var e6=document.getElementById('stTotal');if(e6)e6.textContent=totalAll;
   if(!fd||!td){document.getElementById('sAvl').textContent='-';document.getElementById('sBkd').textContent='-';return;}
-  // 跨日期并集：对 ALL 中每间房逐一用 isBkd 检查
-  var bkd={},used=[],bkDetail=[];
-  for(var i=0;i<BK.length;i++){var b=BK[i];if(b.st==='c')continue;if(b.df>td||b.dt<fd)continue;used.push(b.dep+'('+b.df+'~'+b.dt+')'+b.rs.length+'间');}
-  for(var i=0;i<ALL.length;i++){if(isBkd(ALL[i].num,ALL[i].bld,fd,td))bkd[ALL[i].uid]=true;}
-  var bc=0;
-  // 详细调试：每个BK记录在 [fd,td] 内实际占用的房间数
-  for(var i=0;i<BK.length;i++){var b=BK[i];if(b.st==='c')continue;var cnt=0;for(var j=0;j<b.rs.length;j++){var uid=uVal(b.rs[j]);if(bkd[uid])cnt++;}if(cnt>0){bc+=cnt;bkDetail.push(b.dep+':'+cnt+'间');}}
-  // 显示调试信息到页面
-  var di=document.getElementById('debugInfo');
+  // 范围内每日已排房间数总和
+  var bc=0,d=new Date(fd),end=new Date(td);
+  while(d<=end){
+    var ds=lds(d);
+    for(var i=0;i<BK.length;i++){var b=BK[i];if(b.st!=='c'&&ds>=b.df&&ds<=b.dt)bc+=b.rs.length;}
+    d.setDate(d.getDate()+1);}
   document.getElementById('sAvl').textContent=totalAll-bc;
   document.getElementById('sBkd').textContent=bc;}
 
