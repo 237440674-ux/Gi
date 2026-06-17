@@ -864,12 +864,9 @@ function updS(){var fd=document.getElementById('df').value,td=document.getElemen
   var e5=document.getElementById('stSteL');if(e5)e5.textContent=stL;
   var e6=document.getElementById('stTotal');if(e6)e6.textContent=totalAll;
   if(!fd||!td){document.getElementById('sAvl').textContent='-';document.getElementById('sBkd').textContent='-';return;}
-  // 范围内每日已排房间数总和
-  var bc=0,d=new Date(fd),end=new Date(td);
-  while(d<=end){
-    var ds=lds(d);
-    for(var i=0;i<BK.length;i++){var b=BK[i];if(b.st!=='c'&&ds>=b.df&&ds<=b.dt)bc+=b.rs.length;}
-    d.setDate(d.getDate()+1);}
+  // 范围内每个有重叠的培训班计一次房间数
+  var bc=0;
+  for(var i=0;i<BK.length;i++){var b=BK[i];if(b.st!=='c'&&b.df<=td&&b.dt>=fd)bc+=b.rs.length;}
   document.getElementById('sAvl').textContent=totalAll-bc;
   document.getElementById('sBkd').textContent=bc;}
 
