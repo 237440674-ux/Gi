@@ -629,15 +629,15 @@ function suiteIcon(st){
   if(st==='大套')return '🟪';
   return '';
 }
-var ALL = [];
+var ALL = [], sk = 'pf_v4';
 for(var i=0;i<B11.length;i++){var fl=B11[i];for(var j=0;j<fl.r.length;j++){var n=fl.r[j];ALL.push({uid:110000+n,num:n,bld:11,flr:fl.f});}}
 for(var i=0;i<B12.length;i++){var fl=B12[i];for(var j=0;j<fl.r.length;j++){var n=fl.r[j];ALL.push({uid:120000+n,num:n,bld:12,flr:fl.f});}}
 var BK = [];
 var roomTypePref = 'single';
 
 var DATA_VERSION = 1;
-function ld(cb){loadCloud(function(ok){if(ok){if(typeof renderWh==='function')renderWh();if(typeof renderDateOverview==='function')renderDateOverview();if(typeof rZl==='function')rZl();if(typeof rPf==='function')rPf();}if(cb)cb(ok);});}
-function sv(){renderDateOverview();rZl();if(typeof renderWh==='function')renderWh();saveCloud();}
+function ld(){var ok=false;try{var r=localStorage.getItem(sk);if(r){var p=JSON.parse(r);if(p&&p.version===DATA_VERSION&&p.bk){BK=p.bk||[];WH=p.wh||[];WHL=p.whl||[];ok=true;}}else{localStorage.removeItem(sk);}}catch(e){}if(!ok){BK=[];WH=[];WHL=[];}loadCloud(function(cr){if(cr&&typeof renderWh==='function')renderWh();if(typeof renderDateOverview==='function')renderDateOverview();if(typeof rZl==='function')rZl();if(typeof rPf==='function')rPf();});return ok;}
+function sv(){try{localStorage.setItem(sk,JSON.stringify({version:DATA_VERSION,bk:BK,wh:WH,whl:WHL}));renderDateOverview();rZl();if(typeof renderWh==='function')renderWh();}catch(e){}saveCloud();}
 
 function gu(uid){for(var i=0;i<ALL.length;i++)if(ALL[i].uid===uid)return ALL[i];return null;}
 function gn(num){for(var i=0;i<ALL.length;i++)if(ALL[i].num===num)return ALL[i];return null;}
@@ -676,7 +676,7 @@ function loadCloud(cb){
   .then(function(r){
     if(r&&r.length>0&&r[0].data){
       var p=r[0].data;BK=p.bk||BK;WH=p.wh||WH;WHL=p.whl||WHL;
-      
+      try{localStorage.setItem(sk,JSON.stringify({version:DATA_VERSION,bk:BK,wh:WH,whl:WHL}));}catch(e){}
       _syncStatus=1;syncUI(1);
       if(typeof renderWh==='function')renderWh();
       if(typeof renderDateOverview==='function')renderDateOverview();
@@ -708,7 +708,7 @@ var _pollTimer=setInterval(function(){
     if(r&&r.length>0&&r[0].data){
       var p=r[0].data;var cur=JSON.stringify({bk:BK,wh:WH,whl:WHL});
       var rem=JSON.stringify({bk:p.bk||[],wh:p.wh||[],whl:p.whl||[]});
-      if(cur!==rem){BK=p.bk||BK;WH=p.wh||WH;WHL=p.whl||WHL;
+      if(cur!==rem){BK=p.bk||BK;WH=p.wh||WH;WHL=p.whl||WHL;try{localStorage.setItem(sk,JSON.stringify({version:DATA_VERSION,bk:BK,wh:WH,whl:WHL}));}catch(e){}
         if(typeof renderWh==='function')renderWh();if(typeof renderDateOverview==='function')renderDateOverview();
         if(typeof rZl==='function')rZl();if(typeof rPf==='function')rPf();
       }_syncStatus=1;syncUI(1);
@@ -720,7 +720,7 @@ function sw(p){
   document.querySelectorAll('.header-tab').forEach(function(x){x.classList.remove('act');});
   document.getElementById('p'+p).classList.add('act');
   document.querySelectorAll('.header-tab')[p-1].classList.add('act');
-  if(p===1){rPf();renderDateOverview();}if(p===2)rZl();if(p===3)renderWh();
+  if(p===1){rPf();renderDateOverview();}if(p===2){iZl();rZl();}if(p===3)renderWh();
 }
 
 // ===== 排房 =====
@@ -873,7 +873,7 @@ function updS(){var fd=document.getElementById('df').value,td=document.getElemen
 function sub(){var dep=document.getElementById('dep').value.trim(),co=document.getElementById('con').value.trim(),ph=document.getElementById('ph').value.trim(),pur=document.getElementById('pur').value.trim(),mt=document.getElementById('mt').value.trim(),mf=document.getElementById('mf').checked,vh=document.getElementById('vh').checked,dl=document.getElementById('dl').value.trim(),rmk=document.getElementById('rmk').value.trim(),fd=document.getElementById('df').value,td=document.getElementById('dt').value,pp=parseInt(document.getElementById('pp').value),sel=gS();if(!dep){t('请填写部门','e');return;}if(!co){t('请填写联系人','e');return;}if(!ph){t('请填写电话','e');return;}if(!pur){t('请填写培训内容','e');return;}if(!mt){t('请填写会议场地','e');return;}if(!dl){t('请填写用餐地点','e');return;}if(!pp||pp<=0){t('请填写入住人数','e');return;}if(!fd||!td){t('请选择入住和退房日期','e');return;}if(sel.length===0){t('请至少选择一个房间','e');return;}for(var i=0;i<sel.length;i++){if(isBkd(sel[i].n,sel[i].b,fd,td)){t('房间 '+sel[i].n+' 在选定时间范围内已被预约','e');return;}}var rs=[];for(var i=0;i<sel.length;i++){var o={u:sel[i].b*10000+sel[i].n,na:sel[i].nm||''};if(sel[i].tp==='double'&&sel[i].nm2)o.nb=sel[i].nm2;rs.push(o);}var totalPP=0;for(var i=0;i<sel.length;i++){totalPP+=(sel[i].tp==='double'?2:1);}var pa=parseFloat(document.getElementById('pa').value);if(!pa&&pa!==0){t('请填写住宿标准','e');return;}var pm=parseFloat(document.getElementById('pm').value);if(!pm&&pm!==0){t('请填写餐费标准','e');return;}var po=parseFloat(document.getElementById('po').value);if(!po&&po!==0){t('请填写其他费用','e');return;}BK.push({id:'b'+Date.now()+Math.random().toString(36).slice(2,6),dep:dep,co:co,ph:ph,pu:pur,mt:mt,mf:mf,vh:vh,dl:dl,rmk:rmk,pp:totalPP,pa:pa,pm:pm,po:po,df:fd,dt:td,rs:rs,st:'y',at:lds(new Date())});sv();document.getElementById('dep').value='';document.getElementById('con').value='';document.getElementById('ph').value='';document.getElementById('pur').value='';document.getElementById('pp').value='';document.getElementById('pa').value='';document.getElementById('pm').value='';document.getElementById('po').value='';document.getElementById('mt').value='';document.getElementById('mf').checked=false;document.getElementById('vh').checked=false;document.getElementById('dl').value='';document.getElementById('rmk').value='';document.querySelectorAll('.room-card.sel').forEach(function(card){card.classList.remove('sel');card.classList.add('avl');});rPf();updSelBar();t(dep+' 于 '+fd+'~'+td+' 使用 '+sel.length+' 间房 申请已提交','s');setTimeout(function(){sw(2);},800);}
 
 // ===== 总览 =====
-function iZl(){var t=new Date(),w=new Date(t);w.setDate(w.getDate()+7);document.getElementById('zdf').value=lds(t);document.getElementById('zdt').value=lds(w);rZl();}
+function iZl(){document.getElementById('zdf').value='2020-01-01';var f=new Date();f.setFullYear(f.getFullYear()+2);document.getElementById('zdt').value=lds(f);rZl();}
 function sr(r){var t=new Date();if(r==='w'){var e=new Date(t);e.setDate(e.getDate()+7);document.getElementById('zdf').value=lds(t);document.getElementById('zdt').value=lds(e);}else if(r==='m'){var e=new Date(t);e.setMonth(e.getMonth()+1);document.getElementById('zdf').value=lds(t);document.getElementById('zdt').value=lds(e);}else if(r==='a'){document.getElementById('zdf').value='2020-01-01';var f=new Date();f.setFullYear(f.getFullYear()+2);document.getElementById('zdt').value=lds(f);}rZl();}
 
 function rZl(){var df=document.getElementById('zdf').value,dt=document.getElementById('zdt').value,bld=document.getElementById('zb').value,c=document.getElementById('zc'),bks=[];for(var i=0;i<BK.length;i++)if(BK[i].st!=='c')bks.push(BK[i]);if(df)bks=bks.filter(function(b){return b.df>=df||b.dt>=df;});if(dt)bks=bks.filter(function(b){return b.df<=dt||b.dt<=dt;});if(bld!=='all')bks=bks.filter(function(b){for(var j=0;j<b.rs.length;j++){var g=gn(uVal(b.rs[j])%10000);if(g&&g.bld===parseInt(bld))return true;}return false;});bks.sort(function(a,b){return a.df.localeCompare(b.df);});if(bks.length===0){c.innerHTML='<div class="emp"><i data-lucide="calendar"></i><p>暂无排房记录</p></div>';return;}
@@ -1024,9 +1024,9 @@ function setCheckIn(ds){document.getElementById('df').value=ds;var d=new Date(ds
 function renderDateOverview(){initCal();}
 
 // ===== Init =====
-function init(){
+function init(){try{localStorage.removeItem("pf_v3");}catch(e){}
   document.getElementById('cd').textContent=new Date().getFullYear()+'年'+(new Date().getMonth()+1)+'月'+new Date().getDate()+'日';
-  ld();
+  BK=[];ld();
   document.getElementById('bld').onchange=function(){ftT(parseInt(this.value));rPf();renderCal();};
   document.getElementById('df').onchange=function(){rPf();renderCal();};document.getElementById('dt').onchange=function(){rPf();renderCal();};
   document.getElementById('zb').onchange=function(){rZl();};document.getElementById('zdf').onchange=function(){rZl();};document.getElementById('zdt').onchange=function(){rZl();};
